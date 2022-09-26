@@ -1,6 +1,7 @@
 ﻿namespace ApplicationCore.Interfaces.Observer
 {
-	internal class IObserver
+	internal interface IObserver
 	{
+		// TODO: паттерн наблюдатель
 	}
 }
