@@ -1,5 +1,4 @@
-﻿
-namespace ApplicationCore.Interfaces
+﻿namespace ApplicationCore.Interfaces
 {
 	internal interface IPosition
 	{

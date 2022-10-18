@@ -5,5 +5,7 @@ namespace ApplicationCore.Models.Roles.Staff.Positions
 	internal class AdvertisingManager : IPosition
 	{
 		// TODO: рекламный менеджер
+		public override string? ToString()
+			=> "AdvertisingManager";
 	}
 }
