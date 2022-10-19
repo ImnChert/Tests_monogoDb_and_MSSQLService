@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ApplicationCore.Models.Cinema
+﻿namespace ApplicationCore.Models.Cinema
 {
-	internal enum Categories
+	internal class Category
 	{
-		A,
-		B,
-		C
+		public string Name	{ get; set; }
+		public decimal Price { get; set; }
+
+		public Category(string name, decimal price)
+		{
+			Name = name;
+			Price = price;
+		}
 	}
 }

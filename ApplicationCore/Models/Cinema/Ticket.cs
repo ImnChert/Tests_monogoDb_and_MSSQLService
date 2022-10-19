@@ -1,4 +1,5 @@
 ﻿using ApplicationCore.Models.Roles;
+using ApplicationCore.Models.Roles.Staff.Positions;
 
 namespace ApplicationCore.Models.Cinema
 {
@@ -7,6 +8,6 @@ namespace ApplicationCore.Models.Cinema
 		public Seat Seat { get; set; }
 		public Session Session { get; set; }
 		public RegisteredUser RegisteredUser { get; set; }
-		
+		public Cashier Cashier { get; set; }	
 	}
 }
