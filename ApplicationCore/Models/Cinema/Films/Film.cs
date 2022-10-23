@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ApplicationCore.Models.Cinema.Films
+﻿namespace ApplicationCore.Models.Cinema.Films
 {
 	internal class Film  
 	{

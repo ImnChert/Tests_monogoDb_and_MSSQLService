@@ -1,11 +1,11 @@
-﻿using ApplicationCore.Interfaces;
+﻿using ApplicationCore.Interfaces.Observer;
 using ApplicationCore.Models.Roles;
 
 namespace ApplicationCore.Models.Cinema
 {
 	internal class Schedule
 	{
-		public Dictionary<Session, List<Ticket>> Sessions { get; } = new Dictionary<Session, List<Ticket>>();
+		public List<Session> Sessions { get; } = new List<Session>();
 		public Hall Hall { get; set; }
 		public DateTime Date { get; set; }
 		
@@ -15,21 +15,26 @@ namespace ApplicationCore.Models.Cinema
 		public void AddSession(Session session)
 		{
 			if (!ContainSession(session))
-				Sessions.Add(session, null);
+				Sessions.Add(session);
 			else
 				throw new Exception();
 		}
 
 		private bool ContainSession(Session session)
-			=> Sessions.Where(s => !((s.Key.FinishTime < session.StartTime) || (s.Key.StartTime > session.FinishTime))).Any();
+			=> Sessions.Where(s => !((s.FinishTime < session.StartTime) || (s.StartTime > session.FinishTime))).Any();
 		// TODO: сделать этот метод
-
 		private bool ContainSeat(Seat seat)
-			=> Sessions.Any(s => s.Value.Any(t => t.Seat == seat));
+			=> Sessions.Any(s => s.Tickets.Any(t => t.Seat == seat));
 		private bool DoesTheUserHasAnEntryForThisSession(RegisteredUser user, Session session)
-			=> Sessions.Where(s => s.Key == session).Any(s => s.Value.Any(t => t.RegisteredUser == user));
+			=> Sessions.Where(s => s == session).Any(s => s.Tickets.Any(t => t.RegisteredUser == user));
 
 		public void AddTicket(RegisteredUser user, Session session, Seat seat)
+		{
+			TicketVerification(user, session, seat);
+
+			// TODO: сделать
+		}
+		public void RemoveTicket(RegisteredUser user, Session session, Seat seat)
 		{
 			TicketVerification(user, session, seat);
 
@@ -45,5 +50,9 @@ namespace ApplicationCore.Models.Cinema
 			if (ContainSeat(seat))
 				throw new Exception("This place is already booked");
 		}
+
+		public void Notify(Session session, Exception ex)
+			=> Sessions.Where(s => s == session).Select(s => s).ToList().ForEach(s => s.Notify(ex));
+		
 	}
 }
