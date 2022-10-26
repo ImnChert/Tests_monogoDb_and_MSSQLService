@@ -1,9 +1,10 @@
 ﻿using ApplicationCore.Interfaces.Observer;
 using ApplicationCore.Models.Cinema.Films;
+using Infrastructure.Models;
 
 namespace ApplicationCore.Models.Cinema
 {
-	internal class Session : ISubject
+	internal class Session : EntityBase, ISubject
 	{
 		public Film Film { get; }
 		public DateTime StartTime { get; }

@@ -1,7 +1,9 @@
-﻿namespace ApplicationCore.Models.Roles
+﻿using Infrastructure.Models;
+
+namespace ApplicationCore.Models.Roles
 {
-    internal class Guest
-    {
+    internal class Guest : EntityBase
+	{
         // TODO: Гость
     }
 }

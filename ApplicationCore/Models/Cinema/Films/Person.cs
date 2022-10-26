@@ -1,8 +1,9 @@
 ﻿using ApplicationCore.Interfaces;
+using Infrastructure.Models;
 
 namespace ApplicationCore.Models.Cinema.Films
 {
-	internal class Person : IFullName
+	internal class Person : EntityBase, IFullName
 	{
 		public string FirstName { get; set; }
 		public string MiddleName { get; set; }

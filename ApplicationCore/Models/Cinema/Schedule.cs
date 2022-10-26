@@ -1,9 +1,9 @@
-﻿using ApplicationCore.Interfaces.Observer;
-using ApplicationCore.Models.Roles;
+﻿using ApplicationCore.Models.Roles;
+using Infrastructure.Models;
 
 namespace ApplicationCore.Models.Cinema
 {
-	internal class Schedule
+	internal class Schedule : EntityBase
 	{
 		public List<Session> Sessions { get; } = new List<Session>();
 		public Hall Hall { get; set; }
@@ -36,7 +36,7 @@ namespace ApplicationCore.Models.Cinema
 		}
 		public void RemoveTicket(RegisteredUser user, Session session, Seat seat)
 		{
-			TicketVerification(user, session, seat);
+			//TicketVerification(user, session, seat);
 
 			// TODO: сделать
 		}

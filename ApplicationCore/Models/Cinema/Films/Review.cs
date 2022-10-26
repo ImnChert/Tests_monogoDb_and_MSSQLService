@@ -1,8 +1,9 @@
 ﻿using ApplicationCore.Models.Roles;
+using Infrastructure.Models;
 
 namespace ApplicationCore.Models.Cinema.Films
 {
-	internal class Review
+	internal class Review : EntityBase
 	{
 		RegisteredUser RegisteredUser { get; set; }
 		public string Dicriprion { get; set; }

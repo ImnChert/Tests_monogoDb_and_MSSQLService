@@ -1,6 +1,12 @@
-﻿namespace Infrastructure.Interfaces
+﻿using Infrastructure.Models;
+
+namespace Infrastructure.Interfaces
 {
-	internal interface IRepository
+	public interface IRepository<T> where T : EntityBase
 	{
+		public List<T> GetAll();
+		public void Insert(T entity);
+		public void Update(T entity);
+		public void Delete(T entity);
 	}
 }

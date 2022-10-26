@@ -1,8 +1,9 @@
-﻿namespace ApplicationCore.Models.Cinema.Films
+﻿using Infrastructure.Models;
+
+namespace ApplicationCore.Models.Cinema.Films
 {
-	internal class Film  
+	internal class Film  : EntityBase
 	{
-		public int Id { get; set; }
 		public string Name { get; set; }
 		public TimeSpan Duration { get; set; }
 		public List<Person> FilmCrew { get; set; } = new List<Person>();

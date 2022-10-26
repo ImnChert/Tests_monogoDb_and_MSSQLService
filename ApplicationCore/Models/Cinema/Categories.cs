@@ -1,6 +1,8 @@
-﻿namespace ApplicationCore.Models.Cinema
+﻿using Infrastructure.Models;
+
+namespace ApplicationCore.Models.Cinema
 {
-	internal class Category
+	internal class Category : EntityBase
 	{
 		public string Name	{ get; set; }
 		public decimal Price { get; set; }
