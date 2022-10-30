@@ -10,13 +10,4 @@
     <PackageReference Include="MongoDB.Bson" Version="2.18.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\ApplicationCore\ApplicationCore.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Business\" />
-    <Folder Include="Data\MSSQLServerRepository\" />
-  </ItemGroup>
-
 </Project>
