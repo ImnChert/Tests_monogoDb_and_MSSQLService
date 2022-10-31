@@ -2,7 +2,6 @@
 
 namespace ApplicationCore.Domain.Core.Models
 {
-	[Serializable]
 	public abstract class EntityBase
 	{
 		[BsonId]

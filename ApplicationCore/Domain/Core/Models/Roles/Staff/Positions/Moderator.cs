@@ -1,8 +1,6 @@
-﻿using ApplicationCore.Domain.Core.Interfaces;
-
-namespace ApplicationCore.Domain.Core.Models.Roles.Staff.Positions
+﻿namespace ApplicationCore.Domain.Core.Models.Roles.Staff.Positions
 {
-	public class Moderator : IPosition
+	public class Moderator : Position
 	{
 		// TODO: модератор
 		public override string? ToString()

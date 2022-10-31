@@ -5,22 +5,22 @@ namespace Infrastructure.Data.MongoRepository
 {
 	internal class ScheduleRepository : IRepository<Schedule>
 	{
-		public void Delete(Schedule entity)
+		public Task DeleteAsync(Schedule entity)
 		{
 			throw new NotImplementedException();
 		}
 
-		public List<Schedule> GetAll()
+		public Task<List<Schedule>> GetAll()
 		{
 			throw new NotImplementedException();
 		}
 
-		public void Insert(Schedule entity)
+		public Task Insert(Schedule entity)
 		{
 			throw new NotImplementedException();
 		}
 
-		public void Update(Schedule entity)
+		public Task Update(Schedule entity)
 		{
 			throw new NotImplementedException();
 		}

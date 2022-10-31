@@ -1,8 +1,6 @@
-﻿using ApplicationCore.Domain.Core.Interfaces;
-
-namespace ApplicationCore.Domain.Core.Models.Roles.Staff.Positions
+﻿namespace ApplicationCore.Domain.Core.Models.Roles.Staff.Positions
 {
-	public class FilmDistributionManager : IPosition
+	public class FilmDistributionManager : Position
 	{
 		// TODO: менеджер по кинопроктау
 		public override string? ToString()
