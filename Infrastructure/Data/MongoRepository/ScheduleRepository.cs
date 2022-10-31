@@ -10,6 +10,7 @@ namespace Infrastructure.Data.MongoRepository
 			throw new NotImplementedException();
 		}
 
+
 		public Task<List<Schedule>> GetAll()
 		{
 			throw new NotImplementedException();

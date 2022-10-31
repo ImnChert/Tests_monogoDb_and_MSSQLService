@@ -3,7 +3,6 @@ using ApplicationCore.Domain.Interfaces.Interfaces;
 using Infrastructure.Business;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using System.Diagnostics.Metrics;
 
 namespace Infrastructure.Data.MongoRepository
 {
