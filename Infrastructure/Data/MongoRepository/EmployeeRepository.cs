@@ -24,7 +24,7 @@ namespace Infrastructure.Data.MongoRepository
 				{
 					IEnumerable<BsonDocument> user = cursor.Current;
 
-					foreach (var item in user)
+					foreach (BsonDocument item in user)
 					{
 						employees.Add(new Employee()
 						{
