@@ -16,7 +16,7 @@ namespace Infrastructure.Data.MongoRepository.Connection
                 throw new ArgumentNullException(nameof(connectionString));
 
             var mongoClient = new MongoClient(connectionString);
-            var mongoDatabase = mongoClient.GetDatabase(_nameDatabase);
+            IMongoDatabase mongoDatabase = mongoClient.GetDatabase(_nameDatabase);
             _mongoCollection = mongoDatabase.GetCollection<BsonDocument>(nameCollection);
         }
 
