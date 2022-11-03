@@ -6,11 +6,5 @@ namespace ApplicationCore.Domain.Core.Models.Cinema.Films
 	{
 		RegisteredUser RegisteredUser { get; set; }
 		public string Dicriprion { get; set; }
-
-		public Review(RegisteredUser registeredUser, string dicriprion)
-		{
-			RegisteredUser = registeredUser;
-			Dicriprion = dicriprion;
-		}
 	}
 }

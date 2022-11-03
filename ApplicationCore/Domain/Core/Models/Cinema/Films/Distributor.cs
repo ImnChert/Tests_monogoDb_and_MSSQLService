@@ -3,10 +3,5 @@
 	public class Distributor : EntityBase
 	{
 		public string NameCompany { get; set; }
-
-		public Distributor(string nameCompany)
-		{
-			NameCompany = nameCompany;
-		}
 	}
 }

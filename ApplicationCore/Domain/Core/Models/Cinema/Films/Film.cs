@@ -13,23 +13,6 @@
 		public Distributor Distributor { get; set; }
 		public decimal BasePrice { get; set; }
 
-		public Film(int id, string name, TimeSpan duration, List<Person> filmCrew, 
-			List<Review> reviews, string discription, int year, double raiting, 
-			DateTime licensExpirationDate, Distributor distributor, decimal basePrice)
-		{
-			Id = id;
-			Name = name;
-			Duration = duration;
-			FilmCrew = filmCrew;
-			Reviews = reviews;
-			Discription = discription;
-			Year = year;
-			Raiting = raiting;
-			LicensExpirationDate = licensExpirationDate;
-			Distributor = distributor;
-			BasePrice = basePrice;
-		}
-
 		public override bool Equals(object? obj)
 		{
 			return obj is Film film &&

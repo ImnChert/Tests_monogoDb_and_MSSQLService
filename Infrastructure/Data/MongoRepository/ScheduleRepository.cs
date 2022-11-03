@@ -4,32 +4,29 @@ using Infrastructure.Data.MongoRepository.Connection;
 
 namespace Infrastructure.Data.MongoRepository
 {
-	internal class ScheduleRepository : MainMongoRepository, IRepository<Schedule>
+	internal class ScheduleRepository : MainMongoRepository<Schedule>
 	{
 		public ScheduleRepository(string connectionString) 
 			: base(connectionString, "schedule")
 		{
 		}
 
-		public Task DeleteAsync(Schedule entity) => throw new NotImplementedException();
-
-
-		public Task<List<Schedule>> GetAllAsync()
+		public override Task<List<Schedule>> GetAllAsync()
 		{
 			throw new NotImplementedException();
 		}
 
-		public Task<Schedule> GetById(int id)
+		public override Task<Schedule> GetById(int id)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Task InsertAsync(Schedule entity)
+		public override Task<bool> InsertAsync(Schedule entity)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Task UpdateAsync(Schedule entity)
+		public override Task<bool> UpdateAsync(Schedule entity)
 		{
 			throw new NotImplementedException();
 		}

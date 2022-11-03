@@ -7,9 +7,6 @@ namespace ApplicationCore.Domain.Core.Models.Cinema
 		public List<Session> Sessions { get; } = new List<Session>();
 		public Hall Hall { get; set; }
 		public DateTime Date { get; set; }
-		
-		public Schedule()
-		{ }
 
 		public void AddSession(Session session)
 		{
@@ -52,6 +49,5 @@ namespace ApplicationCore.Domain.Core.Models.Cinema
 
 		public void Notify(Session session, Exception ex)
 			=> Sessions.Where(s => s == session).Select(s => s).ToList().ForEach(s => s.Notify(ex));
-		
 	}
 }
