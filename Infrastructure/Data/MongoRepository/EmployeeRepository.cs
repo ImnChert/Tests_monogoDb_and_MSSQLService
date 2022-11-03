@@ -1,8 +1,10 @@
 ﻿using ApplicationCore.Domain.Core.Models.Roles.Staff;
 using ApplicationCore.Domain.Interfaces.Interfaces;
 using Infrastructure.Business;
+using Infrastructure.Data.MongoRepository.Connection;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using System.Diagnostics.Metrics;
 
 namespace Infrastructure.Data.MongoRepository
 {
@@ -12,82 +14,68 @@ namespace Infrastructure.Data.MongoRepository
 		{
 		}
 
-		public async Task DeleteAsync(Employee entity)
+		public async Task<List<Employee>> GetAllAsync()
 		{
-			var deleteFilter = Builders<BsonDocument>.Filter.Eq("_id", entity.Id);
+			var filter = new BsonDocument();
+			var employees = new List<Employee>();
 
-			await _mongoCollection.DeleteOneAsync(deleteFilter);
+			using (var cursor = await _mongoCollection.FindAsync(filter))
+			{
+				var parse = new MongoParser();
+				while (await cursor.MoveNextAsync())
+				{
+					var user = cursor.Current;
+
+					foreach (var item in user)
+					{
+						employees.Add(new Employee()
+						{
+							Id = item.GetValue("_id").ToInt32(),
+							Username = item.GetValue("username").ToString(),
+							Password = item.GetValue("password").ToString(),
+							FirstName = item.GetValue("firstName").ToString(),
+							MiddleName = item.GetValue("middleName").ToString(),
+							LastName = item.GetValue("lastName").ToString(),
+							Positions = parse.ParsePositions(item.GetValue("posts"))
+						});
+					}
+				}
+			}
+
+			return employees;
 		}
 
-		public Task<List<Employee>> GetAll()
+		public async Task<Employee> GetById(int id)
 		{
-			throw new NotImplementedException();
+			var employee = new Employee();
+			var filter = new BsonDocument("_id", id);
+
+			using (var cursor = await _mongoCollection.FindAsync(filter))
+			{
+				if (await cursor.MoveNextAsync())
+				{
+					if (cursor.Current.Count() == 0)
+						return null;
+
+					var elements = cursor.Current.ToList();
+					var item = elements[0];
+
+					var parse = new MongoParser();
+
+					employee.Id = item.GetValue("_id").ToInt32();
+					employee.Username = item.GetValue("username").ToString();
+					employee.Password = item.GetValue("password").ToString();
+					employee.FirstName = item.GetValue("firstName").ToString();
+					employee.MiddleName = item.GetValue("middleName").ToString();
+					employee.LastName = item.GetValue("lastName").ToString();
+					employee.Positions = parse.ParsePositions(item.GetValue("posts"));
+				}
+			}
+
+			return employee;
 		}
 
-		//public async Task<List<Employee>> GetAllAsync()
-		//{
-		//	var filter = new BsonDocument();
-		//	var countries = new List<Employee>();
-
-		//	var pipeline = new BsonDocument
-		//	{
-		//		{"$unwind", "$posts"}
-		//	};
-
-		//	var pipeline2 = new BsonDocument
-		//	{
-		//		{ "$project", new BsonDocument
-		//			{
-		//			{ "_id", "$_id"},
-		//			{ "name", "$posts.name"},
-		//			{ "post_id", "$posts._id"}
-		//		} }
-		//	};
-		//	BsonDocument[] pipelines = new BsonDocument[] { pipeline, pipeline2 };
-		//	List<BsonDocument> results = await _mongoCollection.Aggregate<BsonDocument>(pipelines).ToListAsync();
-
-		//	List<Position> cities = new();
-
-		//	//foreach (BsonDocument item in results)
-		//	//{
-		//	//	cities.Add(new Employee()
-		//	//	{
-		//	//		Name = item.GetValue("CityName").ToString(),
-		//	//		Id = item.GetValue("CityId").ToInt32(),
-		//	//		CountryId = item.GetValue("_id").ToInt32()
-		//	//	});
-		//	//}
-
-		//	//return cities;
-
-		//	using (var cursor = await _mongoCollection.FindAsync(filter))
-		//	{
-		//		while (await cursor.MoveNextAsync())
-		//		{
-		//			var user = cursor.Current;
-
-		//			foreach (var item in user)
-		//			{
-					 
-		//				countries.Add(new Employee()
-		//				{
-		//					Id = item.GetValue("_id").ToInt32(),
-		//					Username = item.GetValue("Name").ToString(),
-		//					Password = item.GetValue("Name").ToString(),
-		//					FirstName = item.GetValue("Name").ToString(),
-		//					MiddleName = item.GetValue("Name").ToString(),
-		//					LastName = item.GetValue("Name").ToString(),
-		//					//Positions = item.GetElement("Name")
-		//				});
-		//			}
-		//		}
-		//	}
-
-		//	return countries;
-
-		//}
-
-		public async Task Insert(Employee entity)
+		public async Task InsertAsync(Employee entity)
 		{
 			var parser = new MongoParser();
 			entity.Id = parser.MaxIndex(_mongoCollection) + 1;
@@ -117,7 +105,7 @@ namespace Infrastructure.Data.MongoRepository
 			await _mongoCollection.InsertOneAsync(document);
 		}
 
-		public async Task Update(Employee entity)
+		public async Task UpdateAsync(Employee entity)
 		{
 			var filter = Builders<BsonDocument>.Filter.Eq("_id", entity.Id);
 
@@ -138,6 +126,13 @@ namespace Infrastructure.Data.MongoRepository
 
 			update = Builders<BsonDocument>.Update.Set("posts", entity.Positions);
 			await _mongoCollection.UpdateOneAsync(filter, update);
+		}
+
+		public async Task DeleteAsync(Employee entity)
+		{
+			var deleteFilter = Builders<BsonDocument>.Filter.Eq("_id", entity.Id);
+
+			await _mongoCollection.DeleteOneAsync(deleteFilter);
 		}
 	}
 }

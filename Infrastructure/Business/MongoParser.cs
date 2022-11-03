@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using ApplicationCore.Domain.Core.Models.Roles.Staff;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace Infrastructure.Business
@@ -13,6 +14,18 @@ namespace Infrastructure.Business
 			data.ForEach(item => maxValue = item.GetValue("_id").ToInt32());
 
 			return maxValue;
+		}
+
+		public List<Position> ParsePositions(BsonValue value)
+		{
+			var positions = new List<Position>();
+
+			foreach (var item in value.AsBsonArray)
+			{
+				var position = item;
+			}
+
+			return positions;
 		}
 	}
 }
