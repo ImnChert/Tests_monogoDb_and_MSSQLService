@@ -6,6 +6,5 @@ namespace ApplicationCore.Domain.Core.Models
 	{
 		[BsonId]
 		public int Id { get; set; }
-
 	}
 }
