@@ -5,7 +5,8 @@ using MongoDB.Driver;
 
 namespace Infrastructure.Data.MongoRepository.Connection
 {
-    internal abstract class MainMongoRepository<T> : IRepository<T> where T : EntityBase
+    internal abstract class MainMongoRepository<T> 
+        : IRepository<T> where T : EntityBase
     {
         protected readonly IMongoCollection<BsonDocument> _mongoCollection;
         private readonly string _nameDatabase = "Cinema";
