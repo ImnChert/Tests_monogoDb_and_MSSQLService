@@ -13,13 +13,6 @@ namespace ApplicationCore.Domain.Core.Models.Roles
         public DateTime DateOfBirthday { get; set; }
         public string Phone { get; set; }
 
-		public RegisteredUser(int id, string username, string password)
-        {
-            Id = id;
-            Username = username;
-            Password = password;
-        }
-
         public void Update(ISubject subject, Exception exception)
         {
              
