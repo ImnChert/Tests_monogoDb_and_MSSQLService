@@ -1,4 +1,5 @@
-﻿using ApplicationCore.Domain.Core.Models.Roles.Staff;
+﻿using ApplicationCore.Domain.Core.Models.Cinema.Films;
+using ApplicationCore.Domain.Core.Models.Roles.Staff;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -16,6 +17,7 @@ namespace Infrastructure.Business
 			return maxValue;
 		}
 
+		// TODO: сделать парсеры
 		public List<Position> ParsePositions(BsonValue value)
 		{
 			var positions = new List<Position>();
@@ -26,6 +28,21 @@ namespace Infrastructure.Business
 			}
 
 			return positions;
+		}
+
+		public List<Person> ParsePersons(BsonValue value)
+		{
+			return null;
+		}
+
+		public List<Review> ParseReviews(BsonValue value)
+		{
+			return null;
+		}
+
+		public List<Score> ParseScores(BsonValue value)
+		{
+			return null;
 		}
 	}
 }

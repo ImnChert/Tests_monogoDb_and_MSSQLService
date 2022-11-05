@@ -7,7 +7,7 @@ namespace ApplicationCore.Domain.Core.Models.Cinema
 	{
 		public Film Film { get; }
 		public DateTime StartTime { get; }
-		public DateTime FinishTime => StartTime + Film.Duration;
+		public DateTime FinishTime { get; set; } //=> //StartTime + Film.Duration; // TODO: сделать
 		public decimal Price => TimePrice(StartTime);
 		public List<Ticket> Tickets { get; set; } = new List<Ticket>();
 
