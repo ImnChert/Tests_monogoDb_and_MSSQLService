@@ -26,7 +26,7 @@ namespace Infrastructure.Data.MongoRepository.Implementations
 
                     foreach (BsonDocument item in user)
                     {
-                        employees.Add(InitializationFilm(item, parse));
+                        employees.Add(InitializationEmployee(item, parse));
                     }
                 }
             }
@@ -51,14 +51,14 @@ namespace Infrastructure.Data.MongoRepository.Implementations
 
                     var parse = new MongoParser();
 
-                    employee = InitializationFilm(item, parse);
+                    employee = InitializationEmployee(item, parse);
 				}
             }
 
             return employee;
         }
 
-		public Employee InitializationFilm(BsonDocument item, MongoParser parse) => new Employee()
+		public Employee InitializationEmployee(BsonDocument item, MongoParser parse) => new Employee()
 		{
 			Id = item.GetValue("_id").ToInt32(),
 			Username = item.GetValue("username").ToString(),

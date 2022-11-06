@@ -21,21 +21,54 @@ namespace Infrastructure.Data.MongoRepository.Implementations
         {
 			_categoryRepository = new CategoryRepository(connectionString);
 			_userRepository = new UserRepository(connectionString);
-			_scheduleRepository = new ScheduleRepository(connectionString);	
+			_sessionRepository = new SessionRepository(connectionString);	
 			_employeeRepository = new EmployeeRepository(connectionString);
 		}
 
-        public override Task<List<Ticket>> GetAllAsync()
+        public override async Task<List<Ticket>> GetAllAsync()
         {
-            throw new NotImplementedException();
-        }
+			var filter = new BsonDocument();
+			var tickets = new List<Ticket>();
 
-        public override Task<Ticket> GetById(int id)
+			using (IAsyncCursor<BsonDocument> cursor = await _mongoCollection.FindAsync(filter))
+			{
+				while (await cursor.MoveNextAsync())
+				{
+					IEnumerable<BsonDocument> user = cursor.Current;
+
+					foreach (BsonDocument item in user)
+					{
+						tickets.Add(InitializationTicket(item));
+					}
+				}
+			}
+
+			return tickets;
+		}
+
+        public override async Task<Ticket> GetById(int id)
         {
-            throw new NotImplementedException();
-        }
+			var ticket = new Ticket();
+			var filter = new BsonDocument("_id", id);
 
-		public Ticket InitializationFilm(BsonDocument item, MongoParser parse) => new Ticket()
+			using (IAsyncCursor<BsonDocument> cursor = await _mongoCollection.FindAsync(filter))
+			{
+				if (await cursor.MoveNextAsync())
+				{
+					if (cursor.Current.Count() == 0)
+						return null;
+
+					var elements = cursor.Current.ToList();
+					BsonDocument item = elements[0];
+
+					ticket = InitializationTicket(item);
+				}
+			}
+
+			return ticket;
+		}
+
+		public Ticket InitializationTicket(BsonDocument item) => new Ticket()
 		{
 			Id = item.GetValue("_id").ToInt32(),
 			Seat = new Seat()
@@ -50,10 +83,7 @@ namespace Infrastructure.Data.MongoRepository.Implementations
 			},
 			RegisteredUser = _userRepository.GetById(item.GetValue("registeredUser_id").ToInt32()).Result,
 			Cashier = _employeeRepository.GetById(item.GetValue("registeredUser_id").ToInt32()).Result,
-			Session = new Session()
-			{
-
-			}
+			Session = _sessionRepository.GetById(item.GetValue("session_id").ToInt32()).Result
 		};
 		
 		public override async Task<bool> InsertAsync(Ticket entity)
