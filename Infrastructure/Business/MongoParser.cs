@@ -1,4 +1,5 @@
-﻿using ApplicationCore.Domain.Core.Models.Cinema.Films;
+﻿using ApplicationCore.Domain.Core.Models.Cinema;
+using ApplicationCore.Domain.Core.Models.Cinema.Films;
 using ApplicationCore.Domain.Core.Models.Roles.Staff;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -41,6 +42,11 @@ namespace Infrastructure.Business
 		}
 
 		public List<Score> ParseScores(BsonValue value)
+		{
+			return null;
+		}
+
+		public List<Session> ParseSessions(BsonValue value)
 		{
 			return null;
 		}
