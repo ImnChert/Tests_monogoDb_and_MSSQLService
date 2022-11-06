@@ -1,8 +1,6 @@
 ﻿using ApplicationCore.Domain.Core.Models.Cinema;
 using ApplicationCore.Domain.Core.Models.Cinema.Films;
-using ApplicationCore.Domain.Core.Models.Roles.Staff;
 using ApplicationCore.Domain.Interfaces.Interfaces;
-using Infrastructure.Business;
 using Infrastructure.Data.MongoRepository.Connection;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -77,5 +75,7 @@ namespace Infrastructure.Data.MongoRepository.Implementations
 		{
 			throw new NotImplementedException();
 		}
+
+		// TODO: сделать SessionRepository
 	}
 }
