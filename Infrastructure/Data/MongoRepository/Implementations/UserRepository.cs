@@ -1,8 +1,11 @@
-﻿using ApplicationCore.Domain.Core.Models.Roles;
+﻿using ApplicationCore.Domain.Core.Models.Cinema.Films;
+using ApplicationCore.Domain.Core.Models.Roles;
+using ApplicationCore.Domain.Core.Models.Roles.Staff;
 using Infrastructure.Business;
 using Infrastructure.Data.MongoRepository.Connection;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using System.Numerics;
 
 namespace Infrastructure.Data.MongoRepository.Implementations
 {
@@ -13,11 +16,28 @@ namespace Infrastructure.Data.MongoRepository.Implementations
         {
         }
 
-        public override Task<List<RegisteredUser>> GetAllAsync()
+        public override async Task<List<RegisteredUser>> GetAllAsync()
         {
-            throw new NotImplementedException();
-        }
+            var filter = new BsonDocument();
+            var registeredUsers = new List<RegisteredUser>();
 
+            using (IAsyncCursor<BsonDocument> cursor = await _mongoCollection.FindAsync(filter))
+            {
+                var parse = new MongoParser();
+                while (await cursor.MoveNextAsync())
+                {
+                    IEnumerable<BsonDocument> user = cursor.Current;
+
+                    foreach (BsonDocument item in user)
+                    {
+                        registeredUsers.Add(InitializationUser(item));
+                    }
+                }
+            }
+
+            return registeredUsers;
+        }
+		
         public override async Task<RegisteredUser> GetById(int id)
         {
             var user = new RegisteredUser();
@@ -33,21 +53,26 @@ namespace Infrastructure.Data.MongoRepository.Implementations
                     var elements = cursor.Current.ToList();
                     BsonDocument item = elements[0];
 
-                    user.Id = item.GetValue("_id").ToInt32();
-                    user.Username = item.GetValue("username").ToString();
-                    user.Password = item.GetValue("password").ToString();
-                    user.FirstName = item.GetValue("firstName").ToString();
-                    user.LastName = item.GetValue("lastName").ToString();
-                    user.MiddleName = item.GetValue("middleName").ToString();
-                    user.DateOfBirthday = DateTime.Parse((string)item.GetValue("dateOfBirth"));
-                    user.Phone = item.GetValue("phone").ToString();
-                }
+                    user = InitializationUser(item);
+				}
             }
 
             return user;
         }
 
-        public override async Task<bool> InsertAsync(RegisteredUser entity)
+		public RegisteredUser InitializationUser(BsonDocument item) => new RegisteredUser()
+		{
+			Id = item.GetValue("_id").ToInt32(),
+			Username = item.GetValue("username").ToString(),
+			Password = item.GetValue("password").ToString(),
+			FirstName = item.GetValue("firstName").ToString(),
+			LastName = item.GetValue("lastName").ToString(),
+			MiddleName = item.GetValue("middleName").ToString(),
+			DateOfBirthday = DateTime.Parse((string)item.GetValue("dateOfBirth")),
+			Phone = item.GetValue("phone").ToString()
+		};
+
+		public override async Task<bool> InsertAsync(RegisteredUser entity)
         {
             var parser = new MongoParser();
             entity.Id = parser.MaxIndex(_mongoCollection) + 1;
