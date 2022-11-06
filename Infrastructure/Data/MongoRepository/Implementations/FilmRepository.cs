@@ -77,7 +77,6 @@ namespace Infrastructure.Data.MongoRepository.Implementations
 			LicensExpirationDate = DateTime.Parse((string)item.GetValue("licensExpirationDate"))
 		};
 
-
 		public override async Task<bool> InsertAsync(Film entity)
         {
 			var parser = new MongoParser();

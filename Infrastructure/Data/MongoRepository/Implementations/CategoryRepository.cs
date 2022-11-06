@@ -1,4 +1,5 @@
 ﻿using ApplicationCore.Domain.Core.Models.Cinema;
+using ApplicationCore.Domain.Core.Models.Roles.Staff;
 using Infrastructure.Business;
 using Infrastructure.Data.MongoRepository.Connection;
 using MongoDB.Bson;
@@ -26,12 +27,7 @@ namespace Infrastructure.Data.MongoRepository.Implementations
 
                     foreach (BsonDocument item in user)
                     {
-                        categories.Add(new Category()
-                        {
-                            Id = item.GetValue("_id").ToInt32(),
-                            Name = item.GetValue("username").ToString(),
-                            Price = item.GetValue("password").ToDecimal()
-                        });
+                        categories.Add(InitializationFilm(item));
                     }
                 }
             }
@@ -56,16 +52,21 @@ namespace Infrastructure.Data.MongoRepository.Implementations
 
                     var parse = new MongoParser();
 
-                    category.Id = item.GetValue("_id").ToInt32();
-                    category.Name = item.GetValue("name").ToString();
-                    category.Price = item.GetValue("price").ToDecimal();
-                }
+                    category = InitializationFilm(item);
+				}
             }
 
             return category;
         }
 
-        public override async Task<bool> InsertAsync(Category entity)
+		public Category InitializationFilm(BsonDocument item) => new Category()
+		{
+			Id = item.GetValue("_id").ToInt32(),
+			Name = item.GetValue("username").ToString(),
+			Price = item.GetValue("password").ToDecimal()
+		};
+
+		public override async Task<bool> InsertAsync(Category entity)
         {
             var parser = new MongoParser();
             entity.Id = parser.MaxIndex(_mongoCollection) + 1;
@@ -82,7 +83,7 @@ namespace Infrastructure.Data.MongoRepository.Implementations
             return true;
         }
 
-        public override async Task<bool> UpdateAsync(Category entity)
+		public override async Task<bool> UpdateAsync(Category entity)
         {
             var filter = Builders<BsonDocument>.Filter.Eq("_id", entity.Id);
 

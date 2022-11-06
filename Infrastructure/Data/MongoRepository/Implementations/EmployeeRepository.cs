@@ -26,16 +26,7 @@ namespace Infrastructure.Data.MongoRepository.Implementations
 
                     foreach (BsonDocument item in user)
                     {
-                        employees.Add(new Employee()
-                        {
-                            Id = item.GetValue("_id").ToInt32(),
-                            Username = item.GetValue("username").ToString(),
-                            Password = item.GetValue("password").ToString(),
-                            FirstName = item.GetValue("firstName").ToString(),
-                            MiddleName = item.GetValue("middleName").ToString(),
-                            LastName = item.GetValue("lastName").ToString(),
-                            Positions = parse.ParsePositions(item.GetValue("posts"))
-                        });
+                        employees.Add(InitializationFilm(item, parse));
                     }
                 }
             }
@@ -60,20 +51,25 @@ namespace Infrastructure.Data.MongoRepository.Implementations
 
                     var parse = new MongoParser();
 
-                    employee.Id = item.GetValue("_id").ToInt32();
-                    employee.Username = item.GetValue("username").ToString();
-                    employee.Password = item.GetValue("password").ToString();
-                    employee.FirstName = item.GetValue("firstName").ToString();
-                    employee.MiddleName = item.GetValue("middleName").ToString();
-                    employee.LastName = item.GetValue("lastName").ToString();
-                    employee.Positions = parse.ParsePositions(item.GetValue("posts"));
-                }
+                    employee = InitializationFilm(item, parse);
+				}
             }
 
             return employee;
         }
 
-        public override async Task<bool> InsertAsync(Employee entity)
+		public Employee InitializationFilm(BsonDocument item, MongoParser parse) => new Employee()
+		{
+			Id = item.GetValue("_id").ToInt32(),
+			Username = item.GetValue("username").ToString(),
+			Password = item.GetValue("password").ToString(),
+			FirstName = item.GetValue("firstName").ToString(),
+			MiddleName = item.GetValue("middleName").ToString(),
+			LastName = item.GetValue("lastName").ToString(),
+			Positions = parse.ParsePositions(item.GetValue("posts"))
+		};
+
+		public override async Task<bool> InsertAsync(Employee entity)
         {
             var parser = new MongoParser();
             entity.Id = parser.MaxIndex(_mongoCollection) + 1;
