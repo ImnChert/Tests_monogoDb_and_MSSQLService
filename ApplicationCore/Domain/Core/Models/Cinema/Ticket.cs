@@ -1,6 +1,5 @@
 ﻿using ApplicationCore.Domain.Core.Models.Roles;
 using ApplicationCore.Domain.Core.Models.Roles.Staff;
-using ApplicationCore.Domain.Core.Models.Roles.Staff.Positions;
 
 namespace ApplicationCore.Domain.Core.Models.Cinema
 {

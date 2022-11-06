@@ -5,6 +5,6 @@ namespace ApplicationCore.Domain.Core.Models.Cinema.Films
 	public class Review : EntityBase
 	{
 		public RegisteredUser RegisteredUser { get; set; }
-		public string Dicriprion { get; set; }
+		public string Description { get; set; }
 	}
 }
