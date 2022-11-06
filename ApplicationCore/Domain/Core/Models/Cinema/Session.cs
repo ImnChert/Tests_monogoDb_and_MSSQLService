@@ -5,21 +5,11 @@ namespace ApplicationCore.Domain.Core.Models.Cinema
 {
 	public class Session : EntityBase, ISubject
 	{
-		public Film Film { get; }
-		public DateTime StartTime { get; }
+		public Film Film { get; set; }
+		public DateTime StartTime { get; set; }
 		public DateTime FinishTime { get; set; } //=> //StartTime + Film.Duration; // TODO: сделать
 		public decimal Price => TimePrice(StartTime);
 		public List<Ticket> Tickets { get; set; } = new List<Ticket>();
-
-		public Session(Film film, DateTime startTime)
-		{
-			Film = film;
-			StartTime = startTime;
-		}
-		public Session(Film film, DateTime startTime, List<Ticket> tickets) : this(film, startTime)
-		{
-			Tickets = tickets;
-		}
 
 		private decimal TimePrice(DateTime time) // TODO: simplefactory?
 		{

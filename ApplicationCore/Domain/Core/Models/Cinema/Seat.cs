@@ -4,6 +4,6 @@
 	{
 		public int NumberRow { get; set; }
 		public int NumberColumn { get; set; }
-		public Category Category { get; }
+		public Category Category { get; set; }
 	}
 }
