@@ -16,56 +16,16 @@ namespace Infrastructure.Data.MSSQLServerRepository.Implementations
         {
         }
 
-        protected override async Task<List<Category>> GetAllSqlCommand(SqlCommand sqlCommand, Category entity)
-        {
-			List<Category> categories = new List<Category>();
-
-			using (SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync())
+		protected override Category GetReader(SqlDataReader sqlDataReader)
+			=> new Category()
 			{
-				while (await sqlDataReader.ReadAsync())
-				{
-					categories.Add(new Category()
-					{
-						Id = (int)sqlDataReader["Id"],
-						Name = sqlDataReader["NameCategory"] as string ?? "Undefined",
-						Price = (decimal)sqlDataReader["Price"]
-					});
-				}
-
-				if (categories.Count > 0)
-					return categories;
-				else
-					return null;
-			}
-		}
-
-        protected override async Task<Category> GetByIdSqlCommand(SqlCommand sqlCommand, int id)
-        {
-			SqlParameter username = new SqlParameter
-			{
-				ParameterName = "@id",
-				Value = id,
-				SqlDbType = SqlDbType.Int,
-				Direction = ParameterDirection.Input
+				Id = (int)sqlDataReader["Id"],
+				Name = sqlDataReader["Name"] as string ?? "Undefined",
+				Price = (decimal)sqlDataReader["Price"]
 			};
+		
 
-			sqlCommand.Parameters.Add(username);
-
-			using (SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync())
-			{
-				if (await sqlDataReader.ReadAsync())
-					return new Category()
-					{
-						Id = (int)sqlDataReader["Id"],
-						Name = sqlDataReader["Name"] as string ?? "Undefined",
-						Price = (decimal)sqlDataReader["Price"]
-					};
-				else
-					return null;
-			}
-		}
-
-        protected override async Task<bool> InsertSqlCommand(SqlCommand sqlCommand, Category entity)
+		protected override async Task<bool> InsertSqlCommand(SqlCommand sqlCommand, Category entity)
         {
 			sqlCommand.Parameters.Add("@Id", SqlDbType.Int).Value = entity.Id;
 			UpdateCommand(sqlCommand, entity);

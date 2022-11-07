@@ -104,7 +104,7 @@ namespace Infrastructure.Data.MongoRepository.Implementations
 				{
 					{"username", item.RegisteredUser.Username},
 					{"registeredUser_id", item.RegisteredUser.Id},
-					{"discription", item.Dicriprion}
+					{"discription", item.Description}
 				});
 			});
 

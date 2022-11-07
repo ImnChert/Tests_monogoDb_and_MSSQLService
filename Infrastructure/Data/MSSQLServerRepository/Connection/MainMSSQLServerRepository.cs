@@ -2,6 +2,7 @@
 using ApplicationCore.Domain.Interfaces.Interfaces;
 using System.Data.SqlClient;
 using System.Data;
+using ApplicationCore.Domain.Core.Models.Cinema;
 
 namespace Infrastructure.Data.MSSQLServerRepository.Connection
 {
@@ -55,9 +56,46 @@ namespace Infrastructure.Data.MSSQLServerRepository.Connection
 
 		protected abstract Task<bool> UpdateSqlCommand(SqlCommand sqlCommand, T entity);
 
-		protected abstract Task<List<T>> GetAllSqlCommand(SqlCommand sqlCommand, T entity);
+		protected abstract T GetReader(SqlDataReader sqlDataReader);
 
-		protected abstract Task<T> GetByIdSqlCommand(SqlCommand sqlCommand, int id);
+		protected async Task<List<T>> GetAllSqlCommand(SqlCommand sqlCommand, T entity)
+		{
+			List<T> categories = new List<T>();
+
+			using (SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync())
+			{
+				while (await sqlDataReader.ReadAsync())
+				{
+					categories.Add(GetReader(sqlDataReader));
+				}
+
+				if (categories.Count > 0)
+					return categories;
+				else
+					return null;
+			}
+		}
+
+		protected async Task<T> GetByIdSqlCommand(SqlCommand sqlCommand, int id)
+		{
+			SqlParameter username = new SqlParameter
+			{
+				ParameterName = "@id",
+				Value = id,
+				SqlDbType = SqlDbType.Int,
+				Direction = ParameterDirection.Input
+			};
+
+			sqlCommand.Parameters.Add(username);
+
+			using (SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync())
+			{
+				if (await sqlDataReader.ReadAsync())
+					return GetReader(sqlDataReader);
+				else
+					return null;
+			}
+		}
 
 		public async Task<bool> DeleteAsync(T entity)
 			=> await Connection<bool, T>(entity, DeleteSqlCommand, _deleteQuery);
