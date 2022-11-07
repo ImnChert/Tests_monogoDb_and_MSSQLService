@@ -1,6 +1,7 @@
 ﻿using ApplicationCore.Domain.Core.Models.Cinema;
 using ApplicationCore.Domain.Core.Models.Cinema.Films;
 using ApplicationCore.Domain.Interfaces.Interfaces;
+using Infrastructure.Business;
 using Infrastructure.Data.MongoRepository.Connection;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -66,16 +67,47 @@ namespace Infrastructure.Data.MongoRepository.Implementations
 			StartTime = DateTime.Parse((string)item.GetValue("start")),
 		};
 
-		public override Task<bool> InsertAsync(Session entity)
+		public override async Task<bool> InsertAsync(Session entity)
 		{
-			throw new NotImplementedException();
+			var parser = new MongoParser();
+			entity.Id = parser.MaxIndex(_mongoCollection) + 1;
+
+			var document = new BsonDocument
+			{
+				{"_id", entity.Id},
+				{"nameFilm", entity.Film.Name},
+				{"duration", entity.Film.Duration},
+				{"basePrice", entity.Film.BasePrice},
+				{"film_id", entity.Film.Id},
+				{"start", entity.StartTime}
+
+			};
+
+			await _mongoCollection.InsertOneAsync(document);
+
+			return true;
 		}
 
-		public override Task<bool> UpdateAsync(Session entity)
+		public override async Task<bool> UpdateAsync(Session entity)
 		{
-			throw new NotImplementedException();
-		}
+			var filter = Builders<BsonDocument>.Filter.Eq("_id", entity.Id);
 
-		// TODO: сделать SessionRepository
+			var update = Builders<BsonDocument>.Update.Set("nameFilm", entity.Film.Name);
+			await _mongoCollection.UpdateOneAsync(filter, update);
+
+			update = Builders<BsonDocument>.Update.Set("duration", entity.Film.Duration);
+			await _mongoCollection.UpdateOneAsync(filter, update);
+
+			update = Builders<BsonDocument>.Update.Set("basePrice", entity.Film.BasePrice);
+			await _mongoCollection.UpdateOneAsync(filter, update);
+
+			update = Builders<BsonDocument>.Update.Set("film_id", entity.Film.Id);
+			await _mongoCollection.UpdateOneAsync(filter, update);
+
+			update = Builders<BsonDocument>.Update.Set("start", entity.StartTime);
+			await _mongoCollection.UpdateOneAsync(filter, update);
+
+			return true;
+		}
 	}
 }
