@@ -52,13 +52,29 @@ namespace Infrastructure.Data.MSSQLServerRepository.Connection
 			return true;
 		}
 
-		protected abstract Task<bool> InsertSqlCommand(SqlCommand sqlCommand, T entity);
+		private async Task<bool> InsertSqlCommand(SqlCommand sqlCommand, T entity)
+		{
+			InsertCommand(sqlCommand, entity);
 
-		protected abstract Task<bool> UpdateSqlCommand(SqlCommand sqlCommand, T entity);
+			await sqlCommand.ExecuteNonQueryAsync();
 
+			return true;
+		}
+
+		private async Task<bool> UpdateSqlCommand(SqlCommand sqlCommand, T entity)
+		{
+			sqlCommand.Parameters.Add("@Id", SqlDbType.Int).Value = entity.Id;
+			InsertCommand(sqlCommand, entity);
+
+			await sqlCommand.ExecuteNonQueryAsync();
+
+			return true;
+		}
+
+		protected abstract void InsertCommand(SqlCommand sqlCommand, T entity);
 		protected abstract T GetReader(SqlDataReader sqlDataReader);
 
-		protected async Task<List<T>> GetAllSqlCommand(SqlCommand sqlCommand, T entity)
+		private async Task<List<T>> GetAllSqlCommand(SqlCommand sqlCommand, T entity)
 		{
 			List<T> categories = new List<T>();
 
@@ -76,7 +92,7 @@ namespace Infrastructure.Data.MSSQLServerRepository.Connection
 			}
 		}
 
-		protected async Task<T> GetByIdSqlCommand(SqlCommand sqlCommand, int id)
+		private async Task<T> GetByIdSqlCommand(SqlCommand sqlCommand, int id)
 		{
 			SqlParameter username = new SqlParameter
 			{
@@ -104,7 +120,7 @@ namespace Infrastructure.Data.MSSQLServerRepository.Connection
 			=> await Connection<bool, T>(entity, InsertSqlCommand, _insertQuery);
 
 		public async Task<bool> UpdateAsync(T entity)
-			=> await Connection<bool, T>(entity, InsertSqlCommand, _updateQuery);
+			=> await Connection<bool, T>(entity, UpdateSqlCommand, _updateQuery);
 
 		public async Task<List<T>> GetAllAsync()
 			=> await Connection<List<T>, T>(null, GetAllSqlCommand, _getAllQuery);

@@ -6,17 +6,22 @@ namespace Infrastructure.Data.MSSQLServerRepository.Implementations
 {
     internal class EmployeeRepository : MainMSSQLServerRepository<Employee>
     {
+        public EmployeeRepository(string connectionString, string tableName, string insertQuery, string updateQuery, string getAllQuery, string getByIdQuery) 
+            : base(connectionString, 
+                  tableName, 
+                  insertQuery, 
+                  updateQuery, 
+                  getAllQuery, 
+                  getByIdQuery)
+        {
+        }
+
         protected override Employee GetReader(SqlDataReader sqlDataReader)
         {
             throw new NotImplementedException();
         }
 
-        protected override Task<bool> InsertSqlCommand(SqlCommand sqlCommand, Employee entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override Task<bool> UpdateSqlCommand(SqlCommand sqlCommand, Employee entity)
+        protected override void InsertCommand(SqlCommand sqlCommand, Employee entity)
         {
             throw new NotImplementedException();
         }

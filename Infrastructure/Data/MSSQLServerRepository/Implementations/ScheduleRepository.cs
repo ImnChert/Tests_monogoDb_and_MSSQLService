@@ -6,17 +6,22 @@ namespace Infrastructure.Data.MSSQLServerRepository.Implementations
 {
     internal class ScheduleRepository : MainMSSQLServerRepository<Schedule>
     {
+        public ScheduleRepository(string connectionString, string tableName, string insertQuery, string updateQuery, string getAllQuery, string getByIdQuery) 
+            : base(connectionString, 
+                  tableName, 
+                  insertQuery, 
+                  updateQuery, 
+                  getAllQuery, 
+                  getByIdQuery)
+        {
+        }
+
         protected override Schedule GetReader(SqlDataReader sqlDataReader)
         {
             throw new NotImplementedException();
         }
 
-        protected override Task<bool> InsertSqlCommand(SqlCommand sqlCommand, Schedule entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override Task<bool> UpdateSqlCommand(SqlCommand sqlCommand, Schedule entity)
+        protected override void InsertCommand(SqlCommand sqlCommand, Schedule entity)
         {
             throw new NotImplementedException();
         }

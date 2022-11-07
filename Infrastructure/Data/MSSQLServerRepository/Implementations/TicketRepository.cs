@@ -6,17 +6,22 @@ namespace Infrastructure.Data.MSSQLServerRepository.Implementations
 {
     internal class TicketRepository : MainMSSQLServerRepository<Ticket>
     {
+        public TicketRepository(string connectionString, string tableName, string insertQuery, string updateQuery, string getAllQuery, string getByIdQuery) 
+            : base(connectionString, 
+                  tableName, 
+                  insertQuery, 
+                  updateQuery, 
+                  getAllQuery, 
+                  getByIdQuery)
+        {
+        }
+
         protected override Ticket GetReader(SqlDataReader sqlDataReader)
         {
             throw new NotImplementedException();
         }
 
-        protected override Task<bool> InsertSqlCommand(SqlCommand sqlCommand, Ticket entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override Task<bool> UpdateSqlCommand(SqlCommand sqlCommand, Ticket entity)
+        protected override void InsertCommand(SqlCommand sqlCommand, Ticket entity)
         {
             throw new NotImplementedException();
         }

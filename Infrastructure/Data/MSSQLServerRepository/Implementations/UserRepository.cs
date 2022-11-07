@@ -6,17 +6,22 @@ namespace Infrastructure.Data.MSSQLServerRepository.Implementations
 {
     internal class UserRepository : MainMSSQLServerRepository<RegisteredUser>
     {
+        public UserRepository(string connectionString, string tableName, string insertQuery, string updateQuery, string getAllQuery, string getByIdQuery) 
+            : base(connectionString, 
+                  tableName, 
+                  insertQuery, 
+                  updateQuery, 
+                  getAllQuery, 
+                  getByIdQuery)
+        {
+        }
+
         protected override RegisteredUser GetReader(SqlDataReader sqlDataReader)
         {
             throw new NotImplementedException();
         }
 
-        protected override Task<bool> InsertSqlCommand(SqlCommand sqlCommand, RegisteredUser entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override Task<bool> UpdateSqlCommand(SqlCommand sqlCommand, RegisteredUser entity)
+        protected override void InsertCommand(SqlCommand sqlCommand, RegisteredUser entity)
         {
             throw new NotImplementedException();
         }

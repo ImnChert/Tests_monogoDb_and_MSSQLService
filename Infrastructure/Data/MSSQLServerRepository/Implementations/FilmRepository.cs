@@ -6,17 +6,22 @@ namespace Infrastructure.Data.MSSQLServerRepository.Implementations
 {
     internal class FilmRepository : MainMSSQLServerRepository<Film>
     {
+        public FilmRepository(string connectionString, string tableName, string insertQuery, string updateQuery, string getAllQuery, string getByIdQuery) 
+            : base(connectionString, 
+                  tableName, 
+                  insertQuery, 
+                  updateQuery, 
+                  getAllQuery, 
+                  getByIdQuery)
+        {
+        }
+
         protected override Film GetReader(SqlDataReader sqlDataReader)
         {
             throw new NotImplementedException();
         }
 
-        protected override Task<bool> InsertSqlCommand(SqlCommand sqlCommand, Film entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override Task<bool> UpdateSqlCommand(SqlCommand sqlCommand, Film entity)
+        protected override void InsertCommand(SqlCommand sqlCommand, Film entity)
         {
             throw new NotImplementedException();
         }
