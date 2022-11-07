@@ -2,7 +2,6 @@
 using ApplicationCore.Domain.Interfaces.Interfaces;
 using System.Data.SqlClient;
 using System.Data;
-using ApplicationCore.Domain.Core.Models.Cinema;
 
 namespace Infrastructure.Data.MSSQLServerRepository.Connection
 {
@@ -33,11 +32,11 @@ namespace Infrastructure.Data.MSSQLServerRepository.Connection
 
 		private async Task<F> Connection<F, S>(S entity, SqlCommandDelegate<F, S> @delegate, string query)
 		{
-			using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
+			using (var sqlConnection = new SqlConnection(_connectionString))
 			{
 				await sqlConnection.OpenAsync();
 
-				using (SqlCommand sqlCommand = new SqlCommand(query, sqlConnection))
+				using (var sqlCommand = new SqlCommand(query, sqlConnection))
 				{
 					return await @delegate(sqlCommand, entity);
 				}
@@ -76,7 +75,7 @@ namespace Infrastructure.Data.MSSQLServerRepository.Connection
 
 		private async Task<List<T>> GetAllSqlCommand(SqlCommand sqlCommand, T entity)
 		{
-			List<T> categories = new List<T>();
+			var categories = new List<T>();
 
 			using (SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync())
 			{
@@ -94,7 +93,7 @@ namespace Infrastructure.Data.MSSQLServerRepository.Connection
 
 		private async Task<T> GetByIdSqlCommand(SqlCommand sqlCommand, int id)
 		{
-			SqlParameter username = new SqlParameter
+			var username = new SqlParameter
 			{
 				ParameterName = "@id",
 				Value = id,
