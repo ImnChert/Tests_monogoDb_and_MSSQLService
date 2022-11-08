@@ -27,8 +27,8 @@ namespace Infrastructure.Data.MSSQLServerRepository.Implementations
 
 		protected override void InsertCommand(SqlCommand sqlCommand, Category entity)
         {
-			sqlCommand.Parameters.Add("@NameCategory", SqlDbType.DateTime).Value = entity.Name;
-			sqlCommand.Parameters.Add("@Price", SqlDbType.NVarChar).Value = entity.Price;
+			sqlCommand.Parameters.Add("@NameCategory", SqlDbType.NVarChar).Value = entity.Name;
+			sqlCommand.Parameters.Add("@Price", SqlDbType.Decimal).Value = entity.Price;
 		}
 	}
 }

@@ -71,6 +71,7 @@ namespace Infrastructure.Data.MSSQLServerRepository.Connection
 		}
 
 		protected abstract void InsertCommand(SqlCommand sqlCommand, T entity);
+
 		protected abstract T GetReader(SqlDataReader sqlDataReader);
 
 		private async Task<List<T>> GetAllSqlCommand(SqlCommand sqlCommand, T entity)
