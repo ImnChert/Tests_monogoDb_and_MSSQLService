@@ -6,9 +6,8 @@ using System.Data;
 namespace Infrastructure.Data.MSSQLServerRepository.Connection
 {
 	internal abstract class MainMSSQLServerRepository<T>
-		 : IRepository<T> where T : EntityBase
+		 : MainMSSQLServer, IRepository<T> where T : EntityBase
 	{
-		protected readonly string _connectionString;
 		protected readonly string _tableName;
 		protected readonly string _deleteQuery;
 		protected readonly string _insertQuery;
@@ -16,31 +15,16 @@ namespace Infrastructure.Data.MSSQLServerRepository.Connection
 		protected readonly string _getAllQuery;
 		protected readonly string _getByIdQuery;
 
-		delegate Task<G> SqlCommandDelegate<G, S>(SqlCommand sqlCommand, S entity);
-
-		public MainMSSQLServerRepository(string connectionString, string tableName, 
+		public MainMSSQLServerRepository(string connectionString, string tableName,
 			string insertQuery, string updateQuery, string getAllQuery, string getByIdQuery)
+			: base(connectionString)
 		{
-			_connectionString = connectionString;
 			_tableName = tableName;
 			_deleteQuery = $@"DELETE FROM {_tableName} WHERE Id = @id";
 			_insertQuery = insertQuery;
 			_updateQuery = updateQuery;
 			_getAllQuery = getAllQuery;
 			_getByIdQuery = getByIdQuery;
-		}
-
-		private async Task<F> Connection<F, S>(S entity, SqlCommandDelegate<F, S> @delegate, string query)
-		{
-			using (var sqlConnection = new SqlConnection(_connectionString))
-			{
-				await sqlConnection.OpenAsync();
-
-				using (var sqlCommand = new SqlCommand(query, sqlConnection))
-				{
-					return await @delegate(sqlCommand, entity);
-				}
-			}
 		}
 
 		private async Task<bool> DeleteSqlCommand(SqlCommand sqlCommand, T entity)
