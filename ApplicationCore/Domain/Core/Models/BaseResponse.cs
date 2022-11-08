@@ -7,5 +7,6 @@ namespace ApplicationCore.Domain.Core.Models
 	{
 		public T Data { get; set; }
 		public StatusCodeResult StatusCode { get; set; }
+		public string Description { get; set; }
 	}
 }
