@@ -2,16 +2,16 @@
 using Infrastructure.Data.MSSQLServerRepository.Connection;
 using System.Data.SqlClient;
 
-namespace Infrastructure.Data.MSSQLServerRepository.Implementations
+namespace Infrastructure.Data.MSSQLServerRepository.Implementations.MajorRepository
 {
     internal class TicketRepository : MainMSSQLServerRepository<Ticket>
     {
-        public TicketRepository(string connectionString, string tableName, string insertQuery, string updateQuery, string getAllQuery, string getByIdQuery) 
-            : base(connectionString, 
-                  tableName, 
-                  insertQuery, 
-                  updateQuery, 
-                  getAllQuery, 
+        public TicketRepository(string connectionString, string tableName, string insertQuery, string updateQuery, string getAllQuery, string getByIdQuery)
+            : base(connectionString,
+                  tableName,
+                  insertQuery,
+                  updateQuery,
+                  getAllQuery,
                   getByIdQuery)
         {
         }

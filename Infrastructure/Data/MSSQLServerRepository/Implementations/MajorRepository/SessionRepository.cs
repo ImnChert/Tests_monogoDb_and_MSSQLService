@@ -2,16 +2,16 @@
 using Infrastructure.Data.MSSQLServerRepository.Connection;
 using System.Data.SqlClient;
 
-namespace Infrastructure.Data.MSSQLServerRepository.Implementations
+namespace Infrastructure.Data.MSSQLServerRepository.Implementations.MajorRepository
 {
     internal class SessionRepository : MainMSSQLServerRepository<Session>
     {
-        public SessionRepository(string connectionString, string tableName, string insertQuery, string updateQuery, string getAllQuery, string getByIdQuery) 
-            : base(connectionString, 
-                  tableName, 
-                  insertQuery, 
-                  updateQuery, 
-                  getAllQuery, 
+        public SessionRepository(string connectionString, string tableName, string insertQuery, string updateQuery, string getAllQuery, string getByIdQuery)
+            : base(connectionString,
+                  tableName,
+                  insertQuery,
+                  updateQuery,
+                  getAllQuery,
                   getByIdQuery)
         {
         }
