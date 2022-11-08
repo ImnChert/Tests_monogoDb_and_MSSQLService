@@ -1,8 +1,10 @@
-﻿namespace ApplicationCore.Domain.Interfaces
+﻿using ApplicationCore.Domain.Core.Models;
+
+namespace ApplicationCore.Domain.Interfaces
 {
-	public interface IManyToManyRepository<T>
+	public interface IManyToManyRepository<T> where T : EntityBase
 	{
-		public T GetManyToMany(int id);
-		public void SetManyToMany(int id, List<T> values);
+		public Task<List<T>> GetManyToManyAsync(int id);
+		public Task SetManyToMany(int id, List<T> values);
 	}
 }
