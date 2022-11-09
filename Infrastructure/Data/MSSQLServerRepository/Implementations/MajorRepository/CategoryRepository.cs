@@ -5,7 +5,7 @@ using System.Data.SqlClient;
 
 namespace Infrastructure.Data.MSSQLServerRepository.Implementations.MajorRepository
 {
-    internal class CategoryRepository : MainMSSQLServerRepository<Category>
+    public class CategoryRepository : MainMSSQLServerRepository<Category>
     {
         public CategoryRepository(string connectionString)
             : base(connectionString,

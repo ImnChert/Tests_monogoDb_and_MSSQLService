@@ -6,7 +6,7 @@ using SharpCompress.Common;
 
 namespace Infrastructure.Data.MSSQLServerRepository.Connection
 {
-	internal abstract class MainMSSQLServerManyToManyRepository<T>
+	public abstract class MainMSSQLServerManyToManyRepository<T>
 		: MainMSSQLServer, IManyToManyRepository<T> where T : EntityBase
 	{
 		protected string _getManyToManyQuery;

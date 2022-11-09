@@ -6,11 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ApplicationCore.Services.Implementations.Repositories
 {
-	internal class CategoryRepository : IRepositoryBaseResponse<Category>
+	public class CategoryService : IRepositoryBaseResponse<Category>
 	{
 		private IRepository<Category> _categoryRepository;
 
-		public CategoryRepository(IRepository<Category> categoryRepository)
+		public CategoryService(IRepository<Category> categoryRepository)
 		{
 			_categoryRepository = categoryRepository;
 		}

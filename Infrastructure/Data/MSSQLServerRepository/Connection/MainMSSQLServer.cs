@@ -2,7 +2,7 @@
 
 namespace Infrastructure.Data.MSSQLServerRepository.Connection
 {
-	internal class MainMSSQLServer
+	public class MainMSSQLServer
 	{
 		protected readonly string _connectionString;
 

@@ -5,7 +5,7 @@ using System.Data;
 
 namespace Infrastructure.Data.MSSQLServerRepository.Connection
 {
-	internal abstract class MainMSSQLServerRepository<T>
+	public abstract class MainMSSQLServerRepository<T>
 		 : MainMSSQLServer, IRepository<T> where T : EntityBase
 	{
 		protected readonly string _tableName;
