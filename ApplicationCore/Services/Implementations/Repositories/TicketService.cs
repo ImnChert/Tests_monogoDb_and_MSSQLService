@@ -3,9 +3,10 @@ using ApplicationCore.Domain.Interfaces.Interfaces;
 
 namespace ApplicationCore.Services.Implementations.Repositories
 {
-	public class CategoryService : MainRepository<Category>
+	internal class TicketService : MainRepository<Ticket>
 	{
-		public CategoryService(IRepository<Category> repository)
-			: base(repository) { }
+		public TicketService(IRepository<Ticket> repository) : base(repository)
+		{
+		}
 	}
 }

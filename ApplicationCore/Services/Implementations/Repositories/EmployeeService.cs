@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ApplicationCore.Domain.Core.Models.Roles.Staff;
+using ApplicationCore.Domain.Interfaces.Interfaces;
 
 namespace ApplicationCore.Services.Implementations.Repositories
 {
-	internal class EmployeeService
+	internal class EmployeeService : MainRepository<Employee>
 	{
+		public EmployeeService(IRepository<Employee> repository)
+			: base(repository) { }
 	}
 }

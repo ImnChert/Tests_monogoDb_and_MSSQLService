@@ -1,5 +1,4 @@
 ﻿using ApplicationCore.Domain.Core.Models;
-using ApplicationCore.Domain.Core.Models.Cinema;
 using ApplicationCore.Domain.Interfaces.Interfaces;
 using ApplicationCore.Services.Interfaces.Repositories;
 using Microsoft.AspNetCore.Mvc;
