@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ApplicationCore.Domain.Core.Models.Cinema;
+using ApplicationCore.Domain.Interfaces.Interfaces;
 
 namespace ApplicationCore.Services.Implementations.Repositories
 {
-	internal class SessionService
+	internal class SessionService : MainRepository<Session>
 	{
+		public SessionService(IRepository<Session> repository) : base(repository)
+		{
+		}
 	}
 }
