@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ApplicationCore.Services.Implementations.Repositories
 {
-	internal interface EmployeeService
+	internal class EmployeeService
 	{
 	}
 }

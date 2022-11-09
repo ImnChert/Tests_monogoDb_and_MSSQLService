@@ -6,57 +6,57 @@ using MongoDB.Driver;
 
 namespace Infrastructure.Data.MongoRepository.Implementations
 {
-    internal class CategoryRepository : MainMongoRepository<Category>
-    {
-        public CategoryRepository(string connectionString)
-            : base(connectionString, "categores")
-        {
-        }
+	internal class CategoryRepository : MainMongoRepository<Category>
+	{
+		public CategoryRepository(string connectionString)
+			: base(connectionString, "categores")
+		{
+		}
 
-        public override async Task<List<Category>> GetAllAsync()
-        {
-            var filter = new BsonDocument();
-            var categories = new List<Category>();
+		public override async Task<List<Category>> GetAllAsync()
+		{
+			var filter = new BsonDocument();
+			var categories = new List<Category>();
 
-            using (IAsyncCursor<BsonDocument> cursor = await _mongoCollection.FindAsync(filter))
-            {
-                while (await cursor.MoveNextAsync())
-                {
-                    IEnumerable<BsonDocument> user = cursor.Current;
+			using (IAsyncCursor<BsonDocument> cursor = await _mongoCollection.FindAsync(filter))
+			{
+				while (await cursor.MoveNextAsync())
+				{
+					IEnumerable<BsonDocument> user = cursor.Current;
 
-                    foreach (BsonDocument item in user)
-                    {
-                        categories.Add(InitializationFilm(item));
-                    }
-                }
-            }
-
-            return categories;
-        }
-
-        public override async Task<Category> GetById(int id)
-        {
-            var category = new Category();
-            var filter = new BsonDocument("_id", id);
-
-            using (IAsyncCursor<BsonDocument> cursor = await _mongoCollection.FindAsync(filter))
-            {
-                if (await cursor.MoveNextAsync())
-                {
-                    if (cursor.Current.Count() == 0)
-                        return null;
-
-                    var elements = cursor.Current.ToList();
-                    BsonDocument item = elements[0];
-
-                    var parse = new MongoParser();
-
-                    category = InitializationFilm(item);
+					foreach (BsonDocument item in user)
+					{
+						categories.Add(InitializationFilm(item));
+					}
 				}
-            }
+			}
 
-            return category;
-        }
+			return categories;
+		}
+
+		public override async Task<Category> GetById(int id)
+		{
+			var category = new Category();
+			var filter = new BsonDocument("_id", id);
+
+			using (IAsyncCursor<BsonDocument> cursor = await _mongoCollection.FindAsync(filter))
+			{
+				if (await cursor.MoveNextAsync())
+				{
+					if (cursor.Current.Count() == 0)
+						return null;
+
+					var elements = cursor.Current.ToList();
+					BsonDocument item = elements[0];
+
+					var parse = new MongoParser();
+
+					category = InitializationFilm(item);
+				}
+			}
+
+			return category;
+		}
 
 		public Category InitializationFilm(BsonDocument item) => new Category()
 		{
@@ -66,33 +66,33 @@ namespace Infrastructure.Data.MongoRepository.Implementations
 		};
 
 		public override async Task<bool> InsertAsync(Category entity)
-        {
-            var parser = new MongoParser();
-            entity.Id = parser.MaxIndex(_mongoCollection) + 1;
+		{
+			var parser = new MongoParser();
+			entity.Id = parser.MaxIndex(_mongoCollection) + 1;
 
-            var document = new BsonDocument
-            {
-                { "_id", entity.Id },
-                {"name", entity.Name },
-                {"price",entity.Price }
-            };
+			var document = new BsonDocument
+			{
+				{ "_id", entity.Id },
+				{"name", entity.Name },
+				{"price",entity.Price }
+			};
 
-            await _mongoCollection.InsertOneAsync(document);
+			await _mongoCollection.InsertOneAsync(document);
 
-            return true;
-        }
+			return true;
+		}
 
 		public override async Task<bool> UpdateAsync(Category entity)
-        {
-            var filter = Builders<BsonDocument>.Filter.Eq("_id", entity.Id);
+		{
+			FilterDefinition<BsonDocument> filter = Builders<BsonDocument>.Filter.Eq("_id", entity.Id);
 
-            var update = Builders<BsonDocument>.Update.Set("name", entity.Name);
-            await _mongoCollection.UpdateOneAsync(filter, update);
+			UpdateDefinition<BsonDocument> update = Builders<BsonDocument>.Update.Set("name", entity.Name);
+			await _mongoCollection.UpdateOneAsync(filter, update);
 
-            update = Builders<BsonDocument>.Update.Set("price", entity.Price);
-            await _mongoCollection.UpdateOneAsync(filter, update);
+			update = Builders<BsonDocument>.Update.Set("price", entity.Price);
+			await _mongoCollection.UpdateOneAsync(filter, update);
 
-            return true;
-        }
-    }
+			return true;
+		}
+	}
 }

@@ -8,7 +8,7 @@ namespace ApplicationCore.Services.Implementations.Repositories
 {
 	public class CategoryService : IRepositoryBaseResponse<Category>
 	{
-		private IRepository<Category> _categoryRepository;
+		private readonly IRepository<Category> _categoryRepository;
 
 		public CategoryService(IRepository<Category> categoryRepository)
 		{
@@ -34,7 +34,8 @@ namespace ApplicationCore.Services.Implementations.Repositories
 				return new BaseResponse<bool>()
 				{
 					Data = true,
-					StatusCode = new OkResult()
+					StatusCode = new OkResult(),
+					Description = "Ok result"
 				};
 			}
 			catch
@@ -52,11 +53,11 @@ namespace ApplicationCore.Services.Implementations.Repositories
 		{
 			try
 			{
-				var users = await _categoryRepository.GetAllAsync();
+				List<Category> categories = await _categoryRepository.GetAllAsync();
 
 				return new BaseResponse<List<Category>>()
 				{
-					Data = users,
+					Data = categories,
 					Description = "Data received successfully.",
 					StatusCode = new OkResult()
 				};
@@ -75,9 +76,8 @@ namespace ApplicationCore.Services.Implementations.Repositories
 		{
 			try
 			{
-				var role = await _categoryRepository.GetById(id);
 
-				if (role == null)
+				if ((Category?)await _categoryRepository.GetById(id) == null)
 				{
 					return new BaseResponse<Category>()
 					{
@@ -88,7 +88,7 @@ namespace ApplicationCore.Services.Implementations.Repositories
 
 				return new BaseResponse<Category>()
 				{
-					Data = role,
+					Data = (Category?)await _categoryRepository.GetById(id),
 					Description = "The user was successfully found.",
 					StatusCode = new BadRequestResult()
 				};
@@ -107,15 +107,15 @@ namespace ApplicationCore.Services.Implementations.Repositories
 		{
 			try
 			{
-				var user = await _categoryRepository.GetById(entity.Id);
+				Category category = await _categoryRepository.GetById(entity.Id);
 
-				if (user != null)
+				if (category != null)
 				{
 					return new BaseResponse<bool>()
 					{
 						Data = false,
 						StatusCode = new BadRequestResult(),
-						Description = "A user with this name already exists"
+						Description = "A category with this name already exists"
 					};
 				}
 
@@ -124,7 +124,7 @@ namespace ApplicationCore.Services.Implementations.Repositories
 				return new BaseResponse<bool>()
 				{
 					Data = true,
-					Description = "The user was successfully added.",
+					Description = "The category was successfully added.",
 					StatusCode = new OkResult()
 				};
 			}
@@ -143,7 +143,7 @@ namespace ApplicationCore.Services.Implementations.Repositories
 		{
 			try
 			{
-				var data = _categoryRepository.GetById(entity.Id);
+				Task<Category> data = _categoryRepository.GetById(entity.Id);
 
 				if (data == null)
 				{
