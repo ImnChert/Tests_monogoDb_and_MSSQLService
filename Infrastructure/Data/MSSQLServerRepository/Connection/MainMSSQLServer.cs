@@ -2,18 +2,18 @@
 
 namespace Infrastructure.Data.MSSQLServerRepository.Connection
 {
-	public class MainMSSQLServer
+	public abstract class MainMSSQLServer
 	{
 		protected readonly string _connectionString;
 
-		protected delegate Task<G> SqlCommandDelegate<G, S>(SqlCommand sqlCommand, S entity);
+		protected delegate Task<G> SqlCommandDelegate<G, T>(SqlCommand sqlCommand, T entity);
 
 		public MainMSSQLServer(string connectionString)
 		{
 			_connectionString = connectionString;
 		}
 
-		protected async Task<F> Connection<F, S>(S entity, SqlCommandDelegate<F, S> @delegate, string query)
+		protected async Task<F> Connection<F, T>(T entity, SqlCommandDelegate<F, T> @delegate, string query)
 		{
 			using (var sqlConnection = new SqlConnection(_connectionString))
 			{
