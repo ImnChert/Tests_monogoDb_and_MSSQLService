@@ -2,7 +2,7 @@
 
 namespace ApplicationCore.Services.Interfaces.Repositories
 {
-	internal interface IRepositoryBaseResponse<T>
+	public interface IRepositoryBaseResponse<T>
 	{
 		public Task<BaseResponse<List<T>>> GetAllAsync();
 		public Task<BaseResponse<T>> GetById(int id);

@@ -1,6 +1,4 @@
-﻿using ApplicationCore.Domain.Core.Models.Cinema;
-using ApplicationCore.Domain.Interfaces.Interfaces;
-using ApplicationCore.Services.Implementations.Repositories;
+﻿using ApplicationCore.Services.Implementations.Repositories;
 using Infrastructure.Data.MSSQLServerRepository.Implementations.MajorRepository;
 using Microsoft.AspNetCore.Mvc;
 

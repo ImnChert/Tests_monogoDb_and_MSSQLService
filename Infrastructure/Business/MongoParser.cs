@@ -10,10 +10,11 @@ namespace Infrastructure.Business
 	{
 		public int MaxIndex(IMongoCollection<BsonDocument> mongoCollection)
 		{
-			var data = mongoCollection.Find(new BsonDocument()).Sort("{_id:-1}").Limit(1).ToList();
 			int maxValue = 0;
+			var data = mongoCollection.Find(new BsonDocument()).Sort("{_id:-1}").Limit(1).ToList();
 
-			data.ForEach(item => maxValue = item.GetValue("_id").ToInt32());
+			if (data.Count > 0)
+				maxValue = data[0].GetValue("_id").ToInt32();
 
 			return maxValue;
 		}
