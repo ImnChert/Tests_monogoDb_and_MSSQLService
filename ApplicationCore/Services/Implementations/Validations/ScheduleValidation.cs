@@ -17,7 +17,7 @@ namespace ApplicationCore.Services.Implementations.Validations
 			=> _schedule.Sessions.Where(s => !((s.FinishTime < session.StartTime) || (s.StartTime > session.FinishTime))).Any();
 		// TODO: сделать этот метод
 		public bool ContainSeat(Seat seat)
-			=> _schedule.Sessions.Any(s => s.Tickets.Any(t => t.Seat == seat));
+			=> _schedule.Sessions.Any(s => s.Tickets.Contains(seat));
 		public bool DoesTheUserHasAnEntryForThisSession(RegisteredUser user, Session session)
 			=> _schedule.Sessions.Where(s => s == session).Any(s => s.Tickets.Any(t => t.RegisteredUser == user));
 	}
