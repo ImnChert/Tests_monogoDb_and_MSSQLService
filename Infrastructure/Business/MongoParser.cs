@@ -1,6 +1,8 @@
 ﻿using ApplicationCore.Domain.Core.Models.Cinema;
 using ApplicationCore.Domain.Core.Models.Cinema.Films;
+using ApplicationCore.Domain.Core.Models.Roles;
 using ApplicationCore.Domain.Core.Models.Roles.Staff;
+using ApplicationCore.Domain.Interfaces.Interfaces;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -36,23 +38,49 @@ namespace Infrastructure.Business
 			=> value.AsBsonArray
 			.Select(p => new Person()
 			{
-				Id =
+				Id = p[4].AsInt32,
+				FirstName = p[0].AsString,
+				LastName = p[1].AsString,
+				MiddleName = p[2].AsString,
+				Post = p[3].AsString
 			})
 			.ToList();
 
 		public List<Review> ParseReviews(BsonValue value)
 		{
-			return null;
+			var repositpry = new IRepository<RegisteredUser>();
+
+			return value.AsBsonArray
+			.Select(p => new Review()
+			{
+				Id = 0,
+				RegisteredUser =
+			})
+			.ToList();
 		}
 
 		public List<Score> ParseScores(BsonValue value)
-		{
-			return null;
-		}
+		=> value.AsBsonArray
+			.Select(p => new Person()
+			{
+				Id = p[4].AsInt32,
+				FirstName = p[0].AsString,
+				LastName = p[1].AsString,
+				MiddleName = p[2].AsString,
+				Post = p[3].AsString
+			})
+			.ToList();
 
 		public List<Session> ParseSessions(BsonValue value)
-		{
-			return null;
-		}
+		=> value.AsBsonArray
+			.Select(p => new Person()
+			{
+				Id = p[4].AsInt32,
+				FirstName = p[0].AsString,
+				LastName = p[1].AsString,
+				MiddleName = p[2].AsString,
+				Post = p[3].AsString
+			})
+			.ToList();
 	}
 }

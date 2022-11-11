@@ -11,13 +11,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{8C054567
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "srs", "srs", "{24C93C95-0B94-4B5C-95D9-2352C0163E76}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutomaticTests", "AutomaticTests\AutomaticTests.csproj", "{69570DEC-7168-4A88-90A1-8137EBA560E5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutomaticTests", "AutomaticTests\AutomaticTests.csproj", "{69570DEC-7168-4A88-90A1-8137EBA560E5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoqTests", "MoqTests\MoqTests.csproj", "{A07C97EB-C69C-4510-9BDE-EF8DB25362E4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoqTests", "MoqTests\MoqTests.csproj", "{A07C97EB-C69C-4510-9BDE-EF8DB25362E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegratedTests", "IntegratedTests\IntegratedTests.csproj", "{75850A56-F35C-4863-ABF2-B7DF4F8771B8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegratedTests", "IntegratedTests\IntegratedTests.csproj", "{75850A56-F35C-4863-ABF2-B7DF4F8771B8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConnectionTests", "ConnectionTests\ConnectionTests.csproj", "{CC3D621D-5BA7-4C8D-B357-896CC280F323}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConnectionTests", "ConnectionTests\ConnectionTests.csproj", "{CC3D621D-5BA7-4C8D-B357-896CC280F323}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConsole", "TestConsole\TestConsole.csproj", "{82196FA7-7DF7-43CC-B6BE-685DF2BC1BD0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,6 +51,10 @@ Global
 		{CC3D621D-5BA7-4C8D-B357-896CC280F323}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC3D621D-5BA7-4C8D-B357-896CC280F323}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CC3D621D-5BA7-4C8D-B357-896CC280F323}.Release|Any CPU.Build.0 = Release|Any CPU
+		{82196FA7-7DF7-43CC-B6BE-685DF2BC1BD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82196FA7-7DF7-43CC-B6BE-685DF2BC1BD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82196FA7-7DF7-43CC-B6BE-685DF2BC1BD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82196FA7-7DF7-43CC-B6BE-685DF2BC1BD0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
