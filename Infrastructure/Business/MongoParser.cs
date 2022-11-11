@@ -80,7 +80,6 @@ namespace Infrastructure.Business
 			})
 			.ToList();
 
-
 		public List<Score> ParseScores(BsonValue value)
 		=> value.AsBsonArray
 			.Select(p => new Score()
