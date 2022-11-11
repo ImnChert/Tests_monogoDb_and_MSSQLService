@@ -2,6 +2,7 @@
 using ApplicationCore.Domain.Core.Models.Cinema.Films;
 using ApplicationCore.Domain.Core.Models.Roles;
 using ApplicationCore.Domain.Core.Models.Roles.Staff;
+using ApplicationCore.Domain.Core.Models.Roles.Staff.Positions;
 using ApplicationCore.Domain.Interfaces.Interfaces;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -45,15 +46,16 @@ namespace Infrastructure.Business
 
 		// TODO: сделать парсеры
 		public List<Position> ParsePositions(BsonValue value)
+		=> value.AsBsonArray
+			.Select(p => GetType(p[1].AsInt32, p[0].AsString))
+			.ToList();
+
+		public Position GetType(int id, string name)
 		{
-			var positions = new List<Position>();
+			if (name == "Admin")
+				return new Admin() { Id = id, Name = name };
 
-			foreach (var item in value.AsBsonArray)
-			{
-				var position = item;
-			}
-
-			return positions;
+			return null;
 		}
 
 		public List<Person> ParsePersons(BsonValue value)
@@ -95,7 +97,7 @@ namespace Infrastructure.Business
 			{
 				Id = p[0].AsInt32,
 				Film = _filmRepository.GetById(p[4].AsInt32).Result,
-				StartTime = p[5].AsDateTime,
+				StartTime = p[5].AsDateTime
 			})
 			.ToList();
 	}

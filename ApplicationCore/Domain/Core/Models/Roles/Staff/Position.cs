@@ -2,6 +2,6 @@
 {
 	public abstract class Position : EntityBase
 	{
-	
+		public string Name { get; set; }
 	}
 }
