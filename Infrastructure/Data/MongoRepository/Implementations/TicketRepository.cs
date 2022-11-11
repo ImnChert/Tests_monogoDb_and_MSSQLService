@@ -83,7 +83,9 @@ namespace Infrastructure.Data.MongoRepository.Implementations
 			},
 			RegisteredUser = _userRepository.GetById(item.GetValue("registeredUser_id").ToInt32()).Result,
 			Cashier = _employeeRepository.GetById(item.GetValue("registeredUser_id").ToInt32()).Result,
-			Session = _sessionRepository.GetById(item.GetValue("session_id").ToInt32()).Result
+			//Session = _sessionRepository.GetById(item.GetValue("session_id").ToInt32()).Result
+
+			// TODO: коммент
 		};
 
 		public override async Task<bool> InsertAsync(Ticket entity)
@@ -104,15 +106,15 @@ namespace Infrastructure.Data.MongoRepository.Implementations
 				{ "_id", entity.Id },
 				{"usernameRegisteredUser",entity.RegisteredUser.Username },
 				{"registeredUser_id",entity.RegisteredUser.Id },
-				{"nameFilm",entity.Session.Film.Name },
-				{"start", entity.Session.StartTime },
-				{"basePrice", entity.Session.Film.BasePrice },
-				{"session_id", entity.Session.Id },
+				//{"nameFilm",entity.Session.Film.Name },
+				//{"start", entity.Session.StartTime },
+				//{"basePrice", entity.Session.Film.BasePrice },
+				//{"session_id", entity.Session.Id },
 				{"usernameEmployee",entity.Cashier.Username },
 				{"employee_id",entity.Cashier.Id },
 				{"seat", seat }
 			};
-
+			// TODO: понять что делать
 			await _mongoCollection.InsertOneAsync(document);
 
 			return true;
@@ -128,17 +130,19 @@ namespace Infrastructure.Data.MongoRepository.Implementations
 			update = Builders<BsonDocument>.Update.Set("registeredUser_id", entity.RegisteredUser.Id);
 			await _mongoCollection.UpdateOneAsync(filter, update);
 
-			update = Builders<BsonDocument>.Update.Set("nameFilm", entity.Session.Film.Name);
-			await _mongoCollection.UpdateOneAsync(filter, update);
+			//update = Builders<BsonDocument>.Update.Set("nameFilm", entity.Session.Film.Name);
+			//await _mongoCollection.UpdateOneAsync(filter, update);
 
-			update = Builders<BsonDocument>.Update.Set("start", entity.Session.StartTime);
-			await _mongoCollection.UpdateOneAsync(filter, update);
+			//update = Builders<BsonDocument>.Update.Set("start", entity.Session.StartTime);
+			//await _mongoCollection.UpdateOneAsync(filter, update);
 
-			update = Builders<BsonDocument>.Update.Set("basePrice", entity.Session.Film.BasePrice);
-			await _mongoCollection.UpdateOneAsync(filter, update);
+			//update = Builders<BsonDocument>.Update.Set("basePrice", entity.Session.Film.BasePrice);
+			//await _mongoCollection.UpdateOneAsync(filter, update);
 
-			update = Builders<BsonDocument>.Update.Set("session_id", entity.Session.Id);
-			await _mongoCollection.UpdateOneAsync(filter, update);
+			//update = Builders<BsonDocument>.Update.Set("session_id", entity.Session.Id);
+			//await _mongoCollection.UpdateOneAsync(filter, update);
+
+			// TODO: коммент
 
 			update = Builders<BsonDocument>.Update.Set("usernameEmployee", entity.Cashier.Username);
 			await _mongoCollection.UpdateOneAsync(filter, update);
