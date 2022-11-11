@@ -6,7 +6,7 @@ using MongoDB.Driver;
 
 namespace Infrastructure.Data.MongoRepository.Implementations
 {
-	internal class CategoryRepository : MainMongoRepository<Category>
+	public class CategoryRepository : MainMongoRepository<Category>
 	{
 		public CategoryRepository(string connectionString)
 			: base(connectionString, "categores")

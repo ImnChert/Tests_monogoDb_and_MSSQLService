@@ -6,15 +6,15 @@ using MongoDB.Driver;
 
 namespace Infrastructure.Data.MongoRepository.Implementations
 {
-    internal class FilmRepository : MainMongoRepository<Film>
-    {
-        public FilmRepository(string connectionString)
-            : base(connectionString, "films")
-        {
-        }
+	public class FilmRepository : MainMongoRepository<Film>
+	{
+		public FilmRepository(string connectionString)
+			: base(connectionString, "films")
+		{
+		}
 
-        public override async Task<List<Film>> GetAllAsync()
-        {
+		public override async Task<List<Film>> GetAllAsync()
+		{
 			var filter = new BsonDocument();
 			var films = new List<Film>();
 
@@ -35,8 +35,8 @@ namespace Infrastructure.Data.MongoRepository.Implementations
 			return films;
 		}
 
-        public override async Task<Film> GetById(int id)
-        {
+		public override async Task<Film> GetById(int id)
+		{
 			var film = new Film();
 			var filter = new BsonDocument("_id", id);
 
@@ -78,7 +78,7 @@ namespace Infrastructure.Data.MongoRepository.Implementations
 		};
 
 		public override async Task<bool> InsertAsync(Film entity)
-        {
+		{
 			var parser = new MongoParser();
 			entity.Id = parser.MaxIndex(_mongoCollection) + 1;
 
@@ -140,8 +140,8 @@ namespace Infrastructure.Data.MongoRepository.Implementations
 			return true;
 		}
 
-        public override async Task<bool> UpdateAsync(Film entity)
-        {
+		public override async Task<bool> UpdateAsync(Film entity)
+		{
 			var filter = Builders<BsonDocument>.Filter.Eq("_id", entity.Id);
 
 			var update = Builders<BsonDocument>.Update.Set("name", entity.Name);
@@ -176,5 +176,5 @@ namespace Infrastructure.Data.MongoRepository.Implementations
 
 			return true;
 		}
-    }
+	}
 }

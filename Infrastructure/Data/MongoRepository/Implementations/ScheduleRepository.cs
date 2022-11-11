@@ -6,15 +6,15 @@ using MongoDB.Driver;
 
 namespace Infrastructure.Data.MongoRepository.Implementations
 {
-    internal class ScheduleRepository : MainMongoRepository<Schedule>
-    {
-        public ScheduleRepository(string connectionString)
-            : base(connectionString, "schedule")
-        {
-        }
-         
-        public override async Task<List<Schedule>> GetAllAsync()
-        {
+	public class ScheduleRepository : MainMongoRepository<Schedule>
+	{
+		public ScheduleRepository(string connectionString)
+			: base(connectionString, "schedule")
+		{
+		}
+
+		public override async Task<List<Schedule>> GetAllAsync()
+		{
 			var filter = new BsonDocument();
 			var schedules = new List<Schedule>();
 
@@ -35,8 +35,8 @@ namespace Infrastructure.Data.MongoRepository.Implementations
 			return schedules;
 		}
 
-        public override async Task<Schedule> GetById(int id)
-        {
+		public override async Task<Schedule> GetById(int id)
+		{
 			var schedule = new Schedule();
 			var filter = new BsonDocument("_id", id);
 
@@ -70,7 +70,7 @@ namespace Infrastructure.Data.MongoRepository.Implementations
 		};
 
 		public override async Task<bool> InsertAsync(Schedule entity)
-        {
+		{
 			var parser = new MongoParser();
 			entity.Id = parser.MaxIndex(_mongoCollection) + 1;
 
@@ -95,7 +95,7 @@ namespace Infrastructure.Data.MongoRepository.Implementations
 				{"numberHall",entity.Hall.Number },
 				{"date",entity.Date },
 				{"sessions", sessions },
-				 
+
 			};
 
 			await _mongoCollection.InsertOneAsync(document);
@@ -103,8 +103,8 @@ namespace Infrastructure.Data.MongoRepository.Implementations
 			return true;
 		}
 
-        public override async Task<bool> UpdateAsync(Schedule entity)
-        {
+		public override async Task<bool> UpdateAsync(Schedule entity)
+		{
 			var filter = Builders<BsonDocument>.Filter.Eq("_id", entity.Id);
 
 			var update = Builders<BsonDocument>.Update.Set("numberHall", entity.Hall.Number);
@@ -116,7 +116,7 @@ namespace Infrastructure.Data.MongoRepository.Implementations
 			update = Builders<BsonDocument>.Update.Set("sessions", entity.Sessions);
 			await _mongoCollection.UpdateOneAsync(filter, update);
 
-            return true;
+			return true;
 		}
-    }
+	}
 }

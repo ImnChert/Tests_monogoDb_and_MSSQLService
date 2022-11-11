@@ -8,7 +8,7 @@ using MongoDB.Driver;
 
 namespace Infrastructure.Data.MongoRepository.Implementations
 {
-	internal class SessionRepository : MainMongoRepository<Session>
+	public class SessionRepository : MainMongoRepository<Session>
 	{
 		private IRepository<Film> _filmRepository;
 

@@ -9,24 +9,24 @@ using MongoDB.Driver;
 
 namespace Infrastructure.Data.MongoRepository.Implementations
 {
-    internal class TicketRepository : MainMongoRepository<Ticket>
-    {
+	public class TicketRepository : MainMongoRepository<Ticket>
+	{
 		private IRepository<Category> _categoryRepository;
 		private IRepository<RegisteredUser> _userRepository;
 		private IRepository<Session> _sessionRepository;
 		private IRepository<Employee> _employeeRepository;
 
 		public TicketRepository(string connectionString)
-            : base(connectionString, "films")
-        {
+			: base(connectionString, "films")
+		{
 			_categoryRepository = new CategoryRepository(connectionString);
 			_userRepository = new UserRepository(connectionString);
-			_sessionRepository = new SessionRepository(connectionString);	
+			_sessionRepository = new SessionRepository(connectionString);
 			_employeeRepository = new EmployeeRepository(connectionString);
 		}
 
-        public override async Task<List<Ticket>> GetAllAsync()
-        {
+		public override async Task<List<Ticket>> GetAllAsync()
+		{
 			var filter = new BsonDocument();
 			var tickets = new List<Ticket>();
 
@@ -46,8 +46,8 @@ namespace Infrastructure.Data.MongoRepository.Implementations
 			return tickets;
 		}
 
-        public override async Task<Ticket> GetById(int id)
-        {
+		public override async Task<Ticket> GetById(int id)
+		{
 			var ticket = new Ticket();
 			var filter = new BsonDocument("_id", id);
 
@@ -85,9 +85,9 @@ namespace Infrastructure.Data.MongoRepository.Implementations
 			Cashier = _employeeRepository.GetById(item.GetValue("registeredUser_id").ToInt32()).Result,
 			Session = _sessionRepository.GetById(item.GetValue("session_id").ToInt32()).Result
 		};
-		
+
 		public override async Task<bool> InsertAsync(Ticket entity)
-        {
+		{
 			var parser = new MongoParser();
 			entity.Id = parser.MaxIndex(_mongoCollection) + 1;
 
@@ -118,8 +118,8 @@ namespace Infrastructure.Data.MongoRepository.Implementations
 			return true;
 		}
 
-        public override async Task<bool> UpdateAsync(Ticket entity)
-        {
+		public override async Task<bool> UpdateAsync(Ticket entity)
+		{
 			var filter = Builders<BsonDocument>.Filter.Eq("_id", entity.Id);
 
 			var update = Builders<BsonDocument>.Update.Set("usernameRegisteredUser", entity.RegisteredUser.Username);
@@ -151,5 +151,5 @@ namespace Infrastructure.Data.MongoRepository.Implementations
 
 			return true;
 		}
-    }
+	}
 }
