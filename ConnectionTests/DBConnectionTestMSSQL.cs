@@ -14,11 +14,11 @@ namespace ConnectionTests
 			// Arrange
 			string connectionString = "path";
 			int planeId = -1;
-			var planeRepository = new CategoryRepository(connectionString);
-			var planeService = new CategoryService(planeRepository);
+			var categoryRepository = new CategoryRepository(connectionString);
+			var categoryService = new CategoryService(categoryRepository);
 
 			// Act
-			var result = await planeService.GetById(planeId);
+			var result = await categoryService.GetById(planeId);
 
 			// Assert
 			Assert.Equal((new BadRequestResult()).StatusCode, result.StatusCode.StatusCode);
@@ -30,12 +30,12 @@ namespace ConnectionTests
 			// Arrange
 			string connectionString = @"Data Source=DESKTOP-CTBUCT0\SQLEXPRESS;;Initial Catalog=CP;Integrated Security=True";
 			int planeId = -1;
-			var planeRepository = new CategoryRepository(connectionString);
-			var planeService = new CategoryService(planeRepository);
+			var categoryRepository = new CategoryRepository(connectionString);
+			var categoryService = new CategoryService(categoryRepository);
 
 			// Act
 			DateTime startTime = DateTime.Now;
-			await planeService.GetById(planeId);
+			await categoryService.GetById(planeId);
 
 			if (DateTime.Now.Subtract(startTime) >= new TimeSpan(0, 0, 0, 0, 10000))
 			{

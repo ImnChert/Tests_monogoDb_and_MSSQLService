@@ -13,10 +13,10 @@ namespace ConnectionTests
 
 			try
 			{
-				var planeRepository = new CategoryRepository(connectionString);
-				var planeService = new CategoryService(planeRepository);
+				var categoryRepository = new CategoryRepository(connectionString);
+				var categoryService = new CategoryService(categoryRepository);
 
-				var result = await planeService.GetById(planeId);
+				var result = await categoryService.GetById(planeId);
 			}
 			catch (Exception ex)
 			{
@@ -34,12 +34,12 @@ namespace ConnectionTests
 			string connectionString = "mongodb://localhost:27017";
 			int planeId = -1;
 
-			var planeRepository = new CategoryRepository(connectionString);
-			var planeService = new CategoryService(planeRepository);
+			var categoryRepository = new CategoryRepository(connectionString);
+			var categoryService = new CategoryService(categoryRepository);
 
 			// Act
 			DateTime startTime = DateTime.Now;
-			var result = await planeService.GetById(planeId);
+			var result = await categoryService.GetById(planeId);
 
 			if (DateTime.Now.Subtract(startTime) >= new TimeSpan(0, 0, 0, 0, 10000))
 			{
