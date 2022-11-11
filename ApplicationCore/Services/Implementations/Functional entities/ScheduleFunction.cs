@@ -8,16 +8,18 @@ namespace ApplicationCore.Services.Implementations.Functional_entities
 	public class ScheduleFunction : IScheduleFunction
 	{
 		private IScheduleValidation _validation;
+		private Schedule _schedule;
 
-		public ScheduleFunction(IScheduleValidation validation)
+		public ScheduleFunction(IScheduleValidation validation, Schedule schedule)
 		{
-			this._validation = validation;
+			_validation = validation;
+			_schedule = schedule;
 		}
 
-		public void AddSession(Schedule schedule, Session session)
+		public void AddSession(Session session)
 		{
-			if (!_validation.ContainSession(schedule.Sessions, session))
-				schedule.Sessions.Add(session);
+			if (!_validation.ContainSession(session))
+				_schedule.Sessions.Add(session);
 			else
 				throw new Exception();
 		}
@@ -37,11 +39,11 @@ namespace ApplicationCore.Services.Implementations.Functional_entities
 
 		private void TicketVerification(RegisteredUser user, Session session, Seat seat)
 		{
-			if (!ContainSession(session))
+			if (!_validation.ContainSession(session))
 				throw new Exception("The schedule does not contain a littered sessi");
-			if (DoesTheUserHasAnEntryForThisSession(user, session))
+			if (_validation.DoesTheUserHasAnEntryForThisSession(user, session))
 				throw new Exception("The user has an entry for this session");
-			if (ContainSeat(seat))
+			if (_validation.ContainSeat(seat))
 				throw new Exception("This place is already booked");
 		}
 	}

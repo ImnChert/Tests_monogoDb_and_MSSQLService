@@ -33,9 +33,12 @@ namespace Infrastructure.Business
 		}
 
 		public List<Person> ParsePersons(BsonValue value)
-		{
-			return null;
-		}
+			=> value.AsBsonArray
+			.Select(p => new Person()
+			{
+				Id =
+			})
+			.ToList();
 
 		public List<Review> ParseReviews(BsonValue value)
 		{

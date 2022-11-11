@@ -6,12 +6,19 @@ namespace ApplicationCore.Services.Implementations.Validations
 {
 	public class ScheduleValidation : IScheduleValidation
 	{
-		public bool ContainSession(List<Session> sessions, Session session)
-			=> sessions.Where(s => !((s.FinishTime < session.StartTime) || (s.StartTime > session.FinishTime))).Any();
+		private Schedule _schedule;
+
+		public ScheduleValidation(Schedule schedule)
+		{
+			_schedule = schedule;
+		}
+
+		public bool ContainSession(Session session)
+			=> _schedule.Sessions.Where(s => !((s.FinishTime < session.StartTime) || (s.StartTime > session.FinishTime))).Any();
 		// TODO: сделать этот метод
-		public bool ContainSeat(List<Session> sessions, Seat seat)
-			=> sessions.Any(s => s.Tickets.Any(t => t.Seat == seat));
-		public bool DoesTheUserHasAnEntryForThisSession(List<Session> sessions, RegisteredUser user, Session session)
-			=> sessions.Where(s => s == session).Any(s => s.Tickets.Any(t => t.RegisteredUser == user));
+		public bool ContainSeat(Seat seat)
+			=> _schedule.Sessions.Any(s => s.Tickets.Any(t => t.Seat == seat));
+		public bool DoesTheUserHasAnEntryForThisSession(RegisteredUser user, Session session)
+			=> _schedule.Sessions.Where(s => s == session).Any(s => s.Tickets.Any(t => t.RegisteredUser == user));
 	}
 }
