@@ -5,8 +5,8 @@ namespace ApplicationCore.Services.Interfaces.Functional_entities
 {
 	public interface IScheduleFunction
 	{
-		public void AddSession(Schedule schedule, Session session);
-		public void AddTicket(Schedule schedule, RegisteredUser user, Session session, Seat seat);
-		public void RemoveTicket(Schedule schedule, RegisteredUser user, Session session, Seat seat);
+		public void AddSession(Session session);
+		public void AddTicket(RegisteredUser user, Session session, Seat seat);
+		public void RemoveTicket(RegisteredUser user, Session session, Seat seat);
 	}
 }

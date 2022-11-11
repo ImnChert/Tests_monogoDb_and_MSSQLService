@@ -2,7 +2,7 @@
 
 namespace ApplicationCore.Domain.Core.Models.Cinema.Films
 {
-	public class Score
+	public class Score : EntityBase
 	{
 		public RegisteredUser RegisteredUser { get; set; }
 		public int Raiting;
