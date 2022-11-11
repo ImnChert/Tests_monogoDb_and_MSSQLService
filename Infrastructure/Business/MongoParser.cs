@@ -9,7 +9,7 @@ using MongoDB.Driver;
 
 namespace Infrastructure.Business
 {
-	internal class MongoParser
+	public class MongoParser
 	{
 		private IRepository<RegisteredUser> _registeredUserRepository;
 		private IRepository<Film> _filmRepository;
