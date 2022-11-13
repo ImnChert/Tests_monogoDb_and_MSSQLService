@@ -14,11 +14,19 @@ namespace ApplicationCore.Services.Implementations.Validations
 		}
 
 		public bool ContainSession(Session session)
-			=> _schedule.Sessions.Where(s => !((s.FinishTime < session.StartTime) || (s.StartTime > session.FinishTime))).Any();
-		// TODO: сделать этот метод
+			=> _schedule.Sessions.Contains(session);
+
 		public bool ContainSeat(Seat seat)
-			=> _schedule.Sessions.Any(s => s.Tickets.Contains(seat));
+			=> _schedule.Sessions
+			.Any(s => s.Tickets
+				.Any(t => t.Seat == seat)
+			);
+
 		public bool DoesTheUserHasAnEntryForThisSession(RegisteredUser user, Session session)
-			=> _schedule.Sessions.Where(s => s == session).Any(s => s.Tickets.Any(t => t.RegisteredUser == user));
+			=> _schedule.Sessions
+			.Where(s => s == session)
+			.Any(s => s.Tickets
+				.Any(t => t.RegisteredUser == user)
+			);
 	}
 }

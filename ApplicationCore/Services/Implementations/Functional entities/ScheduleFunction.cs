@@ -1,5 +1,6 @@
 ﻿using ApplicationCore.Domain.Core.Models.Cinema;
 using ApplicationCore.Domain.Core.Models.Roles;
+using ApplicationCore.Domain.Core.Models.Roles.Staff;
 using ApplicationCore.Services.Interfaces.Functional_entities;
 using ApplicationCore.Services.Interfaces.Validations;
 
@@ -16,25 +17,45 @@ namespace ApplicationCore.Services.Implementations.Functional_entities
 			_schedule = schedule;
 		}
 
-		public void AddSession(Session session)
+		public bool AddSession(Session session)
 		{
 			if (!_validation.ContainSession(session))
 				_schedule.Sessions.Add(session);
 			else
 				throw new Exception();
+			return true;
 		}
 
-		public void AddTicket(RegisteredUser user, Session session, Seat seat)
+		public bool AddTicket(RegisteredUser user, Session session, Seat seat)
 		{
 			TicketVerification(user, session, seat);
 
-			// TODO: сделать
+			_schedule.Sessions
+				.Where(s => s == session)
+				.First()
+				.Tickets.Add(new Ticket()
+				{
+					Seat = seat,
+					RegisteredUser = user
+				});
+			return true;
 		}
-		public void RemoveTicket(RegisteredUser user, Session session, Seat seat)
-		{
-			//TicketVerification(user, session, seat);
 
-			// TODO: сделать
+		public bool RemoveTicket(RegisteredUser user, Session session, Seat seat)
+			=> _schedule.Sessions
+				.Where(s => s == session)
+				.First()
+				.Tickets.Remove(new Ticket()
+				{
+					Seat = seat,
+					RegisteredUser = user
+				});
+
+		public bool ConfirmPayment(Session session, Ticket ticket, Employee employee)
+		{
+			session.Tickets.Where(t => t == ticket).First().Cashier = employee;
+
+			return true;
 		}
 
 		private void TicketVerification(RegisteredUser user, Session session, Seat seat)

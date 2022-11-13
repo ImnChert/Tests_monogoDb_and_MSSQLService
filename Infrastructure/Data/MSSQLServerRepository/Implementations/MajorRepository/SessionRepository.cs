@@ -1,29 +1,33 @@
 ﻿using ApplicationCore.Domain.Core.Models.Cinema;
+using ApplicationCore.Domain.Interfaces.Interfaces;
 using Infrastructure.Data.MSSQLServerRepository.Connection;
 using System.Data.SqlClient;
 
 namespace Infrastructure.Data.MSSQLServerRepository.Implementations.MajorRepository
 {
-    internal class SessionRepository : MainMSSQLServerRepository<Session>
-    {
-        public SessionRepository(string connectionString, string tableName, string insertQuery, string updateQuery, string getAllQuery, string getByIdQuery)
-            : base(connectionString,
-                  tableName,
-                  insertQuery,
-                  updateQuery,
-                  getAllQuery,
-                  getByIdQuery)
-        {
-        }
+	internal class SessionRepository : MainMSSQLServerRepository<Session>
+	{
+		private IRepository<Ticket> _ticketRepository;
 
-        protected override Session GetReader(SqlDataReader sqlDataReader)
-        {
-            throw new NotImplementedException();
-        }
+		public SessionRepository(string connectionString, IRepository<Ticket> ticketRepository)
+			: base(connectionString,
+				  "SessionsOfFilms",
+				  insertQuery,
+				  updateQuery,
+				  getAllQuery,
+				  getByIdQuery)
+		{
+			_ticketRepository = ticketRepository;
+		}
 
-        protected override void InsertCommand(SqlCommand sqlCommand, Session entity)
-        {
-            throw new NotImplementedException();
-        }
-    }
+		protected override Session GetReader(SqlDataReader sqlDataReader)
+		{
+			throw new NotImplementedException();
+		}
+
+		protected override void InsertCommand(SqlCommand sqlCommand, Session entity)
+		{
+			throw new NotImplementedException();
+		}
+	}
 }
