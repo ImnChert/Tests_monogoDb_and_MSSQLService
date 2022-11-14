@@ -133,7 +133,6 @@ namespace Infrastructure.Data.MSSQLServerRepository.Connection
 			return await Connection<List<T>, int>(id, GetAllByIdSqlCommand, _getAllByIdQuery);
 		}
 
-
 		private async Task<List<T>> GetAllByIdSqlCommand(SqlCommand sqlCommand, int id)
 		{
 			if (_parameterName == null)

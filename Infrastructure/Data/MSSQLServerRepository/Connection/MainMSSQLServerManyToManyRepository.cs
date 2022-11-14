@@ -11,12 +11,20 @@ namespace Infrastructure.Data.MSSQLServerRepository.Connection
 	{
 		protected string _getManyToManyQuery;
 		protected string _setManyToManyQuery;
+		protected string _insertQuery = null;
 
 		public MainMSSQLServerManyToManyRepository(string connectionString, string getManyToManyQuery, string setManyToManyQuery)
 			: base(connectionString)
 		{
 			_getManyToManyQuery = getManyToManyQuery;
 			_setManyToManyQuery = setManyToManyQuery;
+		}
+
+		public MainMSSQLServerManyToManyRepository(string connectionString, string getManyToManyQuery,
+			string setManyToManyQuery, string insertQuery)
+			: this(connectionString, getManyToManyQuery, setManyToManyQuery)
+		{
+			_insertQuery = insertQuery;
 		}
 
 		protected abstract T GetCommand(SqlDataReader sqlDataReader);
@@ -56,5 +64,24 @@ namespace Infrastructure.Data.MSSQLServerRepository.Connection
 
 		public async Task<bool> SetManyToMany(int id, List<T> values)
 		=> await Connection<bool, ManyToMany<T>>(new ManyToMany<T> { Id = id, ManyList = values }, SetSqlCommand, _setManyToManyQuery);
+
+		public async Task<bool> InsertAsync(T entity)
+		{
+			if (_insertQuery == null)
+				return false;
+
+			return await Connection<bool, T>(entity, InsertSqlCommand, _insertQuery);
+		}
+
+		private async Task<bool> InsertSqlCommand(SqlCommand sqlCommand, T entity)
+		{
+			InsertCommand(sqlCommand, entity);
+
+			await sqlCommand.ExecuteNonQueryAsync();
+
+			return true;
+		}
+
+		protected abstract void InsertCommand(SqlCommand sqlCommand, T entity);
 	}
 }
