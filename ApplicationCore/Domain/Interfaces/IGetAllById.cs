@@ -2,6 +2,6 @@
 {
 	public interface IGetAllById<T>
 	{
-		public Task<List<T>> GetAllById(int id);
+		public Task<List<T>> GetAllByIdOneToMany(int id);
 	}
 }
