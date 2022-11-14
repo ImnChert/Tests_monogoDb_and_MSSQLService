@@ -21,16 +21,16 @@ namespace Infrastructure.Data.MSSQLServerRepository.Implementations.MajorReposit
 		}
 
 		protected override Schedule GetReader(SqlDataReader sqlDataReader)
-		 => new Schedule()
-		 {
-			 Id = (int)sqlDataReader["Id"],
-			 Hall = new Hall()
-			 {
-				 Id = (int)sqlDataReader["HallId"]
-			 },
-			 Date = DateTime.Parse((string)sqlDataReader["ShowsDate"]),
-			 Sessions = _sessionRepository.GetManyToManyAsync((int)sqlDataReader["Id"]).Result
-		 };
+			=> new Schedule()
+			{
+				Id = (int)sqlDataReader["Id"],
+				Hall = new Hall()
+				{
+					Id = (int)sqlDataReader["HallId"]
+				},
+				Date = DateTime.Parse((string)sqlDataReader["ShowsDate"]),
+				Sessions = _sessionRepository.GetManyToManyAsync((int)sqlDataReader["Id"]).Result
+			};
 
 		protected override void InsertCommand(SqlCommand sqlCommand, Schedule entity)
 		{

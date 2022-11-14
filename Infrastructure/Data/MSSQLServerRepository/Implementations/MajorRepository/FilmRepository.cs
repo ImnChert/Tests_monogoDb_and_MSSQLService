@@ -2,6 +2,7 @@
 using ApplicationCore.Domain.Interfaces;
 using ApplicationCore.Domain.Interfaces.Interfaces;
 using Infrastructure.Data.MSSQLServerRepository.Connection;
+using System.Data;
 using System.Data.SqlClient;
 
 namespace Infrastructure.Data.MSSQLServerRepository.Implementations.MajorRepository
@@ -33,24 +34,31 @@ namespace Infrastructure.Data.MSSQLServerRepository.Implementations.MajorReposit
 		}
 
 		protected override Film GetReader(SqlDataReader sqlDataReader)
-		=> new Film()
-		{
-			Id = (int)sqlDataReader["Id"],
-			Name = sqlDataReader["Name"] as string ?? "Undefined", // TODO: в базе данных нету
-			Duration = (int)sqlDataReader["Duration"],
-			FilmCrew = _personGetAllById.GetAllByIdOneToMany((int)sqlDataReader["Id"]).Result,
-			Reviews = _reviewGetAllById.GetAllByIdOneToMany((int)sqlDataReader["Id"]).Result,
-			Description = sqlDataReader["Description"] as string ?? "Undefined",
-			Year = (int)sqlDataReader["YearOfRelease"],
-			Scores = _scoreGetAllById.GetAllByIdOneToMany((int)sqlDataReader["Id"]).Result,
-			LicensExpirationDate = DateTime.Parse((string)sqlDataReader["LicensExpirationDate"]),
-			Distributor = _distributorRepository.GetById((int)sqlDataReader["DistributorId"]).Result,
-			BasePrice = (decimal)sqlDataReader["BasePrice"]
-		};
+			=> new Film()
+			{
+				Id = (int)sqlDataReader["Id"],
+				Name = sqlDataReader["Name"] as string ?? "Undefined",
+				Duration = (int)sqlDataReader["Duration"],
+				FilmCrew = _personGetAllById.GetAllByIdOneToMany((int)sqlDataReader["Id"]).Result,
+				Reviews = _reviewGetAllById.GetAllByIdOneToMany((int)sqlDataReader["Id"]).Result,
+				Description = sqlDataReader["Description"] as string ?? "Undefined",
+				Year = (int)sqlDataReader["YearOfRelease"],
+				Scores = _scoreGetAllById.GetAllByIdOneToMany((int)sqlDataReader["Id"]).Result,
+				LicensExpirationDate = DateTime.Parse((string)sqlDataReader["LicensExpirationDate"]),
+				Distributor = _distributorRepository.GetById((int)sqlDataReader["DistributorId"]).Result,
+				BasePrice = (decimal)sqlDataReader["BasePrice"]
+			};
 
 		protected override void InsertCommand(SqlCommand sqlCommand, Film entity)
 		{
-			throw new NotImplementedException();
+			sqlCommand.Parameters.Add("@Id", SqlDbType.NVarChar).Value = entity.Id;
+			sqlCommand.Parameters.Add("@Name", SqlDbType.NVarChar).Value = entity.Name;
+			sqlCommand.Parameters.Add("@Duration", SqlDbType.NVarChar).Value = entity.Duration;
+			sqlCommand.Parameters.Add("@DescriptionFilm", SqlDbType.NVarChar).Value = entity.Description;
+			sqlCommand.Parameters.Add("@YearOfRelease", SqlDbType.NVarChar).Value = entity.Year;
+			sqlCommand.Parameters.Add("@LicensExpirationDate", SqlDbType.NVarChar).Value = entity.LicensExpirationDate;
+			sqlCommand.Parameters.Add("@DistributorId", SqlDbType.NVarChar).Value = entity.Distributor.Id;
+			sqlCommand.Parameters.Add("@BasePrice", SqlDbType.NVarChar).Value = entity.BasePrice;
 		}
 	}
 }

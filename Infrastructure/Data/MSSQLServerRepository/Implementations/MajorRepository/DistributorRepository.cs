@@ -18,11 +18,11 @@ namespace Infrastructure.Data.MSSQLServerRepository.Implementations.MajorReposit
 		}
 
 		protected override Distributor GetReader(SqlDataReader sqlDataReader)
-		=> new Distributor()
-		{
-			Id = (int)sqlDataReader["Id"],
-			NameCompany = sqlDataReader["Name"] as string ?? "Undefined",
-		};
+			=> new Distributor()
+			{
+				Id = (int)sqlDataReader["Id"],
+				NameCompany = sqlDataReader["Name"] as string ?? "Undefined",
+			};
 
 		protected override void InsertCommand(SqlCommand sqlCommand, Distributor entity)
 		{

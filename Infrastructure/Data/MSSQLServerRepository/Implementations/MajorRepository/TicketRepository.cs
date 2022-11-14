@@ -37,13 +37,13 @@ namespace Infrastructure.Data.MSSQLServerRepository.Implementations.MajorReposit
 		}
 
 		protected override Ticket GetReader(SqlDataReader sqlDataReader)
-		 => new Ticket()
-		 {
-			 Id = (int)sqlDataReader["Id"],
-			 Seat = _seatRepository.GetById((int)sqlDataReader["SeatId"]).Result,
-			 RegisteredUser = _registeredUserRepository.GetById((int)sqlDataReader["RegisteredUserId"]).Result,
-			 Cashier = _employeeRepository.GetById((int)sqlDataReader["EmployeeId"]).Result
-		 };
+			=> new Ticket()
+			{
+				Id = (int)sqlDataReader["Id"],
+				Seat = _seatRepository.GetById((int)sqlDataReader["SeatId"]).Result,
+				RegisteredUser = _registeredUserRepository.GetById((int)sqlDataReader["RegisteredUserId"]).Result,
+				Cashier = _employeeRepository.GetById((int)sqlDataReader["EmployeeId"]).Result
+			};
 
 		protected override void InsertCommand(SqlCommand sqlCommand, Ticket entity)
 		{

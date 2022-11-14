@@ -27,14 +27,14 @@ namespace Infrastructure.Data.MSSQLServerRepository.Implementations.MajorReposit
 		}
 
 		protected override Person GetReader(SqlDataReader sqlDataReader)
-		=> new Person()
-		{
-			Id = (int)sqlDataReader["Id"],
-			FirstName = sqlDataReader["FirstName"] as string ?? "Undefined",
-			MiddleName = sqlDataReader["MiddleName"] as string ?? "Undefined",
-			LastName = sqlDataReader["LastName"] as string ?? "Undefined",
-			Post = sqlDataReader["Post"] as string ?? "Undefined"
-		};
+			=> new Person()
+			{
+				Id = (int)sqlDataReader["Id"],
+				FirstName = sqlDataReader["FirstName"] as string ?? "Undefined",
+				MiddleName = sqlDataReader["MiddleName"] as string ?? "Undefined",
+				LastName = sqlDataReader["LastName"] as string ?? "Undefined",
+				Post = sqlDataReader["Post"] as string ?? "Undefined"
+			};
 
 		protected override void InsertCommand(SqlCommand sqlCommand, Person entity)
 		{
