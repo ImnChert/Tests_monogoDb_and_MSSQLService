@@ -33,7 +33,7 @@ namespace Infrastructure.Data.MSSQLServerRepository.Implementations.MajorReposit
 			=> new Review()
 			{
 				Id = (int)sqlDataReader["Id"],
-				RegisteredUser = _registerUserRepository.GetById((int)sqlDataReader["RegisteredUsersId"]).Re,
+				RegisteredUser = _registerUserRepository.GetById((int)sqlDataReader["RegisteredUsersId"]).Result,
 				Description = sqlDataReader["Description"] as string ?? "Undefined"
 			};
 
