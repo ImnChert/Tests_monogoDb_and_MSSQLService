@@ -2,11 +2,13 @@
 using ApplicationCore.Domain.Interfaces.Interfaces;
 using System.Data.SqlClient;
 using System.Data;
+using ApplicationCore.Domain.Interfaces;
+using ApplicationCore.Domain.Core.Models.Cinema;
 
 namespace Infrastructure.Data.MSSQLServerRepository.Connection
 {
 	public abstract class MainMSSQLServerRepository<T>
-		 : MainMSSQLServer, IRepository<T> where T : EntityBase
+		 : MainMSSQLServer, IRepository<T>, IGetAllById<T> where T : EntityBase
 	{
 		protected readonly string _tableName;
 		protected readonly string _deleteQuery;
@@ -14,6 +16,8 @@ namespace Infrastructure.Data.MSSQLServerRepository.Connection
 		protected readonly string _updateQuery;
 		protected readonly string _getAllQuery;
 		protected readonly string _getByIdQuery;
+		protected readonly string _getAllByIdQuery = null;
+		protected readonly string _parameterName = null;
 
 		public MainMSSQLServerRepository(string connectionString, string tableName,
 			string insertQuery, string updateQuery, string getAllQuery, string getByIdQuery)
@@ -25,6 +29,15 @@ namespace Infrastructure.Data.MSSQLServerRepository.Connection
 			_updateQuery = updateQuery;
 			_getAllQuery = getAllQuery;
 			_getByIdQuery = getByIdQuery;
+		}
+
+		public MainMSSQLServerRepository(string connectionString, string tableName,
+			string insertQuery, string updateQuery, string getAllQuery, string getByIdQuery,
+			string getAllByIdQuery, string parameterName)
+			: this(connectionString, tableName, insertQuery, updateQuery, getAllQuery, getByIdQuery)
+		{
+			_getAllByIdQuery = getAllByIdQuery;
+			_parameterName = parameterName;
 		}
 
 		private async Task<bool> DeleteSqlCommand(SqlCommand sqlCommand, T entity)
@@ -111,5 +124,45 @@ namespace Infrastructure.Data.MSSQLServerRepository.Connection
 
 		public async Task<T> GetById(int id)
 			=> await Connection<T, int>(id, GetByIdSqlCommand, _getByIdQuery);
+
+		public async Task<List<T>> GetAllByIdOneToMany(int id)
+		{
+			if (_getAllByIdQuery == null)
+				return null;
+
+			return await Connection<List<T>, int>(id, GetAllByIdSqlCommand, _getAllByIdQuery);
+		}
+
+
+		private async Task<List<T>> GetAllByIdSqlCommand(SqlCommand sqlCommand, int id)
+		{
+			if (_parameterName == null)
+				return null;
+
+			var username = new SqlParameter
+			{
+				ParameterName = _parameterName,
+				Value = id,
+				SqlDbType = SqlDbType.Int,
+				Direction = ParameterDirection.Input
+			};
+
+			sqlCommand.Parameters.Add(username);
+
+			var collection = new List<T>();
+
+			using (SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync())
+			{
+				while (await sqlDataReader.ReadAsync())
+				{
+					collection.Add(GetReader(sqlDataReader));
+				}
+
+				if (collection.Count > 0)
+					return collection;
+				else
+					return null;
+			}
+		}
 	}
 }
