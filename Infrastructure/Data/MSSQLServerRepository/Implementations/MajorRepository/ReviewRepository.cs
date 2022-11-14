@@ -1,5 +1,4 @@
-﻿using ApplicationCore.Domain.Core.Models.Cinema;
-using ApplicationCore.Domain.Core.Models.Cinema.Films;
+﻿using ApplicationCore.Domain.Core.Models.Cinema.Films;
 using ApplicationCore.Domain.Core.Models.Roles;
 using ApplicationCore.Domain.Interfaces.Interfaces;
 using Infrastructure.Data.MSSQLServerRepository.Connection;

@@ -2,7 +2,7 @@
 using Infrastructure.Data.MSSQLServerRepository.Connection;
 using System.Data.SqlClient;
 
-namespace Infrastructure.Data.MSSQLServerRepository.Implementations.ManyToMany
+namespace Infrastructure.Data.MSSQLServerRepository.Implementations.LowerRepository
 {
 	internal class PositionRepository : MainMSSQLServerManyToManyRepository<Position>
 	{
