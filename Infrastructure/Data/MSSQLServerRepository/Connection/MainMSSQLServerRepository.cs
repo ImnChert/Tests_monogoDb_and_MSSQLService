@@ -58,19 +58,19 @@ namespace Infrastructure.Data.MSSQLServerRepository.Connection
 
 		protected abstract T GetReader(SqlDataReader sqlDataReader);
 
-		private async Task<List<T>> GetAllSqlCommand(SqlCommand sqlCommand, T entity)
+		protected async Task<List<T>> GetAllSqlCommand(SqlCommand sqlCommand, T entity)
 		{
-			var categories = new List<T>();
+			var collection = new List<T>();
 
 			using (SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync())
 			{
 				while (await sqlDataReader.ReadAsync())
 				{
-					categories.Add(GetReader(sqlDataReader));
+					collection.Add(GetReader(sqlDataReader));
 				}
 
-				if (categories.Count > 0)
-					return categories;
+				if (collection.Count > 0)
+					return collection;
 				else
 					return null;
 			}
