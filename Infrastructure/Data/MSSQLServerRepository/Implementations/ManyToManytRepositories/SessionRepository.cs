@@ -3,7 +3,6 @@ using ApplicationCore.Domain.Core.Models.Cinema.Films;
 using ApplicationCore.Domain.Interfaces;
 using ApplicationCore.Domain.Interfaces.Interfaces;
 using Infrastructure.Data.MSSQLServerRepository.Connection;
-using SharpCompress.Common;
 using System.Data;
 using System.Data.SqlClient;
 

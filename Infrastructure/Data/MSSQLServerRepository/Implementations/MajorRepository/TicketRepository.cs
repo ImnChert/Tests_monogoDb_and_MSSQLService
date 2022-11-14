@@ -1,8 +1,6 @@
-﻿using ApplicationCore.Domain.Core.Models;
-using ApplicationCore.Domain.Core.Models.Cinema;
+﻿using ApplicationCore.Domain.Core.Models.Cinema;
 using ApplicationCore.Domain.Core.Models.Roles;
 using ApplicationCore.Domain.Core.Models.Roles.Staff;
-using ApplicationCore.Domain.Interfaces;
 using ApplicationCore.Domain.Interfaces.Interfaces;
 using Infrastructure.Data.MSSQLServerRepository.Connection;
 using System.Data;
