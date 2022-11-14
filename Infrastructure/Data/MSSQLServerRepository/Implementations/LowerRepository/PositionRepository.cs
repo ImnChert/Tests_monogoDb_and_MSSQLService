@@ -35,13 +35,17 @@ namespace Infrastructure.Data.MSSQLServerRepository.Implementations.LowerReposit
 			return position;
 		}
 
-		protected override Task SetCommand(SqlCommand sqlCommand, ManyToMany<Position> value)
-			=> await value.ManyList.ForEach(item =>
+		protected override async Task SetCommand(SqlCommand sqlCommand, ManyToMany<Position> value)
+			=> value.ManyList.ForEach(item =>
 			{
 				sqlCommand.Parameters.Add("@EmployeeId", SqlDbType.NVarChar).Value = value.Id;
 				sqlCommand.Parameters.Add("@PositionID", SqlDbType.NVarChar).Value = item.Id;
 			});
 
+		protected override void InsertCommand(SqlCommand sqlCommand, Position entity)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }
 
