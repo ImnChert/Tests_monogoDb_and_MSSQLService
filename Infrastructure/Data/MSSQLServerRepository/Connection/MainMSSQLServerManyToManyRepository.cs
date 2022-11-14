@@ -12,7 +12,7 @@ namespace Infrastructure.Data.MSSQLServerRepository.Connection
 		protected string _getManyToManyQuery;
 		protected string _setManyToManyQuery;
 
-		public MainMSSQLServerManyToManyRepository(string connectionString, string getManyToManyQuery, string setManyToManyQuery) 
+		public MainMSSQLServerManyToManyRepository(string connectionString, string getManyToManyQuery, string setManyToManyQuery)
 			: base(connectionString)
 		{
 			_getManyToManyQuery = getManyToManyQuery;
@@ -40,7 +40,7 @@ namespace Infrastructure.Data.MSSQLServerRepository.Connection
 			}
 		}
 
-		protected abstract Task<bool> SetCommand(SqlCommand sqlCommand, ManyToMany<T> value);
+		protected abstract Task SetCommand(SqlCommand sqlCommand, ManyToMany<T> value);
 
 		private async Task<bool> SetSqlCommand(SqlCommand sqlCommand, ManyToMany<T> value)
 		{
@@ -55,6 +55,6 @@ namespace Infrastructure.Data.MSSQLServerRepository.Connection
 			=> await Connection<List<T>, int>(id, GetSqlCommand, _getManyToManyQuery);
 
 		public async Task<bool> SetManyToMany(int id, List<T> values)
-		=> await Connection<bool, ManyToMany<T>>(new ManyToMany<T> { Id = id, ManyList = values}, SetSqlCommand, _setManyToManyQuery);
+		=> await Connection<bool, ManyToMany<T>>(new ManyToMany<T> { Id = id, ManyList = values }, SetSqlCommand, _setManyToManyQuery);
 	}
 }

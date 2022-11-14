@@ -1,5 +1,9 @@
-﻿using ApplicationCore.Domain.Core.Models.Roles.Staff;
+﻿using ApplicationCore.Domain.Core.Models.Cinema;
+using ApplicationCore.Domain.Core.Models.Roles.Staff;
+using ApplicationCore.Domain.Core.Models.Roles.Staff.Positions;
 using Infrastructure.Data.MSSQLServerRepository.Connection;
+using SharpCompress.Common;
+using System.Data;
 using System.Data.SqlClient;
 
 namespace Infrastructure.Data.MSSQLServerRepository.Implementations.LowerRepository
@@ -17,14 +21,27 @@ namespace Infrastructure.Data.MSSQLServerRepository.Implementations.LowerReposit
 		{
 		}
 
+		private Dictionary<string, Position> _positions = new Dictionary<string, Position>()
+		{
+			{"Admin", new Admin()}
+
+		};
+
 		protected override Position GetCommand(SqlDataReader sqlDataReader)
 		{
-			throw new NotImplementedException();
+			var position = _positions[(string)sqlDataReader["NamePosition"]];
+			position.Id = (int)sqlDataReader["Id"];
+
+			return position;
 		}
 
-		protected override Task<bool> SetCommand(SqlCommand sqlCommand, ManyToMany<Position> value)
-		{
-			throw new NotImplementedException();
-		}
+		protected override Task SetCommand(SqlCommand sqlCommand, ManyToMany<Position> value)
+			=> await value.ManyList.ForEach(item =>
+			{
+				sqlCommand.Parameters.Add("@EmployeeId", SqlDbType.NVarChar).Value = value.Id;
+				sqlCommand.Parameters.Add("@PositionID", SqlDbType.NVarChar).Value = item.Id;
+			});
+
 	}
 }
+
