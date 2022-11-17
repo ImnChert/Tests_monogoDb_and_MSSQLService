@@ -3,7 +3,7 @@ using ApplicationCore.Domain.Interfaces.Interfaces;
 
 namespace ApplicationCore.Services.Implementations.Repositories
 {
-	internal class UserService : MainRepository<RegisteredUser>
+	public class UserService : MainRepository<RegisteredUser>
 	{
 		public UserService(IRepository<RegisteredUser> repository) : base(repository)
 		{
