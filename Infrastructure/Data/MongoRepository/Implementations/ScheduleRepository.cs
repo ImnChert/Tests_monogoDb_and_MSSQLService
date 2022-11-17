@@ -3,10 +3,12 @@ using Infrastructure.Business;
 using Infrastructure.Data.MongoRepository.Connection;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using System.Globalization;
 
 namespace Infrastructure.Data.MongoRepository.Implementations
 {
-	public class ScheduleRepository : MainMongoRepository<Schedule>
+	public class ScheduleRepository
+		: MainMongoRepository<Schedule>
 	{
 		public ScheduleRepository(string connectionString)
 			: base(connectionString, "schedule")
@@ -61,12 +63,12 @@ namespace Infrastructure.Data.MongoRepository.Implementations
 		public Schedule InitializationSchedule(BsonDocument item, MongoParser parse) => new Schedule()
 		{
 			Id = item.GetValue("_id").ToInt32(),
-			Date = DateTime.Parse((string)item.GetValue("date")),
+			Date = DateTime.Parse(item.GetValue("date").ToString(), CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal),
 			Hall = new Hall()
 			{
 				Number = item.GetValue("numberHall").ToInt32(),
 			},
-			Sessions = parse.ParseSessions((string)item.GetValue("sessions"))
+			Sessions = parse.ParseSessions(item.GetValue("sessions"))
 		};
 
 		public override async Task<bool> InsertAsync(Schedule entity)

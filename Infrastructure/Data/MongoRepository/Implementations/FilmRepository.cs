@@ -3,6 +3,7 @@ using Infrastructure.Business;
 using Infrastructure.Data.MongoRepository.Connection;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using System.Globalization;
 
 namespace Infrastructure.Data.MongoRepository.Implementations
 {
@@ -74,7 +75,8 @@ namespace Infrastructure.Data.MongoRepository.Implementations
 				Id = item.GetValue("distributor_id").ToInt32(),
 			},
 			BasePrice = item.GetValue("basePrice").ToInt32(),
-			LicensExpirationDate = DateTime.Parse((string)item.GetValue("licensExpirationDate"))
+			LicensExpirationDate = DateTime.Parse(item.GetValue("licensExpirationDate").ToString(), 
+				CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal)
 		};
 
 		public override async Task<bool> InsertAsync(Film entity)

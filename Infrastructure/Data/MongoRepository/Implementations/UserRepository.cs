@@ -3,13 +3,14 @@ using Infrastructure.Business;
 using Infrastructure.Data.MongoRepository.Connection;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using System.Globalization;
 
 namespace Infrastructure.Data.MongoRepository.Implementations
 {
 	public class UserRepository : MainMongoRepository<RegisteredUser>
 	{
 		public UserRepository(string connectionString)
-			: base(connectionString, "registeredUsers")
+			: base(connectionString, "registeredUser")
 		{
 		}
 
@@ -65,7 +66,7 @@ namespace Infrastructure.Data.MongoRepository.Implementations
 			FirstName = item.GetValue("firstName").ToString(),
 			LastName = item.GetValue("lastName").ToString(),
 			MiddleName = item.GetValue("middleName").ToString(),
-			DateOfBirthday = DateTime.Parse((string)item.GetValue("dateOfBirth")),
+			DateOfBirthday = DateTime.Parse(item.GetValue("dateOfBirth").ToString(), CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal),
 			Phone = item.GetValue("phone").ToString()
 		};
 

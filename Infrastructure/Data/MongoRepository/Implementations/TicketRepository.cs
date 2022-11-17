@@ -17,7 +17,7 @@ namespace Infrastructure.Data.MongoRepository.Implementations
 		private IRepository<Employee> _employeeRepository;
 
 		public TicketRepository(string connectionString)
-			: base(connectionString, "films")
+			: base(connectionString, "ticket")
 		{
 			_categoryRepository = new CategoryRepository(connectionString);
 			_userRepository = new UserRepository(connectionString);

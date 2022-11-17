@@ -8,7 +8,8 @@ namespace Infrastructure.Data.MongoRepository.Implementations
 {
 	public class EmployeeRepository : MainMongoRepository<Employee>
 	{
-		public EmployeeRepository(string connectionString) : base(connectionString, "employees")
+		public EmployeeRepository(string connectionString)
+			: base(connectionString, "employees")
 		{
 		}
 

@@ -12,7 +12,8 @@ namespace Infrastructure.Data.MongoRepository.Implementations
 	{
 		private IRepository<Film> _filmRepository;
 
-		public SessionRepository(string connectionString) : base(connectionString, "sessions")
+		public SessionRepository(string connectionString)
+			: base(connectionString, "sessions")
 		{
 			_filmRepository = new FilmRepository(connectionString);
 		}
