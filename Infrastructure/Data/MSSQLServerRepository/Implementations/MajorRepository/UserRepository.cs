@@ -5,7 +5,7 @@ using System.Data.SqlClient;
 
 namespace Infrastructure.Data.MSSQLServerRepository.Implementations.MajorRepository
 {
-	internal class UserRepository : MainMSSQLServerRepository<RegisteredUser>
+	public class UserRepository : MainMSSQLServerRepository<RegisteredUser>
 	{
 		public UserRepository(string connectionString)
 			: base(connectionString,

@@ -6,7 +6,7 @@ using System.Data.SqlClient;
 
 namespace Infrastructure.Data.MSSQLServerRepository.Implementations.MajorRepository
 {
-	internal class ScheduleRepository : MainMSSQLServerRepository<Schedule>
+	public class ScheduleRepository : MainMSSQLServerRepository<Schedule>
 	{
 		IManyToManyRepository<Session> _sessionRepository;
 		public ScheduleRepository(string connectionString, IManyToManyRepository<Session> sessionRepository)

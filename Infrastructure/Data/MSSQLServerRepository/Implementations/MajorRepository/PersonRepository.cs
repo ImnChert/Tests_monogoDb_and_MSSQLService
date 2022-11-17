@@ -6,7 +6,7 @@ using System.Data.SqlClient;
 
 namespace Infrastructure.Data.MSSQLServerRepository.Implementations.MajorRepository
 {
-	internal class PersonRepository : MainMSSQLServerRepository<Person>
+	public class PersonRepository : MainMSSQLServerRepository<Person>
 	{
 		private readonly Film _film;
 

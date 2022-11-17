@@ -5,7 +5,7 @@ using System.Data.SqlClient;
 
 namespace Infrastructure.Data.MSSQLServerRepository.Implementations.MajorRepository
 {
-	internal class DistributorRepository : MainMSSQLServerRepository<Distributor>
+	public class DistributorRepository : MainMSSQLServerRepository<Distributor>
 	{
 		public DistributorRepository(string connectionString)
 			: base(connectionString,

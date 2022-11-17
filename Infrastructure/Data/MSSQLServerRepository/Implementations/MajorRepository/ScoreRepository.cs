@@ -7,7 +7,7 @@ using System.Data.SqlClient;
 
 namespace Infrastructure.Data.MSSQLServerRepository.Implementations.MajorRepository
 {
-	internal class ScoreRepository : MainMSSQLServerRepository<Score>
+	public class ScoreRepository : MainMSSQLServerRepository<Score>
 	{
 		private readonly Film _film;
 		private readonly IRepository<RegisteredUser> _registerUserRepository;

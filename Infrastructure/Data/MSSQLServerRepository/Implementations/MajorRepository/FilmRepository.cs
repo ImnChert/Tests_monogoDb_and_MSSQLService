@@ -7,7 +7,7 @@ using System.Data.SqlClient;
 
 namespace Infrastructure.Data.MSSQLServerRepository.Implementations.MajorRepository
 {
-	internal class FilmRepository : MainMSSQLServerRepository<Film>
+	public class FilmRepository : MainMSSQLServerRepository<Film>
 	{
 		private IRepository<Distributor> _distributorRepository;
 		private readonly IGetAllById<Review> _reviewGetAllById;
