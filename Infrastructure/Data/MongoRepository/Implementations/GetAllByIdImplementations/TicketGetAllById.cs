@@ -3,14 +3,9 @@ using ApplicationCore.Domain.Core.Models.Roles;
 using ApplicationCore.Domain.Core.Models.Roles.Staff;
 using ApplicationCore.Domain.Interfaces;
 using ApplicationCore.Domain.Interfaces.Interfaces;
-using Infrastructure.Business;
-using Infrastructure.Data.MongoRepository.Connection;
 using Infrastructure.Data.MSSQLServerRepository.Implementations.MajorRepository;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using MongoDB.Driver.Core.Configuration;
-using SharpCompress.Common;
-using System.Globalization;
 
 namespace Infrastructure.Data.MongoRepository.Implementations.GetAllByIdImplementations
 {

@@ -6,7 +6,7 @@ using MongoDB.Driver;
 
 namespace Infrastructure.Data.MongoRepository.Implementations.GetAllByIdImplementations
 {
-	internal class PositionGetAllById : IGetAllById<Position>
+	public class PositionGetAllById : IGetAllById<Position>
 	{
 		private readonly IMongoCollection<BsonDocument> _mongoCollection;
 
@@ -19,6 +19,8 @@ namespace Infrastructure.Data.MongoRepository.Implementations.GetAllByIdImplemen
 		{
 			if (name == "Admin")
 				return new Admin() { Id = id, Name = name };
+			else if (name == "Cashier")
+				return new Cashier() { Id = id, Name = name };
 
 			return null;
 		}
@@ -27,7 +29,7 @@ namespace Infrastructure.Data.MongoRepository.Implementations.GetAllByIdImplemen
 		{
 			var pipeline = new BsonDocument
 			{
-				{"$unwind", "$post"}
+				{"$unwind", "$posts"}
 			};
 
 			var pipeline2 = new BsonDocument
@@ -42,8 +44,8 @@ namespace Infrastructure.Data.MongoRepository.Implementations.GetAllByIdImplemen
 				{
 					"$project", new BsonDocument
 					{
-						{ "_id", "$post.post_id" },
-						{ "name", "$post.name"}
+						{ "_id", "$posts.post_id" },
+						{ "name", "$posts.postName"}
 					}
 				}
 			};

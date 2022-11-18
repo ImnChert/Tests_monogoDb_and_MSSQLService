@@ -1,6 +1,8 @@
 ﻿using ApplicationCore.Domain.Core.Models.Cinema.Films;
+using ApplicationCore.Domain.Interfaces;
 using Infrastructure.Business;
 using Infrastructure.Data.MongoRepository.Connection;
+using Infrastructure.Data.MongoRepository.Implementations.GetAllByIdImplementations;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System.Globalization;
@@ -9,9 +11,25 @@ namespace Infrastructure.Data.MongoRepository.Implementations.RepositoryImplemen
 {
 	public class FilmRepository : MainMongoRepository<Film>
 	{
+		private IGetAllById<Review> _reviewGetAllById;
+		private IGetAllById<Score> _scoreGetAllById;
+		private IGetAllById<Person> _personGetAllById;
+
+		public FilmRepository(string connectionString, IGetAllById<Review> reviewGetAllById,
+			IGetAllById<Score> scoreGetAllById, IGetAllById<Person> personGetAllById)
+			: base(connectionString, "films")
+		{
+			_reviewGetAllById = reviewGetAllById;
+			_personGetAllById = personGetAllById;
+			_scoreGetAllById = scoreGetAllById;
+		}
+
 		public FilmRepository(string connectionString)
 			: base(connectionString, "films")
 		{
+			_reviewGetAllById = new ReviewGetAllById(connectionString, _mongoCollection);
+			_personGetAllById = new PersonGetAllById(_mongoCollection);
+			_scoreGetAllById = new ScoreGetAllById(connectionString, _mongoCollection);
 		}
 
 		public override async Task<List<Film>> GetAllAsync()
@@ -65,9 +83,9 @@ namespace Infrastructure.Data.MongoRepository.Implementations.RepositoryImplemen
 			Name = item.GetValue("name").ToString(),
 			Duration = item.GetValue("duration").ToInt32(),
 			Description = item.GetValue("description").ToString(),
-			FilmCrew = parse.ParsePersons(item.GetValue("staff")),
-			Reviews = parse.ParseReviews(item.GetValue("rewiews")),
-			Scores = parse.ParseScores(item.GetValue("scores")),
+			FilmCrew = _personGetAllById.GetAllByIdOneToMany(item.GetValue("_id").ToInt32()).Result,
+			Reviews = _reviewGetAllById.GetAllByIdOneToMany(item.GetValue("_id").ToInt32()).Result,
+			Scores = _scoreGetAllById.GetAllByIdOneToMany(item.GetValue("_id").ToInt32()).Result,
 			Year = item.GetValue("yearOfRelease").ToInt32(),
 			Distributor = new Distributor()
 			{

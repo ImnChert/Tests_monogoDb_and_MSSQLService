@@ -5,6 +5,7 @@ using ApplicationCore.Domain.Core.Models.Roles.Staff;
 using ApplicationCore.Domain.Core.Models.Roles.Staff.Positions;
 using ApplicationCore.Services.Implementations.Repositories;
 using Infrastructure.Data.MongoRepository.Implementations;
+using Infrastructure.Data.MongoRepository.Implementations.RepositoryImplementetions;
 
 namespace IntegratedTests
 {
@@ -62,31 +63,31 @@ namespace IntegratedTests
 				Name = "test",
 				Duration = 120,
 				FilmCrew = new List<Person>()
-						{
-							new Person()
-							{
-								FirstName= "testFirstName",
-								MiddleName = "testMiddleName",
-								LastName = "testLastName",
-								Post = "Режисер"
-							}
-						},
+				{
+					new Person()
+					{
+						FirstName= "testFirstName",
+						MiddleName = "testMiddleName",
+						LastName = "testLastName",
+						Post = "Режисер"
+					}
+				},
 				Reviews = new List<Review>()
-						{
-							new Review()
-							{
-								RegisteredUser = GetTestUsers()[0],
-								Description = "test"
-							}
-						},
+				{
+					new Review()
+					{
+						RegisteredUser = GetTestUsers()[0],
+						Description = "test"
+					}
+				},
 				Scores = new List<Score>()
-						{
-							new Score()
-							{
-								RegisteredUser = GetTestUsers()[0],
-								Raiting = 1
-							}
-						},
+				{
+					new Score()
+					{
+						RegisteredUser = GetTestUsers()[0],
+						Raiting = 1
+					}
+				},
 				Description = "test",
 				Year = 2001,
 				LicensExpirationDate = DateTime.Now,
@@ -136,8 +137,7 @@ namespace IntegratedTests
 							RegisteredUser = null,
 							Cashier = null
 						}
-					}
-
+					};
 
 		private List<Session> GetTestListSession()
 			=> new List<Session>()
@@ -153,7 +153,6 @@ namespace IntegratedTests
 		private Schedule GetTestSchedule()
 			=> new Schedule
 			{
-				Id = 1,
 				Hall = new Hall { Id = 1 },
 				Date = new DateTime(),
 				Sessions = GetTestListSession()
@@ -174,23 +173,44 @@ namespace IntegratedTests
 				var filmRepositpry = new FilmRepository(_connectionString);
 				var filmService = new FilmService(filmRepositpry);
 
+				var categoryRepositpry = new CategoryRepository(_connectionString);
+				var categoryService = new CategoryService(categoryRepositpry);
 
-
-				var scheduleRepository = new ScheduleRepository(_connectionString, filmRepositpry);
+				var scheduleRepository = new ScheduleRepository(_connectionString);
 				var scheduleService = new ScheduleService(scheduleRepository);
 
 				List<RegisteredUser> collectionUsers = GetTestUsers();
+				List<Ticket> collectionTickets = GetTestTicket();
 				Category category = GetTestCategory();
 				Employee employee = GetTestEmployee();
 				Schedule schedule = GetTestSchedule();
+				Film film = GetTestFilm();
 
 				// Act
 
-				employeeRepository.InsertAsync(employee);
-				Employee employeeData = employeeRepository.GetAllAsync().Result[0];
+				await categoryService.InsertAsync(category);
+				Category categoryData = categoryService.GetAllAsync().Result.Data[0];
+
+				await employeeService.InsertAsync(employee);
+				Employee employeeData = employeeService.GetAllAsync().Result.Data[0];
+
+				// TODO: тестил сотрудника траблы с должностью
 
 				collectionUsers.ForEach(async user => await userService.InsertAsync(user));
-				List<RegisteredUser> usersData = (await userService.GetAllAsync()).Result;
+				List<RegisteredUser> usersData = userService.GetAllAsync().Result.Data;
+
+				await filmService.InsertAsync(film);
+				Film filmData = filmService.GetAllAsync().Result.Data[0];
+
+				foreach (Ticket ticket in collectionTickets)
+				{
+					ticket.RegisteredUser = usersData[0];
+					ticket.Seat.Category = category;
+					ticket.Cashier = employee;
+				}
+
+				schedule.Sessions[0].Tickets = collectionTickets;
+				schedule.Sessions[0].Film = film;
 
 				await scheduleService.InsertAsync(schedule);
 				var scheduleData = await scheduleService.GetById(schedule.Id);
@@ -235,7 +255,7 @@ namespace IntegratedTests
 				var filmRepositpry = new FilmRepository(_connectionString);
 
 
-				var scheduleRepository = new ScheduleRepository(_connectionString, filmRepositpry);
+				var scheduleRepository = new ScheduleRepository(_connectionString);
 				var scheduleService = new ScheduleService(scheduleRepository);
 
 				// Act

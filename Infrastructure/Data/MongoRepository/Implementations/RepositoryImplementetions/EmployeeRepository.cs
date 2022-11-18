@@ -1,16 +1,28 @@
 ﻿using ApplicationCore.Domain.Core.Models.Roles.Staff;
+using ApplicationCore.Domain.Interfaces;
 using Infrastructure.Business;
 using Infrastructure.Data.MongoRepository.Connection;
+using Infrastructure.Data.MongoRepository.Implementations.GetAllByIdImplementations;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using MongoDB.Driver.Core.Configuration;
 
 namespace Infrastructure.Data.MongoRepository.Implementations.RepositoryImplementetions
 {
 	public class EmployeeRepository : MainMongoRepository<Employee>
 	{
+		private IGetAllById<Position> _positionsGetAllById;
+
+		public EmployeeRepository(string connectionString, IGetAllById<Position> positionsGetAllById)
+			: base(connectionString, "employees")
+		{
+			_positionsGetAllById = positionsGetAllById;
+		}
+
 		public EmployeeRepository(string connectionString)
 			: base(connectionString, "employees")
 		{
+			_positionsGetAllById = new PositionGetAllById(_mongoCollection);
 		}
 
 		public override async Task<List<Employee>> GetAllAsync()
@@ -67,7 +79,7 @@ namespace Infrastructure.Data.MongoRepository.Implementations.RepositoryImplemen
 			FirstName = item.GetValue("firstName").ToString(),
 			MiddleName = item.GetValue("middleName").ToString(),
 			LastName = item.GetValue("lastName").ToString(),
-			Positions = parse.ParsePositions(item.GetValue("posts"))
+			Positions = _positionsGetAllById.GetAllByIdOneToMany(item.GetValue("_id").ToInt32()).Result.ToList()
 		};
 
 		public override async Task<bool> InsertAsync(Employee entity)

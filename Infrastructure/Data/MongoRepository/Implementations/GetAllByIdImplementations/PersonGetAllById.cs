@@ -5,7 +5,7 @@ using MongoDB.Driver;
 
 namespace Infrastructure.Data.MongoRepository.Implementations.GetAllByIdImplementations
 {
-	internal class PersonGetAllById : IGetAllById<Person>
+	public class PersonGetAllById : IGetAllById<Person>
 	{
 		private readonly IMongoCollection<BsonDocument> _mongoCollection;
 

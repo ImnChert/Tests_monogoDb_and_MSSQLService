@@ -2,7 +2,7 @@
 using ApplicationCore.Domain.Core.Models.Cinema.Films;
 using ApplicationCore.Domain.Interfaces;
 using ApplicationCore.Domain.Interfaces.Interfaces;
-using Infrastructure.Data.MSSQLServerRepository.Implementations.MajorRepository;
+using Infrastructure.Data.MongoRepository.Implementations.RepositoryImplementetions;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System.Globalization;

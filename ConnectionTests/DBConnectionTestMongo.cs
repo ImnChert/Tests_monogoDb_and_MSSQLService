@@ -1,5 +1,5 @@
 ﻿using ApplicationCore.Services.Implementations.Repositories;
-using Infrastructure.Data.MongoRepository.Implementations;
+using Infrastructure.Data.MongoRepository.Implementations.RepositoryImplementetions;
 
 namespace ConnectionTests
 {

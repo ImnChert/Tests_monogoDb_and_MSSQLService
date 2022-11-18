@@ -2,13 +2,13 @@
 using ApplicationCore.Domain.Core.Models.Roles;
 using ApplicationCore.Domain.Interfaces;
 using ApplicationCore.Domain.Interfaces.Interfaces;
+using Infrastructure.Data.MongoRepository.Implementations.RepositoryImplementetions;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using MongoDB.Driver.Core.Configuration;
 
 namespace Infrastructure.Data.MongoRepository.Implementations.GetAllByIdImplementations
 {
-	internal class ScoreGetAllById : IGetAllById<Score>
+	public class ScoreGetAllById : IGetAllById<Score>
 	{
 		private readonly IMongoCollection<BsonDocument> _mongoCollection;
 		private IRepository<RegisteredUser> _registeredUserRepository;

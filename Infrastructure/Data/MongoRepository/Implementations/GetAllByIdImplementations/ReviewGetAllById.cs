@@ -2,12 +2,13 @@
 using ApplicationCore.Domain.Core.Models.Roles;
 using ApplicationCore.Domain.Interfaces;
 using ApplicationCore.Domain.Interfaces.Interfaces;
+using Infrastructure.Data.MongoRepository.Implementations.RepositoryImplementetions;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace Infrastructure.Data.MongoRepository.Implementations.GetAllByIdImplementations
 {
-	internal class ReviewGetAllById : IGetAllById<Review>
+	public class ReviewGetAllById : IGetAllById<Review>
 	{
 		private readonly IMongoCollection<BsonDocument> _mongoCollection;
 		private IRepository<RegisteredUser> _registeredUserRepository;
@@ -37,7 +38,7 @@ namespace Infrastructure.Data.MongoRepository.Implementations.GetAllByIdImplemen
 				{
 					"$project", new BsonDocument
 					{
-						{"_id", "$reviews._id" }
+						{"_id", "$reviews._id" },
 						{"username", "$reviews.username"},
 						{"registeredUser_id", "$reviews.registeredUser_id"},
 						{"discription", "$reviews.discription"}
