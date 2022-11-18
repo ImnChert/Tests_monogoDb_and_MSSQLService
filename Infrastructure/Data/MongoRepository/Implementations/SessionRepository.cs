@@ -1,5 +1,6 @@
 ﻿using ApplicationCore.Domain.Core.Models.Cinema;
 using ApplicationCore.Domain.Core.Models.Cinema.Films;
+using ApplicationCore.Domain.Interfaces;
 using ApplicationCore.Domain.Interfaces.Interfaces;
 using Infrastructure.Business;
 using Infrastructure.Data.MongoRepository.Connection;
@@ -8,20 +9,45 @@ using MongoDB.Driver;
 
 namespace Infrastructure.Data.MongoRepository.Implementations
 {
-	public class SessionRepository : MainMongoRepository<Session>
+	public class SessionRepository : MainMongoRepository<Session>, IGetAllById<Session>
 	{
 		private IRepository<Film> _filmRepository;
+		private IRepository<Ticket> _ticketRepository;
+		//private IGetAllById<Ticket> _ticketGetAllByID;
 
-		public SessionRepository(string connectionString)
+		public SessionRepository(string connectionString, IGetAllById<Ticket> ticketGetAllByID, IRepository<Ticket> ticketRepository)
 			: base(connectionString, "sessions")
 		{
 			_filmRepository = new FilmRepository(connectionString);
+			//_ticketGetAllByID = ticketGetAllByID;
+			_ticketRepository = ticketRepository;
 		}
 
 		public override async Task<List<Session>> GetAllAsync()
 		{
 			var filter = new BsonDocument();
 			var sessions = new List<Session>();
+
+			using (IAsyncCursor<BsonDocument> cursor = await _mongoCollection.FindAsync(filter))
+			{
+				while (await cursor.MoveNextAsync())
+				{
+					IEnumerable<BsonDocument> user = cursor.Current;
+
+					foreach (BsonDocument item in user)
+					{
+						sessions.Add(InitializationSession(item));
+					}
+				}
+			}
+
+			return sessions;
+		}
+
+		public async Task<List<Session>> GetAllByIdOneToMany(int id)
+		{
+			var sessions = new List<Session>();
+			var filter = new BsonDocument("schedule_id", id);
 
 			using (IAsyncCursor<BsonDocument> cursor = await _mongoCollection.FindAsync(filter))
 			{
@@ -66,6 +92,7 @@ namespace Infrastructure.Data.MongoRepository.Implementations
 			Id = item.GetValue("_id").ToInt32(),
 			Film = _filmRepository.GetById(item.GetValue("film_id").ToInt32()).Result,
 			StartTime = DateTime.Parse((string)item.GetValue("start")),
+			//Tickets = _ticketGetAllByID.GetAllByIdOneToMany(item.GetValue("_id").ToInt32()).Result
 		};
 
 		public override async Task<bool> InsertAsync(Session entity)
@@ -85,6 +112,7 @@ namespace Infrastructure.Data.MongoRepository.Implementations
 			};
 
 			await _mongoCollection.InsertOneAsync(document);
+			//await _ticketRepository.InsertAsync(entity.Tickets);
 
 			return true;
 		}

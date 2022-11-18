@@ -90,14 +90,14 @@ namespace Infrastructure.Business
 			})
 			.ToList();
 
-		public List<Session> ParseSessions(BsonValue value)
-		=> value.AsBsonArray
-			.Select(p => new Session()
-			{
-				Id = p[0].AsInt32,
-				Film = _filmRepository.GetById(p[4].AsInt32).Result,
-				StartTime = p[5].AsDateTime
-			})
-			.ToList();
+		public List<Session> ParseSessions(BsonValue value) => new List<Session>();
+		//=> value.AsBsonDocument
+		//	.Select(p => new Session()
+		//	{
+		//		Id = p.Value.AsInt32,
+		//		//Film = _filmRepository.GetById(p[4].AsInt32).Result,
+		//		//StartTime = p[5].AsDateTime
+		//	})
+		//	.ToList();
 	}
 }

@@ -1,4 +1,7 @@
 ﻿using ApplicationCore.Domain.Core.Models.Cinema;
+using ApplicationCore.Domain.Core.Models.Cinema.Films;
+using ApplicationCore.Domain.Interfaces;
+using ApplicationCore.Domain.Interfaces.Interfaces;
 using Infrastructure.Business;
 using Infrastructure.Data.MongoRepository.Connection;
 using MongoDB.Bson;
@@ -8,11 +11,21 @@ using System.Globalization;
 namespace Infrastructure.Data.MongoRepository.Implementations
 {
 	public class ScheduleRepository
-		: MainMongoRepository<Schedule>
+		: MainMongoRepository<Schedule>, IGetAllById<Session>
 	{
-		public ScheduleRepository(string connectionString)
+		private IRepository<Film> _filmRepository;
+		//private IRepository<Ticket> _ticketRepository;
+		private IGetAllById<Ticket> _ticketGetAllByID;
+		//private IGetAllById<Session> _sessionGetAllById;
+		//, IGetAllById<Session> sessionGetAllById,\
+
+		public ScheduleRepository(string connectionString, IRepository<Film> filmRepositpry)
 			: base(connectionString, "schedule")
 		{
+			//_sessionGetAllById = sessionGetAllById;
+			_filmRepository = filmRepositpry;
+			//_ticketRepository = ticketRepositpory;
+			_ticketGetAllByID = new TicketRepository(connectionString, _mongoCollection);
 		}
 
 		public override async Task<List<Schedule>> GetAllAsync()
@@ -35,6 +48,54 @@ namespace Infrastructure.Data.MongoRepository.Implementations
 			}
 
 			return schedules;
+		}
+
+		public async Task<List<Session>> GetAllByIdOneToMany(int id)
+		{
+			var pipeline = new BsonDocument
+			{
+				{"$unwind", "$sessions"}
+			};
+
+			var pipeline2 = new BsonDocument
+			{
+				{"$match", new BsonDocument{
+					{"_id", id }
+				}}
+			};
+
+			var pipeline3 = new BsonDocument
+			{
+				{
+					"$project", new BsonDocument
+					{
+						{ "_id", "$_id"},
+						{"nameFilm", "$sessions.nameFilm"},
+						{"duration", "$sessions.duration"},
+						{"basePrice", "$sessions.basePrice"},
+						{"film_id",  "$sessions.film_id"},
+						{"start", "$sessions.start"}
+					}
+				}
+			};
+
+			BsonDocument[] pipelines = new BsonDocument[] { pipeline, pipeline2, pipeline3 };
+			List<BsonDocument> results = await _mongoCollection.Aggregate<BsonDocument>(pipelines).ToListAsync();
+
+			List<Session> sessions = new();
+
+			foreach (BsonDocument item in results)
+			{
+				sessions.Add(new Session()
+				{
+					Id = item.GetValue("_id").ToInt32(),
+					Film = _filmRepository.GetById(item.GetValue("film_id").ToInt32()).Result,
+					StartTime = DateTime.Parse(item.GetValue("start").ToString(), CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal),
+					Tickets = _ticketGetAllByID.GetAllByIdOneToMany(item.GetValue("_id").ToInt32()).Result
+				});
+			}
+
+			return sessions;
 		}
 
 		public override async Task<Schedule> GetById(int id)
@@ -68,26 +129,66 @@ namespace Infrastructure.Data.MongoRepository.Implementations
 			{
 				Number = item.GetValue("numberHall").ToInt32(),
 			},
-			Sessions = parse.ParseSessions(item.GetValue("sessions"))
+			Sessions = GetAllByIdOneToMany(item.GetValue("_id").ToInt32()).Result
 		};
 
+		[Obsolete]
 		public override async Task<bool> InsertAsync(Schedule entity)
 		{
 			var parser = new MongoParser();
 			entity.Id = parser.MaxIndex(_mongoCollection) + 1;
 
-			var sessions = new BsonDocument();
+			var sessions = new BsonArray();
 
-			entity.Sessions.ForEach(item =>
+			entity.Sessions.ForEach(async item =>
 			{
-				sessions.AddRange(new BsonDocument
+				var tickets = new BsonArray();
+
+				if (item.Tickets != null)
+				{
+					item.Tickets.ForEach(ticket =>
+					{
+						var seat = new BsonDocument
+						{
+						{"numberRow", ticket.Seat.NumberRow},
+						{"numberColumn", ticket.Seat.NumberColumn},
+						{"categoryName", ticket.Seat.Category.Name},
+						{"category_id", ticket.Seat.Category.Id}
+						};
+
+						if (ticket.Cashier != null)
+						{
+							tickets.Add(new BsonDocument{
+								{ "_id", ticket.Id },
+								{ "usernameRegisteredUser",ticket.RegisteredUser.Username },
+								{ "registeredUser_id",ticket.RegisteredUser.Id },
+								{ "usernameEmployee",ticket.Cashier.Username },
+								{ "employee_id",ticket.Cashier.Id },
+								{ "seat", seat }
+							});
+						}
+						else
+						{
+							tickets.Add(new BsonDocument{
+								{ "_id", ticket.Id },
+								{ "usernameRegisteredUser",ticket.RegisteredUser.Username },
+								{ "registeredUser_id",ticket.RegisteredUser.Id },
+								{ "usernameEmployee", "undefaited" },
+								{ "employee_id", 0 },
+								{ "seat", seat }
+							});
+						}
+					});
+				}
+				sessions.Add(new BsonDocument
 				{
 					{"_id", item.Id},
 					{"nameFilm", item.Film.Name},
 					{"duration", item.Film.Duration},
 					{"basePrice", item.Film.BasePrice},
 					{"film_id", item.Film.Id},
-					{"start", item.StartTime}
+					{"start", item.StartTime},
+					{"tickets", tickets }
 				});
 			});
 
@@ -122,3 +223,5 @@ namespace Infrastructure.Data.MongoRepository.Implementations
 		}
 	}
 }
+
+// TODO: Сделано Ticket только с insert
