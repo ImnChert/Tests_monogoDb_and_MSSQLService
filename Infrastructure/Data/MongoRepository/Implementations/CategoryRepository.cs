@@ -61,8 +61,8 @@ namespace Infrastructure.Data.MongoRepository.Implementations
 		public Category InitializationFilm(BsonDocument item) => new Category()
 		{
 			Id = item.GetValue("_id").ToInt32(),
-			Name = item.GetValue("username").ToString(),
-			Price = item.GetValue("password").ToDecimal()
+			Name = item.GetValue("name").ToString(),
+			Price = item.GetValue("price").ToDecimal()
 		};
 
 		public override async Task<bool> InsertAsync(Category entity)
