@@ -4,7 +4,7 @@ using Infrastructure.Data.MongoRepository.Connection;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
-namespace Infrastructure.Data.MongoRepository.Implementations
+namespace Infrastructure.Data.MongoRepository.Implementations.RepositoryImplementetions
 {
 	public class CategoryRepository : MainMongoRepository<Category>
 	{

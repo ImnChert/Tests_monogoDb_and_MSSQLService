@@ -1,6 +1,7 @@
 ﻿using ApplicationCore.Domain.Core.Models.Cinema;
 using ApplicationCore.Domain.Interfaces;
 using Infrastructure.Data.MSSQLServerRepository.Connection;
+using Infrastructure.Data.MSSQLServerRepository.Implementations.LowerRepository;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -19,6 +20,11 @@ namespace Infrastructure.Data.MSSQLServerRepository.Implementations.MajorReposit
 		{
 			_sessionRepository = sessionRepository;
 		}
+
+		//public ScheduleRepository(string connectionString)
+		//	: this(new SessionRepository(connectionString))
+		//{
+		//}
 
 		protected override Schedule GetReader(SqlDataReader sqlDataReader)
 			=> new Schedule()

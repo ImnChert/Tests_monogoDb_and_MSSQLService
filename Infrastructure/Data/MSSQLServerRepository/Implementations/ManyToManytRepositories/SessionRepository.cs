@@ -3,18 +3,20 @@ using ApplicationCore.Domain.Core.Models.Cinema.Films;
 using ApplicationCore.Domain.Interfaces;
 using ApplicationCore.Domain.Interfaces.Interfaces;
 using Infrastructure.Data.MSSQLServerRepository.Connection;
+using Infrastructure.Data.MSSQLServerRepository.Implementations.MajorRepository;
 using System.Data;
 using System.Data.SqlClient;
 
 namespace Infrastructure.Data.MSSQLServerRepository.Implementations.LowerRepository
 {
-	internal class SessionRepository : MainMSSQLServerManyToManyRepository<Session>
+	public class SessionRepository : MainMSSQLServerManyToManyRepository<Session>
 	{
 		private IGetAllById<Ticket> _ticketGetAllById;
 		private IRepository<Ticket> _ticketRepository;
 		private IRepository<Film> _filmRepository;
 
-		public SessionRepository(string connectionString, IRepository<Ticket> ticketRepository, IGetAllById<Ticket> ticketGetAllById, IRepository<Film> filmRepository)
+		public SessionRepository(string connectionString, IRepository<Ticket> ticketRepository,
+			IGetAllById<Ticket> ticketGetAllById, IRepository<Film> filmRepository)
 			: base(connectionString,
 				 $@"SELECT SessionsOfFilms.Id, SessionsOfFilms.FilmId, SessionsOfFilms.StartTime
 					FROM Schedules
@@ -28,6 +30,11 @@ namespace Infrastructure.Data.MSSQLServerRepository.Implementations.LowerReposit
 			_ticketRepository = ticketRepository;
 			_filmRepository = filmRepository;
 		}
+
+		//public SessionRepository(string connectionString)
+		//	: this(connectionString, new TicketRepository(connectionString, new Session),
+		//		  new TicketRepository(connectionString), new FilmRepository(connectionString))
+		//{ }
 
 		protected override Session GetCommand(SqlDataReader sqlDataReader)
 			=> new Session()

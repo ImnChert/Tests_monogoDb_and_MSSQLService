@@ -1,7 +1,5 @@
 ﻿using ApplicationCore.Domain.Core.Models.Cinema;
-using ApplicationCore.Domain.Core.Models.Cinema.Films;
 using ApplicationCore.Domain.Interfaces;
-using ApplicationCore.Domain.Interfaces.Interfaces;
 using Infrastructure.Business;
 using Infrastructure.Data.MongoRepository.Connection;
 using Infrastructure.Data.MongoRepository.Implementations.GetAllByIdImplementations;
@@ -9,19 +7,15 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using System.Globalization;
 
-namespace Infrastructure.Data.MongoRepository.Implementations
+namespace Infrastructure.Data.MongoRepository.Implementations.RepositoryImplementetions
 {
 	public class ScheduleRepository : MainMongoRepository<Schedule>
 	{
-		private IRepository<Film> _filmRepository;
-		private IGetAllById<Ticket> _ticketGetAllByID;
 		private IGetAllById<Session> _sessionGetAllById;
 
-		public ScheduleRepository(string connectionString, IRepository<Film> filmRepositpry)
+		public ScheduleRepository(string connectionString)
 			: base(connectionString, "schedule")
 		{
-			_filmRepository = filmRepositpry;
-			_ticketGetAllByID = new TicketGetAllById(connectionString, _mongoCollection);
 			_sessionGetAllById = new SessionGetAllById(connectionString, _mongoCollection);
 		}
 

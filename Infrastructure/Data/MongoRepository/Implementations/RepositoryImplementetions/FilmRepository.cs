@@ -5,7 +5,7 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using System.Globalization;
 
-namespace Infrastructure.Data.MongoRepository.Implementations
+namespace Infrastructure.Data.MongoRepository.Implementations.RepositoryImplementetions
 {
 	public class FilmRepository : MainMongoRepository<Film>
 	{
