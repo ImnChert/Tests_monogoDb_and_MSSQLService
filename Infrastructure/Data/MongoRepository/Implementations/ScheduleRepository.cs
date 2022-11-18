@@ -4,28 +4,25 @@ using ApplicationCore.Domain.Interfaces;
 using ApplicationCore.Domain.Interfaces.Interfaces;
 using Infrastructure.Business;
 using Infrastructure.Data.MongoRepository.Connection;
+using Infrastructure.Data.MongoRepository.Implementations.GetAllByIdImplementations;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System.Globalization;
 
 namespace Infrastructure.Data.MongoRepository.Implementations
 {
-	public class ScheduleRepository
-		: MainMongoRepository<Schedule>, IGetAllById<Session>
+	public class ScheduleRepository : MainMongoRepository<Schedule>
 	{
 		private IRepository<Film> _filmRepository;
-		//private IRepository<Ticket> _ticketRepository;
 		private IGetAllById<Ticket> _ticketGetAllByID;
-		//private IGetAllById<Session> _sessionGetAllById;
-		//, IGetAllById<Session> sessionGetAllById,\
+		private IGetAllById<Session> _sessionGetAllById;
 
 		public ScheduleRepository(string connectionString, IRepository<Film> filmRepositpry)
 			: base(connectionString, "schedule")
 		{
-			//_sessionGetAllById = sessionGetAllById;
 			_filmRepository = filmRepositpry;
-			//_ticketRepository = ticketRepositpory;
-			_ticketGetAllByID = new TicketRepository(connectionString, _mongoCollection);
+			_ticketGetAllByID = new TicketGetAllById(connectionString, _mongoCollection);
+			_sessionGetAllById = new SessionGetAllById(connectionString, _mongoCollection);
 		}
 
 		public override async Task<List<Schedule>> GetAllAsync()
@@ -48,54 +45,6 @@ namespace Infrastructure.Data.MongoRepository.Implementations
 			}
 
 			return schedules;
-		}
-
-		public async Task<List<Session>> GetAllByIdOneToMany(int id)
-		{
-			var pipeline = new BsonDocument
-			{
-				{"$unwind", "$sessions"}
-			};
-
-			var pipeline2 = new BsonDocument
-			{
-				{"$match", new BsonDocument{
-					{"_id", id }
-				}}
-			};
-
-			var pipeline3 = new BsonDocument
-			{
-				{
-					"$project", new BsonDocument
-					{
-						{ "_id", "$_id"},
-						{"nameFilm", "$sessions.nameFilm"},
-						{"duration", "$sessions.duration"},
-						{"basePrice", "$sessions.basePrice"},
-						{"film_id",  "$sessions.film_id"},
-						{"start", "$sessions.start"}
-					}
-				}
-			};
-
-			BsonDocument[] pipelines = new BsonDocument[] { pipeline, pipeline2, pipeline3 };
-			List<BsonDocument> results = await _mongoCollection.Aggregate<BsonDocument>(pipelines).ToListAsync();
-
-			List<Session> sessions = new();
-
-			foreach (BsonDocument item in results)
-			{
-				sessions.Add(new Session()
-				{
-					Id = item.GetValue("_id").ToInt32(),
-					Film = _filmRepository.GetById(item.GetValue("film_id").ToInt32()).Result,
-					StartTime = DateTime.Parse(item.GetValue("start").ToString(), CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal),
-					Tickets = _ticketGetAllByID.GetAllByIdOneToMany(item.GetValue("_id").ToInt32()).Result
-				});
-			}
-
-			return sessions;
 		}
 
 		public override async Task<Schedule> GetById(int id)
@@ -121,16 +70,17 @@ namespace Infrastructure.Data.MongoRepository.Implementations
 			return schedule;
 		}
 
-		public Schedule InitializationSchedule(BsonDocument item, MongoParser parse) => new Schedule()
-		{
-			Id = item.GetValue("_id").ToInt32(),
-			Date = DateTime.Parse(item.GetValue("date").ToString(), CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal),
-			Hall = new Hall()
+		public Schedule InitializationSchedule(BsonDocument item, MongoParser parse)
+			=> new Schedule()
 			{
-				Number = item.GetValue("numberHall").ToInt32(),
-			},
-			Sessions = GetAllByIdOneToMany(item.GetValue("_id").ToInt32()).Result
-		};
+				Id = item.GetValue("_id").ToInt32(),
+				Date = DateTime.Parse(item.GetValue("date").ToString(), CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal),
+				Hall = new Hall()
+				{
+					Number = item.GetValue("numberHall").ToInt32(),
+				},
+				Sessions = _sessionGetAllById.GetAllByIdOneToMany(item.GetValue("_id").ToInt32()).Result
+			};
 
 		[Obsolete]
 		public override async Task<bool> InsertAsync(Schedule entity)
@@ -223,5 +173,3 @@ namespace Infrastructure.Data.MongoRepository.Implementations
 		}
 	}
 }
-
-// TODO: Сделано Ticket только с insert

@@ -75,7 +75,7 @@ namespace Infrastructure.Data.MongoRepository.Implementations
 				Id = item.GetValue("distributor_id").ToInt32(),
 			},
 			BasePrice = item.GetValue("basePrice").ToInt32(),
-			LicensExpirationDate = DateTime.Parse(item.GetValue("licensExpirationDate").ToString(), 
+			LicensExpirationDate = DateTime.Parse(item.GetValue("licensExpirationDate").ToString(),
 				CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal)
 		};
 
@@ -84,11 +84,10 @@ namespace Infrastructure.Data.MongoRepository.Implementations
 			var parser = new MongoParser();
 			entity.Id = parser.MaxIndex(_mongoCollection) + 1;
 
-			var staff = new BsonDocument();
-
+			var staff = new BsonArray();
 			entity.FilmCrew.ForEach(item =>
 			{
-				staff.AddRange(new BsonDocument
+				staff.Add(new BsonDocument
 				{
 					{"firstName", item.FirstName},
 					{"lastName", item.LastName},
@@ -98,24 +97,24 @@ namespace Infrastructure.Data.MongoRepository.Implementations
 				});
 			});
 
-			var rewiews = new BsonDocument();
-
+			var rewiews = new BsonArray();
 			entity.Reviews.ForEach(item =>
 			{
-				rewiews.AddRange(new BsonDocument
+				rewiews.Add(new BsonDocument
 				{
+					{"_id", item.Id},
 					{"username", item.RegisteredUser.Username},
 					{"registeredUser_id", item.RegisteredUser.Id},
 					{"discription", item.Description}
 				});
 			});
 
-			var score = new BsonDocument();
-
+			var score = new BsonArray();
 			entity.Scores.ForEach(item =>
 			{
-				rewiews.AddRange(new BsonDocument
+				score.Add(new BsonDocument
 				{
+					{"_id", item.Id},
 					{"username", item.RegisteredUser.Username},
 					{"registeredUser_id", item.RegisteredUser.Id},
 					{"score", item.Raiting}
@@ -130,7 +129,7 @@ namespace Infrastructure.Data.MongoRepository.Implementations
 				{"description",entity.Description },
 				{"staff", staff },
 				{"reviews", rewiews },
-				{"score", score },
+				{"scores", score },
 				{"companyName",entity.Distributor.NameCompany },
 				{"distributor_id",entity.Distributor.Id },
 				{"basePrice",entity.BasePrice },
