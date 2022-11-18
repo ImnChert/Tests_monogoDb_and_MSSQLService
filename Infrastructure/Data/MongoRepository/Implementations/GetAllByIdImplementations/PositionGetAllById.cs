@@ -10,7 +10,7 @@ namespace Infrastructure.Data.MongoRepository.Implementations.GetAllByIdImplemen
 	{
 		private readonly IMongoCollection<BsonDocument> _mongoCollection;
 
-		public PositionGetAllById(string connectionString, IMongoCollection<BsonDocument> mongoCollection)
+		public PositionGetAllById(IMongoCollection<BsonDocument> mongoCollection)
 		{
 			_mongoCollection = mongoCollection;
 		}
