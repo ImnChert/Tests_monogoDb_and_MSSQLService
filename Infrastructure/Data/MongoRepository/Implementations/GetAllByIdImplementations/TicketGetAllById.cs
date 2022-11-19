@@ -3,9 +3,11 @@ using ApplicationCore.Domain.Core.Models.Roles;
 using ApplicationCore.Domain.Core.Models.Roles.Staff;
 using ApplicationCore.Domain.Interfaces;
 using ApplicationCore.Domain.Interfaces.Interfaces;
-using Infrastructure.Data.MSSQLServerRepository.Implementations.MajorRepository;
+using Infrastructure.Data.MongoRepository.Implementations.RepositoryImplementetions;
+using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using System.Linq;
 
 namespace Infrastructure.Data.MongoRepository.Implementations.GetAllByIdImplementations
 {
@@ -26,17 +28,19 @@ namespace Infrastructure.Data.MongoRepository.Implementations.GetAllByIdImplemen
 
 		public async Task<List<Ticket>> GetAllByIdOneToMany(int id)
 		{
-			var pipeline = new BsonDocument
+			var pipeline = new BsonDocument()
 			{
-				{"$unwind", "$sessions.tickets"}
+				{ "$unwind", "$sessions"}
 			};
-
+			//new BsonDocument { { "$unwind", "$sessions.tickets" } }
 			var pipeline2 = new BsonDocument
 			{
 				{"$match", new BsonDocument{
-					{"_id", id }
+					{"_id", id }, { "sessions._id", 0}
 				}}
 			};
+
+			// TODO: только сессия с id 0 будет выбираться
 
 			var pipeline3 = new BsonDocument
 			{
@@ -48,7 +52,6 @@ namespace Infrastructure.Data.MongoRepository.Implementations.GetAllByIdImplemen
 						{"registeredUser_id","$sessions.tickets.registeredUser_id"},
 						{"usernameEmployee", "$sessions.tickets.usernameEmployee" },
 						{"employee_id","$sessions.tickets.employee_id" },
-						//{"seat", "$sessions.tickets.seat" },
 						{"numberRow", "$sessions.tickets.seat.numberRow"},
 						{"numberColumn", "$sessions.tickets.seat.numberColumn"},
 						{"categoryName", "$sessions.tickets.seat.categoryName"},
@@ -64,45 +67,46 @@ namespace Infrastructure.Data.MongoRepository.Implementations.GetAllByIdImplemen
 
 			foreach (BsonDocument item in results)
 			{
-				if (item.GetValue("employee_id").ToInt32() == 0)
+				for (int i = 0; i < item.GetValue("employee_id").AsBsonArray.Count; i++)
 				{
-					tickets.Add(new Ticket()
+					if (item.GetValue("employee_id").AsBsonArray[i].ToInt32() == 0)
 					{
-						Id = item.GetValue("_id").ToInt32(),
-						Seat = new Seat()
+						tickets.Add(new Ticket()
 						{
-							NumberRow = item.GetValue("numberRow").ToInt32(),
-							NumberColumn = item.GetValue("numberColumn").ToInt32(),
-							Category = new Category()
+							Id = item.GetValue("_id")[i].ToInt32(),
+							Seat = new Seat()
 							{
-								Name = item.GetValue("categoryName").ToString(),
-								Price = _categoryRepository.GetById(item.GetValue("category_id").ToInt32()).Result.Price,
+								NumberRow = item.GetValue("numberRow")[i].ToInt32(),
+								NumberColumn = item.GetValue("numberColumn")[i].ToInt32(),
+								Category = new Category()
+								{
+									Name = item.GetValue("categoryName")[i].ToString(),
+									Price = _categoryRepository.GetById(item.GetValue("category_id")[i].ToInt32()).Result.Price,
+								},
 							},
-						},
-						RegisteredUser = _userRepository.GetById(item.GetValue("registeredUser_id").ToInt32()).Result,
+							RegisteredUser = _userRepository.GetById(item.GetValue("registeredUser_id")[i].ToInt32()).Result,
 
-					});
-				}
-				else
-				{
-					tickets.Add(new Ticket()
+						});
+					}
+					else
 					{
-						Id = item.GetValue("_id").ToInt32(),
-						Seat = new Seat()
+						tickets.Add(new Ticket()
 						{
-							NumberRow = item.GetValue("numberRow").ToInt32(),
-							NumberColumn = item.GetValue("numberColumn").ToInt32(),
-							Category = new Category()
+							Id = item.GetValue("_id")[i].ToInt32(),
+							Seat = new Seat()
 							{
-								Name = item.GetValue("categoryName").ToString(),
-								Price = _categoryRepository.GetById(item.GetValue("category_id").ToInt32()).Result.Price,
+								NumberRow = item.GetValue("numberRow")[i].ToInt32(),
+								NumberColumn = item.GetValue("numberColumn")[i].ToInt32(),
+								Category = _categoryRepository.GetById(item.GetValue("category_id")[i].ToInt32()).Result,
 							},
-						},
-						RegisteredUser = _userRepository.GetById(item.GetValue("registeredUser_id").ToInt32()).Result,
-						Cashier = _employeeRepository.GetById(item.GetValue("employee_id").ToInt32()).Result
-					});
+							RegisteredUser = _userRepository.GetById(item.GetValue("registeredUser_id")[i].ToInt32()).Result,
+							Cashier = _employeeRepository.GetById(item.GetValue("employee_id")[i].ToInt32()).Result
+						});
+					}
 				}
 			}
+
+			// TODO: хуже этого не придумаешь
 
 			return tickets;
 		}
