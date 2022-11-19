@@ -12,13 +12,13 @@ using Infrastructure.Data.MongoRepository.Implementations.RepositoryImplementeti
 
 namespace IntegratedTests
 {
-	[TestCaseOrderer("IntegratedTests.Configuration", "IntegratedTests")]
+	[TestCaseOrderer("IntegratedTests.PriorityOrderer", "IntegratedTests")]
 	public class ScheduleFunctionIntegratedTest
 	{
 		private string _connectionString = "mongodb://localhost:27017";
 		//@"Data Source=DESKTOP-CTBUCT0\SQLEXPRESS;Initial Catalog=CP;Integrated Security=True";
 
-		private int _idScheduleData = 1;
+		private int _idScheduleData;
 
 		private List<RegisteredUser> GetTestUsers()
 			=> new List<RegisteredUser>()
@@ -232,44 +232,51 @@ namespace IntegratedTests
 			}
 		}
 
+		//[Fact, TestPriority(1)]
+		//public void TestCalculation()
+		//{
+		//	try
+		//	{
+		//		// Arrange
+		//		var scheduleRepository = new ScheduleRepository(_connectionString);
+		//		var scheduleService = new ScheduleService(scheduleRepository);
+
+		//		var testUser = new RegisteredUser()
+		//		{
+		//			Username = "test3",
+		//			Password = "test3",
+		//			FirstName = "test3",
+		//			MiddleName = "test3",
+		//			LastName = "test3",
+		//			DateOfBirthday = DateTime.Now,
+		//			Phone = "+375444444444"
+		//		};
+
+		//		var testSeat = new Seat()
+		//		{
+		//			NumberRow = 1,
+		//			NumberColumn = 1,
+		//			Category = null
+		//		};
+
+		//		// Act
+		//		Schedule schedule = scheduleService.GetById(_idScheduleData).Result.Data;
+		//		var scheduleValidation = new ScheduleValidation(schedule);
+		//		var scheduleFuntion = new ScheduleFunction(scheduleValidation, schedule);
+		//		var scheduleFunctionService = new ScheduleFunctionService(scheduleFuntion);
+
+
+		//		// Assert
+		//		var assert = scheduleFunctionService.AddTicket(testUser, schedule.Sessions[0], testSeat).Data;
+		//		Assert.False(assert);
+		//	}
+		//	catch
+		//	{
+		//		Assert.False(true);
+		//	}
+		//}
+
 		[Fact, TestPriority(1)]
-		public void TestCalculation()
-		{
-			// Arrange
-			var scheduleRepository = new ScheduleRepository(_connectionString);
-			var scheduleService = new ScheduleService(scheduleRepository);
-
-			var testUser = new RegisteredUser()
-			{
-				Username = "test3",
-				Password = "test3",
-				FirstName = "test3",
-				MiddleName = "test3",
-				LastName = "test3",
-				DateOfBirthday = DateTime.Now,
-				Phone = "+375444444444"
-			};
-
-			var testSeat = new Seat()
-			{
-				NumberRow = 1,
-				NumberColumn = 1,
-				Category = null
-			};
-
-			// Act
-			Schedule schedule = scheduleService.GetById(_idScheduleData).Result.Data;
-			var scheduleValidation = new ScheduleValidation(schedule);
-			var scheduleFuntion = new ScheduleFunction(scheduleValidation, schedule);
-			var scheduleFunctionService = new ScheduleFunctionService(scheduleFuntion);
-
-
-			// Assert
-			var assert = scheduleFunctionService.AddTicket(testUser, schedule.Sessions[0], testSeat).Data;
-			Assert.False(assert);
-		}
-
-		[Fact, TestPriority(2)]
 		public async Task TestDeleteAllData()
 		{
 			try

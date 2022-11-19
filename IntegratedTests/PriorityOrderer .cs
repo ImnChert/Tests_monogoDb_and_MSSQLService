@@ -2,14 +2,13 @@
 
 namespace IntegratedTests
 {
-	public class Configuration
+	public class PriorityOrderer
 	{
 		public IEnumerable<TTestCase> OrderTestCases<TTestCase>(
 			IEnumerable<TTestCase> testCases) where TTestCase : ITestCase
 		{
 			string assemblyName = typeof(TestPriorityAttribute).AssemblyQualifiedName!;
 			var sortedMethods = new SortedDictionary<int, List<TTestCase>>();
-
 			foreach (TTestCase testCase in testCases)
 			{
 				int priority = testCase.TestMethod.Method
