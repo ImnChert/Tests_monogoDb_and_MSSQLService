@@ -1,10 +1,13 @@
-﻿using ApplicationCore.Domain.Core.Models.Cinema;
+﻿using ApplicationCore.Domain.Core.Models;
+using ApplicationCore.Domain.Core.Models.Cinema;
 using ApplicationCore.Domain.Core.Models.Cinema.Films;
 using ApplicationCore.Domain.Core.Models.Roles;
 using ApplicationCore.Domain.Core.Models.Roles.Staff;
 using ApplicationCore.Domain.Core.Models.Roles.Staff.Positions;
+using ApplicationCore.Services.Implementations.FunctionalEntities.Implementations;
+using ApplicationCore.Services.Implementations.FunctionalEntities.Services;
 using ApplicationCore.Services.Implementations.Repositories;
-using Infrastructure.Data.MongoRepository.Implementations;
+using ApplicationCore.Services.Implementations.Validations;
 using Infrastructure.Data.MongoRepository.Implementations.RepositoryImplementetions;
 
 namespace IntegratedTests
@@ -14,6 +17,8 @@ namespace IntegratedTests
 	{
 		private string _connectionString = "mongodb://localhost:27017";
 		//@"Data Source=DESKTOP-CTBUCT0\SQLEXPRESS;Initial Catalog=CP;Integrated Security=True";
+
+		private int _idScheduleData = 1;
 
 		private List<RegisteredUser> GetTestUsers()
 			=> new List<RegisteredUser>()
@@ -164,6 +169,7 @@ namespace IntegratedTests
 			try
 			{
 				// Arrange
+
 				var userRepository = new UserRepository(_connectionString);
 				var userService = new UserService(userRepository);
 
@@ -213,7 +219,9 @@ namespace IntegratedTests
 				schedule.Sessions[0].Film = filmData;
 
 				await scheduleService.InsertAsync(schedule);
-				var scheduleData = await scheduleService.GetById(schedule.Id);
+				BaseResponse<Schedule> scheduleData = await scheduleService.GetById(schedule.Id);
+
+				_idScheduleData = scheduleData.Data.Id;
 
 				Assert.True(true);
 			}
@@ -224,25 +232,44 @@ namespace IntegratedTests
 			}
 		}
 
-		//[Fact, TestPriority(1)]
-		//public async Task TestCalculation()
-		//{
-		//	// Arrange
-		//	ITripDetailService tripDetailService = new TripDetailService(new TripDetailRepositoryMS(_stringConnection),
-		//		new TripRepositoryMS(_stringConnection), new UserRepositoryMS(_stringConnection));
-		//	ITripTreatmentService tripTreatmentService = new TripTreatmentService();
-
-		//	// Act
-		//	var data = await tripDetailService.GetDetailsByTripId(_foundTrip.Id);
-
-		//	var availablePlacesResponse = tripTreatmentService.GetAvailablePlaces(data.Data, _foundTrip.Capacity);
-		//	var aavailablePlaces = availablePlacesResponse.Data;
-		//	// Assert
-
-		//	Assert.Equal(_foundTrip.Capacity - data.Data.Count(), aavailablePlaces.Count());
-		//}
-
 		[Fact, TestPriority(1)]
+		public void TestCalculation()
+		{
+			// Arrange
+			var scheduleRepository = new ScheduleRepository(_connectionString);
+			var scheduleService = new ScheduleService(scheduleRepository);
+
+			var testUser = new RegisteredUser()
+			{
+				Username = "test3",
+				Password = "test3",
+				FirstName = "test3",
+				MiddleName = "test3",
+				LastName = "test3",
+				DateOfBirthday = DateTime.Now,
+				Phone = "+375444444444"
+			};
+
+			var testSeat = new Seat()
+			{
+				NumberRow = 1,
+				NumberColumn = 1,
+				Category = null
+			};
+
+			// Act
+			Schedule schedule = scheduleService.GetById(_idScheduleData).Result.Data;
+			var scheduleValidation = new ScheduleValidation(schedule);
+			var scheduleFuntion = new ScheduleFunction(scheduleValidation, schedule);
+			var scheduleFunctionService = new ScheduleFunctionService(scheduleFuntion);
+
+
+			// Assert
+			var assert = scheduleFunctionService.AddTicket(testUser, schedule.Sessions[0], testSeat).Data;
+			Assert.False(assert);
+		}
+
+		[Fact, TestPriority(2)]
 		public async Task TestDeleteAllData()
 		{
 			try
@@ -251,27 +278,37 @@ namespace IntegratedTests
 				var userRepository = new UserRepository(_connectionString);
 				var userService = new UserService(userRepository);
 
-				//var ticketRepositpry = new TicketRepository(_connectionString);
-				var filmRepositpry = new FilmRepository(_connectionString);
+				var employeeRepository = new EmployeeRepository(_connectionString);
+				var employeeService = new EmployeeService(employeeRepository);
 
+				var filmRepositpry = new FilmRepository(_connectionString);
+				var filmService = new FilmService(filmRepositpry);
+
+				var categoryRepositpry = new CategoryRepository(_connectionString);
+				var categoryService = new CategoryService(categoryRepositpry);
 
 				var scheduleRepository = new ScheduleRepository(_connectionString);
 				var scheduleService = new ScheduleService(scheduleRepository);
 
 				// Act
-				//var details = await tripDetailService.GetDetailsByTripId(_foundTrip.Id);
-				//await DeleteTripDetails(details.Data);
-				//await tripService.DeleteById(_foundTrip.Id);
-				//await planeService.DeleteById(_foundTrip.PlaneId);
 
-				//var country = await cityService.GetById(_foundTrip.StartCityId);
+				List<RegisteredUser> collectionRegisteredUsers = userService.GetAllAsync().Result.Data;
+				collectionRegisteredUsers.ForEach(async user => await userService.DeleteAsync(user));
 
-				//await cityService.DeleteById(_foundTrip.StartCityId);
-				//await cityService.DeleteById(_foundTrip.EndCityId);
-				//await countryService.DeleteById(country.Data.CountryId);
-				var s = userService.GetById(1).Result;
-				//await userService.DeleteAsync(GetTestUser());
-				//await scheduleService.DeleteAsync(GetTestSchedule());
+				Schedule schedule = scheduleService.GetById(_idScheduleData).Result.Data;
+
+				schedule.Sessions.ForEach(async session =>
+				{
+					await filmService.DeleteAsync(session.Film);
+
+					session.Tickets.ForEach(async ticket =>
+					{
+						await employeeService.DeleteAsync(ticket.Cashier);
+						await categoryService.DeleteAsync(ticket.Seat.Category);
+					});
+				});
+
+				await scheduleRepository.DeleteAsync(schedule);
 
 				Assert.True(true);
 			}
