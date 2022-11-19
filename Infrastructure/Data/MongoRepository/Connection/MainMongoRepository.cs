@@ -44,7 +44,6 @@ namespace Infrastructure.Data.MongoRepository.Connection
 
 		public async Task<T?> GetById(int id)
 		{
-			//var value = new T();
 			var filter = new BsonDocument("_id", id);
 
 			using (IAsyncCursor<BsonDocument> cursor = await _mongoCollection.FindAsync(filter))
@@ -67,7 +66,9 @@ namespace Infrastructure.Data.MongoRepository.Connection
 		protected abstract T Initialization(BsonDocument item);
 
 		public abstract Task<bool> InsertAsync(T entity);
+
 		public abstract Task<bool> UpdateAsync(T entity);
+
 		public async Task<bool> DeleteAsync(T entity)
 		{
 			var deleteFilter = Builders<BsonDocument>.Filter.Eq("_id", entity.Id);

@@ -4,7 +4,7 @@ using ApplicationCore.Domain.Core.Models.Roles.Staff;
 using ApplicationCore.Services.Interfaces.Functional_entities;
 using ApplicationCore.Services.Interfaces.Validations;
 
-namespace ApplicationCore.Services.Implementations.Functional_entities
+namespace ApplicationCore.Services.Implementations.FunctionalEntities.Implementations
 {
 	public class ScheduleFunction : IScheduleFunction
 	{
