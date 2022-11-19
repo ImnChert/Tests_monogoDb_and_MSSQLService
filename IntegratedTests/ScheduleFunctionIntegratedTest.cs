@@ -194,23 +194,23 @@ namespace IntegratedTests
 				await employeeService.InsertAsync(employee);
 				Employee employeeData = employeeService.GetAllAsync().Result.Data[0];
 
-				// TODO: тестил сотрудника траблы с должностью
-
 				collectionUsers.ForEach(async user => await userService.InsertAsync(user));
 				List<RegisteredUser> usersData = userService.GetAllAsync().Result.Data;
 
+				film.Reviews.ForEach(review => review.RegisteredUser = usersData[0]);
+				film.Scores.ForEach(score => score.RegisteredUser = usersData[0]);
 				await filmService.InsertAsync(film);
 				Film filmData = filmService.GetAllAsync().Result.Data[0];
 
 				foreach (Ticket ticket in collectionTickets)
 				{
 					ticket.RegisteredUser = usersData[0];
-					ticket.Seat.Category = category;
-					ticket.Cashier = employee;
+					ticket.Seat.Category = categoryData;
+					ticket.Cashier = employeeData;
 				}
 
 				schedule.Sessions[0].Tickets = collectionTickets;
-				schedule.Sessions[0].Film = film;
+				schedule.Sessions[0].Film = filmData;
 
 				await scheduleService.InsertAsync(schedule);
 				var scheduleData = await scheduleService.GetById(schedule.Id);

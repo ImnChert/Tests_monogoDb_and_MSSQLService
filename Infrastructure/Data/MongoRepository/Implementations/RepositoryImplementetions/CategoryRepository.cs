@@ -13,57 +13,58 @@ namespace Infrastructure.Data.MongoRepository.Implementations.RepositoryImplemen
 		{
 		}
 
-		public override async Task<List<Category>> GetAllAsync()
-		{
-			var filter = new BsonDocument();
-			var categories = new List<Category>();
+		//public override async Task<List<Category>> GetAllAsync()
+		//{
+		//	var filter = new BsonDocument();
+		//	var categories = new List<Category>();
 
-			using (IAsyncCursor<BsonDocument> cursor = await _mongoCollection.FindAsync(filter))
+		//	using (IAsyncCursor<BsonDocument> cursor = await _mongoCollection.FindAsync(filter))
+		//	{
+		//		while (await cursor.MoveNextAsync())
+		//		{
+		//			IEnumerable<BsonDocument> user = cursor.Current;
+
+		//			foreach (BsonDocument item in user)
+		//			{
+		//				categories.Add(InitializationFilm(item));
+		//			}
+		//		}
+		//	}
+
+		//	return categories;
+		//}
+
+		//public override async Task<Category> GetById(int id)
+		//{
+		//	var category = new Category();
+		//	var filter = new BsonDocument("_id", id);
+
+		//	using (IAsyncCursor<BsonDocument> cursor = await _mongoCollection.FindAsync(filter))
+		//	{
+		//		if (await cursor.MoveNextAsync())
+		//		{
+		//			if (cursor.Current.Count() == 0)
+		//				return null;
+
+		//			var elements = cursor.Current.ToList();
+		//			BsonDocument item = elements[0];
+
+		//			var parse = new MongoParser();
+
+		//			category = InitializationFilm(item);
+		//		}
+		//	}
+
+		//	return category;
+		//}
+
+		protected override Category Initialization(BsonDocument item)
+			=> new Category()
 			{
-				while (await cursor.MoveNextAsync())
-				{
-					IEnumerable<BsonDocument> user = cursor.Current;
-
-					foreach (BsonDocument item in user)
-					{
-						categories.Add(InitializationFilm(item));
-					}
-				}
-			}
-
-			return categories;
-		}
-
-		public override async Task<Category> GetById(int id)
-		{
-			var category = new Category();
-			var filter = new BsonDocument("_id", id);
-
-			using (IAsyncCursor<BsonDocument> cursor = await _mongoCollection.FindAsync(filter))
-			{
-				if (await cursor.MoveNextAsync())
-				{
-					if (cursor.Current.Count() == 0)
-						return null;
-
-					var elements = cursor.Current.ToList();
-					BsonDocument item = elements[0];
-
-					var parse = new MongoParser();
-
-					category = InitializationFilm(item);
-				}
-			}
-
-			return category;
-		}
-
-		public Category InitializationFilm(BsonDocument item) => new Category()
-		{
-			Id = item.GetValue("_id").ToInt32(),
-			Name = item.GetValue("name").ToString(),
-			Price = item.GetValue("price").ToDecimal()
-		};
+				Id = item.GetValue("_id").ToInt32(),
+				Name = item.GetValue("name").ToString(),
+				Price = item.GetValue("price").ToDecimal()
+			};
 
 		public override async Task<bool> InsertAsync(Category entity)
 		{

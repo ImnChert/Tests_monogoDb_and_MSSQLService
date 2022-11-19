@@ -14,61 +14,63 @@ namespace Infrastructure.Data.MongoRepository.Implementations.RepositoryImplemen
 		{
 		}
 
-		public override async Task<List<RegisteredUser>> GetAllAsync()
-		{
-			var filter = new BsonDocument();
-			var registeredUsers = new List<RegisteredUser>();
+		//public override async Task<List<RegisteredUser>> GetAllAsync()
+		//{
+		//	var filter = new BsonDocument();
+		//	var registeredUsers = new List<RegisteredUser>();
 
-			using (IAsyncCursor<BsonDocument> cursor = await _mongoCollection.FindAsync(filter))
+		//	using (IAsyncCursor<BsonDocument> cursor = await _mongoCollection.FindAsync(filter))
+		//	{
+		//		var parse = new MongoParser();
+		//		while (await cursor.MoveNextAsync())
+		//		{
+		//			IEnumerable<BsonDocument> user = cursor.Current;
+
+		//			foreach (BsonDocument item in user)
+		//			{
+		//				registeredUsers.Add(InitializationUser(item));
+		//			}
+		//		}
+		//	}
+
+		//	return registeredUsers;
+		//}
+
+		//public override async Task<RegisteredUser> GetById(int id)
+		//{
+		//	var user = new RegisteredUser();
+		//	var filter = new BsonDocument("_id", id);
+
+		//	using (IAsyncCursor<BsonDocument> cursor = await _mongoCollection.FindAsync(filter))
+		//	{
+		//		if (await cursor.MoveNextAsync())
+		//		{
+		//			if (cursor.Current.Count() == 0)
+		//				return null;
+
+		//			var elements = cursor.Current.ToList();
+		//			BsonDocument item = elements[0];
+
+		//			user = InitializationUser(item);
+		//		}
+		//	}
+
+		//	return user;
+		//}
+
+		protected override RegisteredUser Initialization(BsonDocument item)
+			=> new RegisteredUser()
 			{
-				var parse = new MongoParser();
-				while (await cursor.MoveNextAsync())
-				{
-					IEnumerable<BsonDocument> user = cursor.Current;
-
-					foreach (BsonDocument item in user)
-					{
-						registeredUsers.Add(InitializationUser(item));
-					}
-				}
-			}
-
-			return registeredUsers;
-		}
-
-		public override async Task<RegisteredUser> GetById(int id)
-		{
-			var user = new RegisteredUser();
-			var filter = new BsonDocument("_id", id);
-
-			using (IAsyncCursor<BsonDocument> cursor = await _mongoCollection.FindAsync(filter))
-			{
-				if (await cursor.MoveNextAsync())
-				{
-					if (cursor.Current.Count() == 0)
-						return null;
-
-					var elements = cursor.Current.ToList();
-					BsonDocument item = elements[0];
-
-					user = InitializationUser(item);
-				}
-			}
-
-			return user;
-		}
-
-		public RegisteredUser InitializationUser(BsonDocument item) => new RegisteredUser()
-		{
-			Id = item.GetValue("_id").ToInt32(),
-			Username = item.GetValue("username").ToString(),
-			Password = item.GetValue("password").ToString(),
-			FirstName = item.GetValue("firstName").ToString(),
-			LastName = item.GetValue("lastName").ToString(),
-			MiddleName = item.GetValue("middleName").ToString(),
-			DateOfBirthday = DateTime.Parse(item.GetValue("dateOfBirth").ToString(), CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal),
-			Phone = item.GetValue("phone").ToString()
-		};
+				Id = item.GetValue("_id").ToInt32(),
+				Username = item.GetValue("username").ToString(),
+				Password = item.GetValue("password").ToString(),
+				FirstName = item.GetValue("firstName").ToString(),
+				LastName = item.GetValue("lastName").ToString(),
+				MiddleName = item.GetValue("middleName").ToString(),
+				DateOfBirthday = DateTime.Parse(item.GetValue("dateOfBirth").ToString(),
+					CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal),
+				Phone = item.GetValue("phone").ToString()
+			};
 
 		public override async Task<bool> InsertAsync(RegisteredUser entity)
 		{

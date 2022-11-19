@@ -32,70 +32,69 @@ namespace Infrastructure.Data.MongoRepository.Implementations.RepositoryImplemen
 			_scoreGetAllById = new ScoreGetAllById(connectionString, _mongoCollection);
 		}
 
-		public override async Task<List<Film>> GetAllAsync()
-		{
-			var filter = new BsonDocument();
-			var films = new List<Film>();
+		//public override async Task<List<Film>> GetAllAsync()
+		//{
+		//	var filter = new BsonDocument();
+		//	var films = new List<Film>();
 
-			using (IAsyncCursor<BsonDocument> cursor = await _mongoCollection.FindAsync(filter))
+		//	using (IAsyncCursor<BsonDocument> cursor = await _mongoCollection.FindAsync(filter))
+		//	{
+		//		while (await cursor.MoveNextAsync())
+		//		{
+		//			IEnumerable<BsonDocument> filmsBson = cursor.Current;
+
+		//			foreach (BsonDocument item in filmsBson)
+		//			{
+		//				films.Add(InitializationFilm(item));
+		//			}
+		//		}
+		//	}
+
+		//	return films;
+		//}
+
+		//public override async Task<Film GetById(int id)
+		//{
+		//	var film = new Film();
+		//	var filter = new BsonDocument("_id", id);
+
+		//	using (IAsyncCursor<BsonDocument> cursor = await _mongoCollection.FindAsync(filter))
+		//	{
+		//		if (await cursor.MoveNextAsync())
+		//		{
+		//			if (cursor.Current.Count() == 0)
+		//				return null;
+
+		//			var elements = cursor.Current.ToList();
+		//			BsonDocument item = elements[0];
+
+		//			film = InitializationFilm(item);
+		//		}
+		//	}
+
+		//	return film;
+		//}
+
+		protected override Film Initialization(BsonDocument item)
+			=> new Film()
 			{
-				var parse = new MongoParser();
-				while (await cursor.MoveNextAsync())
+				Id = item.GetValue("_id").ToInt32(),
+				Name = item.GetValue("name").ToString(),
+				Duration = item.GetValue("duration").ToInt32(),
+				Description = item.GetValue("description").ToString(),
+				FilmCrew = _personGetAllById.GetAllByIdOneToMany(item.GetValue("_id").ToInt32()).Result,
+				Reviews = _reviewGetAllById.GetAllByIdOneToMany(item.GetValue("_id").ToInt32()).Result,
+				Scores = _scoreGetAllById.GetAllByIdOneToMany(item.GetValue("_id").ToInt32()).Result,
+				Year = item.GetValue("yearOfRelease").ToInt32(),
+				Distributor = new Distributor()
 				{
-					IEnumerable<BsonDocument> user = cursor.Current;
-
-					foreach (BsonDocument item in user)
-					{
-						films.Add(InitializationFilm(item, parse));
-					}
-				}
-			}
-
-			return films;
-		}
-
-		public override async Task<Film> GetById(int id)
-		{
-			var film = new Film();
-			var filter = new BsonDocument("_id", id);
-
-			using (IAsyncCursor<BsonDocument> cursor = await _mongoCollection.FindAsync(filter))
-			{
-				if (await cursor.MoveNextAsync())
-				{
-					if (cursor.Current.Count() == 0)
-						return null;
-
-					var elements = cursor.Current.ToList();
-					BsonDocument item = elements[0];
-
-					var parse = new MongoParser();
-					film = InitializationFilm(item, parse);
-				}
-			}
-
-			return film;
-		}
-
-		public Film InitializationFilm(BsonDocument item, MongoParser parse) => new Film()
-		{
-			Id = item.GetValue("_id").ToInt32(),
-			Name = item.GetValue("name").ToString(),
-			Duration = item.GetValue("duration").ToInt32(),
-			Description = item.GetValue("description").ToString(),
-			FilmCrew = _personGetAllById.GetAllByIdOneToMany(item.GetValue("_id").ToInt32()).Result,
-			Reviews = _reviewGetAllById.GetAllByIdOneToMany(item.GetValue("_id").ToInt32()).Result,
-			Scores = _scoreGetAllById.GetAllByIdOneToMany(item.GetValue("_id").ToInt32()).Result,
-			Year = item.GetValue("yearOfRelease").ToInt32(),
-			Distributor = new Distributor()
-			{
-				NameCompany = item.GetValue("companyName").ToString(),
-				Id = item.GetValue("distributor_id").ToInt32(),
-			},
-			BasePrice = item.GetValue("basePrice").ToInt32(),
-			LicensExpirationDate = DateTime.Parse(item.GetValue("licensExpirationDate").ToString(),
+					NameCompany = item.GetValue("companyName").ToString(),
+					Id = item.GetValue("distributor_id").ToInt32(),
+				},
+				BasePrice = item.GetValue("basePrice").ToInt32(),
+				LicensExpirationDate = DateTime.Parse(item.GetValue("licensExpirationDate").ToString(),
 				CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal)
-		};
+			};
 
 		public override async Task<bool> InsertAsync(Film entity)
 		{
@@ -151,6 +150,7 @@ namespace Infrastructure.Data.MongoRepository.Implementations.RepositoryImplemen
 				{"companyName",entity.Distributor.NameCompany },
 				{"distributor_id",entity.Distributor.Id },
 				{"basePrice",entity.BasePrice },
+				{"yearOfRelease",entity.Year },
 				{"licensExpirationDate",entity.LicensExpirationDate }
 			};
 

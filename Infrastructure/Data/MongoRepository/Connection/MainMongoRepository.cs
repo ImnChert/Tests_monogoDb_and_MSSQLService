@@ -21,8 +21,51 @@ namespace Infrastructure.Data.MongoRepository.Connection
 			_mongoCollection = mongoDatabase.GetCollection<BsonDocument>(nameCollection);
 		}
 
-		public abstract Task<List<T>> GetAllAsync();
-		public abstract Task<T> GetById(int id);
+		public async Task<List<T>> GetAllAsync()
+		{
+			var filter = new BsonDocument();
+			var collection = new List<T>();
+
+			using (IAsyncCursor<BsonDocument> cursor = await _mongoCollection.FindAsync(filter))
+			{
+				while (await cursor.MoveNextAsync())
+				{
+					IEnumerable<BsonDocument> filmsBson = cursor.Current;
+
+					foreach (BsonDocument item in filmsBson)
+					{
+						collection.Add(Initialization(item));
+					}
+				}
+			}
+
+			return collection;
+		}
+
+		public async Task<T?> GetById(int id)
+		{
+			//var value = new T();
+			var filter = new BsonDocument("_id", id);
+
+			using (IAsyncCursor<BsonDocument> cursor = await _mongoCollection.FindAsync(filter))
+			{
+				if (await cursor.MoveNextAsync())
+				{
+					if (cursor.Current.Count() == 0)
+						return null;
+
+					var elements = cursor.Current.ToList();
+					BsonDocument item = elements[0];
+
+					return Initialization(item);
+				}
+			}
+
+			return null;
+		}
+
+		protected abstract T Initialization(BsonDocument item);
+
 		public abstract Task<bool> InsertAsync(T entity);
 		public abstract Task<bool> UpdateAsync(T entity);
 		public async Task<bool> DeleteAsync(T entity)
