@@ -49,13 +49,16 @@ namespace ApplicationCore.Domain.Core.Models.Cinema
 		public override bool Equals(object? obj)
 		{
 			return obj is Session session &&
-				   Id == session.Id;
+				   EqualityComparer<Film>.Default.Equals(Film, session.Film);
 		}
 
 		public override int GetHashCode()
 		{
-			return HashCode.Combine(Id);
+			return HashCode.Combine(Film);
 		}
+
+
+
 
 
 		// TODO: Вместо исключения исользовать события

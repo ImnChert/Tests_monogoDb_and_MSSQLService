@@ -17,15 +17,14 @@
 		{
 			return obj is Film film &&
 				   Name == film.Name &&
-				   EqualityComparer<List<Person>>.Default.Equals(FilmCrew, film.FilmCrew) &&
+				   Duration == film.Duration &&
 				   Year == film.Year &&
-				   LicensExpirationDate == film.LicensExpirationDate &&
 				   EqualityComparer<Distributor>.Default.Equals(Distributor, film.Distributor);
 		}
 
 		public override int GetHashCode()
 		{
-			return HashCode.Combine(Name, FilmCrew, Year, LicensExpirationDate, Distributor);
+			return HashCode.Combine(Name, Duration, Year, Distributor);
 		}
 	}
 }

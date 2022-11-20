@@ -86,7 +86,7 @@ namespace IntegratedTests
 		[Fact, TestPriority(2)]
 		public async Task TestCalculation()
 		{
-			Thread.Sleep(200);
+			Thread.Sleep(400);
 			try
 			{
 				// Arrange
@@ -184,23 +184,23 @@ namespace IntegratedTests
 			{
 				new RegisteredUser()
 				{
-					Username = "test3",
+					Username = "test1",
 					Password = "test3",
 					FirstName = "test3",
 					MiddleName = "test3",
 					LastName = "test3",
 					DateOfBirthday = DateTime.Now,
-					Phone = "+375444444444"
+					Phone = "+375444444441"
 				},
 				new RegisteredUser()
 				{
-					Username = "test3",
+					Username = "test2",
 					Password = "test3",
 					FirstName = "test3",
 					MiddleName = "test3",
 					LastName = "test3",
 					DateOfBirthday = DateTime.Now,
-					Phone = "+375444444444"
+					Phone = "+375444444442"
 				},
 				new RegisteredUser()
 				{

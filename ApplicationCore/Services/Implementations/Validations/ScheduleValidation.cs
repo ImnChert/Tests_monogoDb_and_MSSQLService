@@ -14,19 +14,35 @@ namespace ApplicationCore.Services.Implementations.Validations
 		}
 
 		public bool ContainSession(Session session)
-			=> _schedule.Sessions.Contains(session);
+		{
+			if (session == null)
+				return false;
+			return _schedule.Sessions.Contains(session);
+		}
 
 		public bool ContainSeat(Seat seat)
-			=> _schedule.Sessions
+		{
+			if (seat == null)
+				return false;
+			return _schedule.Sessions
 			.Any(s => s.Tickets
-				.Any(t => t.Seat == seat)
+				.Any(t => t.Seat.NumberRow == seat.NumberRow && t.Seat.NumberColumn == seat.NumberColumn)
 			);
+		}
 
 		public bool DoesTheUserHasAnEntryForThisSession(RegisteredUser user, Session session)
-			=> _schedule.Sessions
+		{
+			if (session == null)
+				return false;
+
+			if (user == null)
+				return false;
+
+			return _schedule.Sessions
 			.Where(s => s == session)
 			.Any(s => s.Tickets
 				.Any(t => t.RegisteredUser.Phone == user.Phone)
 			);
+		}
 	}
 }
