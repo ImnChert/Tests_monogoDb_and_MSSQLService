@@ -33,6 +33,15 @@ namespace Infrastructure.Data.MSSQLServerRepository.Implementations.MajorReposit
 			_scoreGetAllById = scoreGetAllById;
 		}
 
+		public FilmRepository(string connectionString)
+			: this(connectionString,
+				 new DistributorRepository(connectionString),
+				 new ReviewRepository(connectionString),
+				 new PersonRepository(connectionString),
+				 new ScoreRepository(connectionString))
+		{
+		}
+
 		protected override Film GetReader(SqlDataReader sqlDataReader)
 			=> new Film()
 			{

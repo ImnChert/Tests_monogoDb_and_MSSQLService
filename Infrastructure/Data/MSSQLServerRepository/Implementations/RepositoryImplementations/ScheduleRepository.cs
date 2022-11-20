@@ -21,10 +21,11 @@ namespace Infrastructure.Data.MSSQLServerRepository.Implementations.MajorReposit
 			_sessionRepository = sessionRepository;
 		}
 
-		//public ScheduleRepository(string connectionString)
-		//	: this(new SessionRepository(connectionString))
-		//{
-		//}
+		public ScheduleRepository(string connectionString)
+			: this(connectionString,
+				 new SessionRepository(connectionString))
+		{
+		}
 
 		protected override Schedule GetReader(SqlDataReader sqlDataReader)
 			=> new Schedule()

@@ -15,7 +15,8 @@ namespace Infrastructure.Data.MSSQLServerRepository.Implementations.MajorReposit
 		private IRepository<RegisteredUser> _registeredUserRepository;
 		private IRepository<Seat> _seatRepository;
 
-		public TicketRepository(string connectionString, Session session, IRepository<Employee> employeeRepository, IRepository<RegisteredUser> registeredUserRepository, IRepository<Seat> seatRepository)
+		public TicketRepository(string connectionString, Session session, IRepository<Employee> employeeRepository,
+			IRepository<RegisteredUser> registeredUserRepository, IRepository<Seat> seatRepository)
 			: base(connectionString,
 				  "Tickets",
 				  $"INSERT INTO Tickets (Id,SeatId,SessionId,RegisteredUserId,EmployeeId) VALUES(@Id,@SeatId,@SessionId,@RegisteredUserId,@EmployeeId)",
@@ -32,6 +33,15 @@ namespace Infrastructure.Data.MSSQLServerRepository.Implementations.MajorReposit
 			_employeeRepository = employeeRepository;
 			_registeredUserRepository = registeredUserRepository;
 			_seatRepository = seatRepository;
+		}
+
+		public TicketRepository(string connectionString, Session session)
+			: this(connectionString,
+				  session,
+				  new EmployeeRepository(connectionString),
+				  new UserRepository(connectionString),
+				  new SeatRepository(connectionString))
+		{
 		}
 
 		protected override Ticket GetReader(SqlDataReader sqlDataReader)
