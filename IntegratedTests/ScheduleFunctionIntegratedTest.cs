@@ -17,26 +17,8 @@ namespace IntegratedTests
 	{
 		private string _connectionString = "mongodb://localhost:27017";
 
-		[Fact, TestPriority(0)]
-		public void CreateTestData()
-		{
-			Assert.True(CreateData().Result);
-		}
-
 		[Fact, TestPriority(1)]
-		public void TestCalculation()
-		{
-			Assert.True(Calculation().Result);
-		}
-
-		[Fact, TestPriority(2)]
-		public void TestDeleteAllData()
-		{
-			Assert.True(DeleteAllData().Result);
-		}
-
-		//[Fact, TestPriority(0)]
-		public async Task<bool> CreateData()
+		public async Task TestCreateData()
 		{
 			try
 			{
@@ -93,19 +75,18 @@ namespace IntegratedTests
 				await scheduleService.InsertAsync(schedule);
 				BaseResponse<Schedule> scheduleData = await scheduleService.GetById(schedule.Id);
 
-				//Assert.True(true);
-				return true;
+				Assert.True(true);
 			}
 			catch (Exception)
 			{
-				return false;
-				//Assert.True(false);
+				Assert.True(false);
 			}
 		}
 
-		//[Fact, TestPriority(1)]
-		public async Task<bool> Calculation()
+		[Fact, TestPriority(2)]
+		public async Task TestCalculation()
 		{
+			Thread.Sleep(200);
 			try
 			{
 				// Arrange
@@ -131,8 +112,8 @@ namespace IntegratedTests
 				};
 
 				// Act
-				var data = scheduleService.GetAllAsync().Result.Data[0];
-				Schedule schedule = data;
+				var data = await scheduleService.GetAllAsync();
+				Schedule schedule = data.Data[0];
 				var scheduleValidation = new ScheduleValidation(schedule);
 				var scheduleFuntion = new ScheduleFunction(scheduleValidation, schedule);
 				var scheduleFunctionService = new ScheduleFunctionService(scheduleFuntion);
@@ -140,19 +121,18 @@ namespace IntegratedTests
 
 				// Assert
 				var assert = scheduleFunctionService.AddTicket(testUser, schedule.Sessions[0], testSeat).Data;
-				//Assert.False(assert);
-				return !assert;
+				Assert.False(assert);
 			}
 			catch
 			{
-				//Assert.False(true);//
-				return false;
+				Assert.False(true);
 			}
 		}
 
-		//[Fact, TestPriority(2)]
-		public async Task<bool> DeleteAllData()
+		[Fact, TestPriority(3)]
+		public async Task TestDeleteAllData()
 		{
+			Thread.Sleep(3000);
 			try
 			{
 				// Arrange
@@ -166,7 +146,7 @@ namespace IntegratedTests
 				var filmService = new FilmRepositoryService(filmRepositpry);
 
 				var categoryRepositpry = new CategoryRepository(_connectionString);
-				var categoryService = new CategoryService(categoryRepositpry);
+				var categoryService = new CategoryRepositoryService(categoryRepositpry);
 
 				var scheduleRepository = new ScheduleRepository(_connectionString);
 				var scheduleService = new ScheduleRepositoryService(scheduleRepository);
@@ -191,14 +171,11 @@ namespace IntegratedTests
 
 				await scheduleRepository.DeleteAsync(schedule);
 
-				//Assert.True(true);
-				return true;
+				Assert.True(true);
 			}
 			catch (Exception)
 			{
-
-				//Assert.True(false);
-				return false;
+				Assert.True(false);
 			}
 		}
 

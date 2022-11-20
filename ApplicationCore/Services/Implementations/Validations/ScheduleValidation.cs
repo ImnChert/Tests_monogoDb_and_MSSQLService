@@ -26,7 +26,7 @@ namespace ApplicationCore.Services.Implementations.Validations
 			=> _schedule.Sessions
 			.Where(s => s == session)
 			.Any(s => s.Tickets
-				.Any(t => t.RegisteredUser == user)
+				.Any(t => t.RegisteredUser.Phone == user.Phone)
 			);
 	}
 }

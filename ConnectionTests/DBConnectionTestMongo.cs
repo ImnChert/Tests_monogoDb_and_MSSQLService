@@ -14,7 +14,7 @@ namespace ConnectionTests
 			try
 			{
 				var categoryRepository = new CategoryRepository(connectionString);
-				var categoryService = new CategoryService(categoryRepository);
+				var categoryService = new CategoryRepositoryService(categoryRepository);
 
 				var result = await categoryService.GetById(planeId);
 			}
@@ -35,7 +35,7 @@ namespace ConnectionTests
 			int planeId = -1;
 
 			var categoryRepository = new CategoryRepository(connectionString);
-			var categoryService = new CategoryService(categoryRepository);
+			var categoryService = new CategoryRepositoryService(categoryRepository);
 
 			// Act
 			DateTime startTime = DateTime.Now;

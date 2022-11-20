@@ -15,7 +15,7 @@ namespace ConnectionTests
 			string connectionString = "path";
 			int planeId = -1;
 			var categoryRepository = new CategoryRepository(connectionString);
-			var categoryService = new CategoryService(categoryRepository);
+			var categoryService = new CategoryRepositoryService(categoryRepository);
 
 			// Act
 			var result = await categoryService.GetById(planeId);
@@ -31,7 +31,7 @@ namespace ConnectionTests
 			string connectionString = @"Data Source=DESKTOP-CTBUCT0\SQLEXPRESS;;Initial Catalog=CP;Integrated Security=True";
 			int planeId = -1;
 			var categoryRepository = new CategoryRepository(connectionString);
-			var categoryService = new CategoryService(categoryRepository);
+			var categoryService = new CategoryRepositoryService(categoryRepository);
 
 			// Act
 			DateTime startTime = DateTime.Now;
