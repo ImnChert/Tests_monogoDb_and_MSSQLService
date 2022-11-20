@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegratedTests", "Integrat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConnectionTests", "ConnectionTests\ConnectionTests.csproj", "{CC3D621D-5BA7-4C8D-B357-896CC280F323}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestCons", "TestCons\TestCons.csproj", "{451F598D-A8D5-4808-A5A0-B7C5FDCDC2D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestCons", "TestCons\TestCons.csproj", "{451F598D-A8D5-4808-A5A0-B7C5FDCDC2D7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

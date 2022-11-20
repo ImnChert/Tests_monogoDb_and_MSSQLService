@@ -2,7 +2,7 @@
 
 namespace IntegratedTests
 {
-	public class PriorityOrderer
+	public class Configuration
 	{
 		public IEnumerable<TTestCase> OrderTestCases<TTestCase>(
 			IEnumerable<TTestCase> testCases) where TTestCase : ITestCase

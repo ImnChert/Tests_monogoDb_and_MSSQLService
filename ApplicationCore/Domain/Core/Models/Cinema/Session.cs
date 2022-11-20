@@ -49,15 +49,15 @@ namespace ApplicationCore.Domain.Core.Models.Cinema
 		public override bool Equals(object? obj)
 		{
 			return obj is Session session &&
-				   EqualityComparer<Film>.Default.Equals(Film, session.Film) &&
-				   StartTime == session.StartTime &&
-				   EqualityComparer<List<Ticket>>.Default.Equals(Tickets, session.Tickets);
+				   Id == session.Id;
 		}
 
 		public override int GetHashCode()
 		{
-			return HashCode.Combine(Film, StartTime, Tickets);
+			return HashCode.Combine(Id);
 		}
+
+
 		// TODO: Вместо исключения исользовать события
 		// TODO: сделать время
 	}
