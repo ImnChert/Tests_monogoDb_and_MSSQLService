@@ -7,7 +7,7 @@ using System.Data.SqlClient;
 
 namespace Infrastructure.Data.MSSQLServerRepository.Implementations.RepositoryImplementations
 {
-	public class SeatRepository : MainMSSQLServerRepository<Seat>
+	public class SeatRepository : MSSQLFullRepository<Seat>
 	{
 		private IRepository<Category> _categoryRepository;
 

@@ -5,7 +5,7 @@ using System.Data;
 using ApplicationCore.Domain.Interfaces;
 using ApplicationCore.Domain.Core.Models.Cinema;
 
-namespace Infrastructure.Data.MSSQLServerRepository.Connection
+namespace Infrastructure.Data.MSSQLServerRepository.Connection.Extensions
 {
 	public abstract class MainMSSQLServerRepository<T>
 		 : MainMSSQLServer, IRepository<T>, IGetAllById<T> where T : EntityBase
@@ -111,26 +111,26 @@ namespace Infrastructure.Data.MSSQLServerRepository.Connection
 		}
 
 		public async Task<bool> DeleteAsync(T entity)
-			=> await Connection<bool, T>(entity, DeleteSqlCommand, _deleteQuery);
+			=> await Connection(entity, DeleteSqlCommand, _deleteQuery);
 
 		public async Task<bool> InsertAsync(T entity)
-			=> await Connection<bool, T>(entity, InsertSqlCommand, _insertQuery);
+			=> await Connection(entity, InsertSqlCommand, _insertQuery);
 
 		public async Task<bool> UpdateAsync(T entity)
-			=> await Connection<bool, T>(entity, UpdateSqlCommand, _updateQuery);
+			=> await Connection(entity, UpdateSqlCommand, _updateQuery);
 
 		public async Task<List<T>> GetAllAsync()
 			=> await Connection<List<T>, T>(null, GetAllSqlCommand, _getAllQuery);
 
 		public async Task<T> GetById(int id)
-			=> await Connection<T, int>(id, GetByIdSqlCommand, _getByIdQuery);
+			=> await Connection(id, GetByIdSqlCommand, _getByIdQuery);
 
 		public async Task<List<T>> GetAllByIdOneToMany(int id)
 		{
 			if (_getAllByIdQuery == null)
 				return null;
 
-			return await Connection<List<T>, int>(id, GetAllByIdSqlCommand, _getAllByIdQuery);
+			return await Connection(id, GetAllByIdSqlCommand, _getAllByIdQuery);
 		}
 
 		private async Task<List<T>> GetAllByIdSqlCommand(SqlCommand sqlCommand, int id)

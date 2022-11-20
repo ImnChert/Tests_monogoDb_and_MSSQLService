@@ -9,7 +9,7 @@ using System.Data.SqlClient;
 
 namespace Infrastructure.Data.MSSQLServerRepository.Implementations.LowerRepository
 {
-	public class SessionRepository : MainMSSQLServerManyToManyRepository<Session>
+	public class SessionRepository : MSSQLManyToManyRepository<Session>
 	{
 		private IGetAllById<Ticket> _ticketGetAllById;
 		private IRepository<Ticket> _ticketRepository;

@@ -7,7 +7,7 @@ using System.Data.SqlClient;
 
 namespace Infrastructure.Data.MSSQLServerRepository.Implementations.MajorRepository
 {
-	public class EmployeeRepository : MainMSSQLServerRepository<Employee>
+	public class EmployeeRepository : MSSQLFullRepository<Employee>
 	{
 		private IManyToManyRepository<Position> _positionManyToManyRepository;
 

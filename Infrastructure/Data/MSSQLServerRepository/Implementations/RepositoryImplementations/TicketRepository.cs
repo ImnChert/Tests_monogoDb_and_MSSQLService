@@ -8,7 +8,7 @@ using System.Data.SqlClient;
 
 namespace Infrastructure.Data.MSSQLServerRepository.Implementations.MajorRepository
 {
-	public class TicketRepository : MainMSSQLServerRepository<Ticket>
+	public class TicketRepository : MSSQLFullRepository<Ticket>
 	{
 		private Session _session;
 		private IRepository<Employee> _employeeRepository;

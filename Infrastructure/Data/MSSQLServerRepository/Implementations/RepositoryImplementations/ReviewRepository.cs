@@ -7,7 +7,7 @@ using System.Data.SqlClient;
 
 namespace Infrastructure.Data.MSSQLServerRepository.Implementations.MajorRepository
 {
-	public class ReviewRepository : MainMSSQLServerRepository<Review>
+	public class ReviewRepository : MSSQLFullRepository<Review>
 	{
 		private readonly Film _film;
 		private readonly IRepository<RegisteredUser> _registerUserRepository;

@@ -8,7 +8,7 @@ using System.Data.SqlClient;
 
 namespace Infrastructure.Data.MSSQLServerRepository.Implementations.LowerRepository
 {
-	public class PositionRepository : MainMSSQLServerManyToManyRepository<Position>
+	public class PositionRepository : MSSQLManyToManyRepository<Position>
 	{
 		public PositionRepository(string connectionString)
 			: base(connectionString,

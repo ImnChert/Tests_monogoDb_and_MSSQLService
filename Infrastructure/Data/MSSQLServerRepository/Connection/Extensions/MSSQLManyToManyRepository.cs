@@ -4,7 +4,7 @@ using System.Data.SqlClient;
 using System.Data;
 using SharpCompress.Common;
 
-namespace Infrastructure.Data.MSSQLServerRepository.Connection
+namespace Infrastructure.Data.MSSQLServerRepository.Connection.Extensions
 {
 	public abstract class MainMSSQLServerManyToManyRepository<T>
 		: MainMSSQLServer, IManyToManyRepository<T> where T : EntityBase
@@ -60,28 +60,9 @@ namespace Infrastructure.Data.MSSQLServerRepository.Connection
 		}
 
 		public async Task<List<T>> GetManyToManyAsync(int id)
-			=> await Connection<List<T>, int>(id, GetSqlCommand, _getManyToManyQuery);
+			=> await Connection(id, GetSqlCommand, _getManyToManyQuery);
 
 		public async Task<bool> SetManyToMany(int id, List<T> values)
-		=> await Connection<bool, ManyToMany<T>>(new ManyToMany<T> { Id = id, ManyList = values }, SetSqlCommand, _setManyToManyQuery);
-
-		public async Task<bool> InsertAsync(T entity)
-		{
-			if (_insertQuery == null)
-				return false;
-
-			return await Connection<bool, T>(entity, InsertSqlCommand, _insertQuery);
-		}
-
-		private async Task<bool> InsertSqlCommand(SqlCommand sqlCommand, T entity)
-		{
-			InsertCommand(sqlCommand, entity);
-
-			await sqlCommand.ExecuteNonQueryAsync();
-
-			return true;
-		}
-
-		protected abstract void InsertCommand(SqlCommand sqlCommand, T entity);
+		=> await Connection(new ManyToMany<T> { Id = id, ManyList = values }, SetSqlCommand, _setManyToManyQuery);
 	}
 }

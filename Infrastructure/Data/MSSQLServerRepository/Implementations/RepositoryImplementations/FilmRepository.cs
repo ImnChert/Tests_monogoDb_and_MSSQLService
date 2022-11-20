@@ -24,8 +24,29 @@ namespace Infrastructure.Data.MSSQLServerRepository.Implementations.MajorReposit
 					YearOfRelease=@YearOfRelease, LicensExpirationDate=@LicensExpirationDate,
 					DistributorId=@DistributorId, BasePrice=@BasePrice
 					WHERE Id=@Id",
-				  $"SELECT Id,Name,Duration,DescriptionFilm,YearOfRelease,LicensExpirationDate,DistributorId,BasePrice FROM Films",
-				  $"SELECT Id,Name,Duration,DescriptionFilm,YearOfRelease,LicensExpirationDate,DistributorId,BasePrice FROM Films WHERE Id=@id")
+				  $@"SELECT Films.Id, Name, Duration, DescriptionFilm, YearOfRelease, LicensExpirationDate, DistributorId, BasePrice, 
+					Scores.Id, Scores.FilmId, Scores.Raiting, Scores.RegisteredUsersId,
+					Reviews.Id, Reviews.FilmId, Reviews.DescriptionReview, Reviews.RegisteredUsersId, 
+					People.Id, People.FilmsId, People.FirstName, People.LastName, People.MiddleName, People.Post
+					FROM Films
+					INNER JOIN Scores
+					ON Scores.FilmId = Films.Id
+					INNER JOIN Reviews
+					ON Reviews.FilmId = Films.Id
+					INNER JOIN People
+					ON People.FilmsId = Films.Id",
+				  $@"SELECT Films.Id, Name, Duration, DescriptionFilm, YearOfRelease, LicensExpirationDate, DistributorId, BasePrice, 
+					Scores.Id, Scores.FilmId, Scores.Raiting, Scores.RegisteredUsersId,
+					Reviews.Id, Reviews.FilmId, Reviews.DescriptionReview, Reviews.RegisteredUsersId, 
+					People.Id, People.FilmsId, People.FirstName, People.LastName, People.MiddleName, People.Post
+					FROM Films
+					INNER JOIN Scores
+					ON Scores.FilmId = Films.Id
+					INNER JOIN Reviews
+					ON Reviews.FilmId = Films.Id
+					INNER JOIN People
+					ON People.FilmsId = Films.Id
+					WHERE Id=@id")
 		{
 			_distributorRepository = distributorRepository;
 			_reviewGetAllById = reviewGetAllById;
