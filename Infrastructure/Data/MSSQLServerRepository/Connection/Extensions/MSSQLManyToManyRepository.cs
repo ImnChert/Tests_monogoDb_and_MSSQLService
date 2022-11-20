@@ -2,29 +2,27 @@
 using ApplicationCore.Domain.Interfaces;
 using System.Data.SqlClient;
 using System.Data;
-using SharpCompress.Common;
 
 namespace Infrastructure.Data.MSSQLServerRepository.Connection.Extensions
 {
-	public abstract class MainMSSQLServerManyToManyRepository<T>
+	public abstract class MSSQLManyToManyRepository<T>
 		: MainMSSQLServer, IManyToManyRepository<T> where T : EntityBase
 	{
 		protected string _getManyToManyQuery;
 		protected string _setManyToManyQuery;
-		protected string _insertQuery = null;
 
-		public MainMSSQLServerManyToManyRepository(string connectionString, string getManyToManyQuery, string setManyToManyQuery)
+		public MSSQLManyToManyRepository(string connectionString, string getManyToManyQuery, string setManyToManyQuery)
 			: base(connectionString)
 		{
 			_getManyToManyQuery = getManyToManyQuery;
 			_setManyToManyQuery = setManyToManyQuery;
 		}
 
-		public MainMSSQLServerManyToManyRepository(string connectionString, string getManyToManyQuery,
+		public MSSQLManyToManyRepository(string connectionString, string getManyToManyQuery,
 			string setManyToManyQuery, string insertQuery)
 			: this(connectionString, getManyToManyQuery, setManyToManyQuery)
 		{
-			_insertQuery = insertQuery;
+			//_insertQuery = insertQuery;
 		}
 
 		protected abstract T GetCommand(SqlDataReader sqlDataReader);

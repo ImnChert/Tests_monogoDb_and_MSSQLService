@@ -5,7 +5,7 @@ using System.Data;
 
 namespace Infrastructure.Data.MSSQLServerRepository.Connection.Extensions
 {
-	public abstract class MainMSSSQLServerUpdateInsert<T>
+	public abstract class MSSSQLShortRepository<T>
 		: MainMSSQLServer, IShortRepository<T> where T : EntityBase
 	{
 		protected readonly string _tableName;
@@ -13,8 +13,13 @@ namespace Infrastructure.Data.MSSQLServerRepository.Connection.Extensions
 		protected readonly string _insertQuery;
 		protected readonly string _updateQuery;
 
-		public MainMSSSQLServerUpdateInsert(string connectionString) : base(connectionString)
+		protected MSSSQLShortRepository(string connectionString, string tableName, string insertQuery, string updateQuery)
+			: base(connectionString)
 		{
+			_tableName = tableName;
+			_deleteQuery = $@"DELETE FROM {tableName} WHERE Id = @id";
+			_insertQuery = insertQuery;
+			_updateQuery = updateQuery;
 		}
 
 		public async Task<bool> DeleteAsync(T entity)

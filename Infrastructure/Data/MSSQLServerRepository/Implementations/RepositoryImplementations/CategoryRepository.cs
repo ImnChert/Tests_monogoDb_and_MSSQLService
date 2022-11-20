@@ -1,11 +1,12 @@
 ﻿using ApplicationCore.Domain.Core.Models.Cinema;
 using Infrastructure.Data.MSSQLServerRepository.Connection;
+using Infrastructure.Data.MSSQLServerRepository.Connection.Extensions;
 using System.Data;
 using System.Data.SqlClient;
 
 namespace Infrastructure.Data.MSSQLServerRepository.Implementations.MajorRepository
 {
-	public class CategoryRepository : MSSQLFullRepository<Category>
+	public class CategoryRepository : MSSQLRepository<Category>
 	{
 		public CategoryRepository(string connectionString)
 			: base(connectionString,

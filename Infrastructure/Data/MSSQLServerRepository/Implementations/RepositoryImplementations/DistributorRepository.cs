@@ -1,11 +1,12 @@
 ﻿using ApplicationCore.Domain.Core.Models.Cinema.Films;
 using Infrastructure.Data.MSSQLServerRepository.Connection;
+using Infrastructure.Data.MSSQLServerRepository.Connection.Extensions;
 using System.Data;
 using System.Data.SqlClient;
 
 namespace Infrastructure.Data.MSSQLServerRepository.Implementations.MajorRepository
 {
-	public class DistributorRepository : MSSQLFullRepository<Distributor>
+	public class DistributorRepository : MSSQLRepository<Distributor>
 	{
 		public DistributorRepository(string connectionString)
 			: base(connectionString,

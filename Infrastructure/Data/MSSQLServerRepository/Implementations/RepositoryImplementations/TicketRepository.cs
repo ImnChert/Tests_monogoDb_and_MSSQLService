@@ -2,13 +2,14 @@
 using ApplicationCore.Domain.Core.Models.Roles;
 using ApplicationCore.Domain.Core.Models.Roles.Staff;
 using ApplicationCore.Domain.Interfaces.Interfaces;
-using Infrastructure.Data.MSSQLServerRepository.Connection;
+using Infrastructure.Data.MSSQLServerRepository.Connection.Extensions;
+using Infrastructure.Data.MSSQLServerRepository.Implementations.RepositoryImplementations;
 using System.Data;
 using System.Data.SqlClient;
 
 namespace Infrastructure.Data.MSSQLServerRepository.Implementations.MajorRepository
 {
-	public class TicketRepository : MSSQLFullRepository<Ticket>
+	public class TicketRepository : MSSQLRepository<Ticket>
 	{
 		private Session _session;
 		private IRepository<Employee> _employeeRepository;

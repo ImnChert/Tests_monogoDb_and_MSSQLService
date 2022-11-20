@@ -1,11 +1,12 @@
 ﻿using ApplicationCore.Domain.Core.Models.Roles;
 using Infrastructure.Data.MSSQLServerRepository.Connection;
+using Infrastructure.Data.MSSQLServerRepository.Connection.Extensions;
 using System.Data;
 using System.Data.SqlClient;
 
 namespace Infrastructure.Data.MSSQLServerRepository.Implementations.MajorRepository
 {
-	public class UserRepository : MSSQLFullRepository<RegisteredUser>
+	public class UserRepository : MSSQLRepository<RegisteredUser>
 	{
 		public UserRepository(string connectionString)
 			: base(connectionString,

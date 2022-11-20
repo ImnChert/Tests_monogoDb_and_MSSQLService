@@ -2,6 +2,7 @@
 using ApplicationCore.Domain.Core.Models.Roles.Staff;
 using ApplicationCore.Domain.Core.Models.Roles.Staff.Positions;
 using Infrastructure.Data.MSSQLServerRepository.Connection;
+using Infrastructure.Data.MSSQLServerRepository.Connection.Extensions;
 using SharpCompress.Common;
 using System.Data;
 using System.Data.SqlClient;
@@ -42,10 +43,10 @@ namespace Infrastructure.Data.MSSQLServerRepository.Implementations.LowerReposit
 				sqlCommand.Parameters.Add("@PositionID", SqlDbType.NVarChar).Value = item.Id;
 			});
 
-		protected override void InsertCommand(SqlCommand sqlCommand, Position entity)
-		{
-			throw new NotImplementedException();
-		}
+		//protected override void InsertCommand(SqlCommand sqlCommand, Position entity)
+		//{
+		//	throw new NotImplementedException();
+		//}
 	}
 }
 

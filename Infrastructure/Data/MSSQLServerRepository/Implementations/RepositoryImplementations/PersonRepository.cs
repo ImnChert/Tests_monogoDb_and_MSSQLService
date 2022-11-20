@@ -1,12 +1,14 @@
 ﻿using ApplicationCore.Domain.Core.Models.Cinema.Films;
 using ApplicationCore.Domain.Interfaces;
 using Infrastructure.Data.MSSQLServerRepository.Connection;
+using Infrastructure.Data.MSSQLServerRepository.Connection.Extensions;
+using System.Data.SqlClient;
 
 namespace Infrastructure.Data.MSSQLServerRepository.Implementations.MajorRepository
 {
-	public class PersonRepository : MainMSSQLServer, IUpdateAsync<Film>
+	public class PersonRepository : MSSSQLShortRepository<Film>
 	{
-		public PersonRepository(string connectionString, Film film)
+		public PersonRepository(string connectionString)
 			: base(connectionString,
 				  "People",
 				  $@"INSERT INTO People (Id,FirstName, MiddleName,LastName,FilmsId,Post) 
@@ -15,10 +17,14 @@ namespace Infrastructure.Data.MSSQLServerRepository.Implementations.MajorReposit
 									FilmsId=@FilmsId,Post=@Post 
 					WHERE Id=@Id")
 		{
-			_film = film;
 		}
 
-		public Task<bool> UpdateAsync(Film entity)
+		protected override Task<bool> InsertSqlCommand(SqlCommand sqlCommand, Film entity)
+		{
+			throw new NotImplementedException();
+		}
+
+		protected override Task<bool> UpdateSqlCommand(SqlCommand sqlCommand, Film entity)
 		{
 			throw new NotImplementedException();
 		}

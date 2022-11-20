@@ -1,13 +1,14 @@
 ﻿using ApplicationCore.Domain.Core.Models.Roles.Staff;
 using ApplicationCore.Domain.Interfaces;
 using Infrastructure.Data.MSSQLServerRepository.Connection;
+using Infrastructure.Data.MSSQLServerRepository.Connection.Extensions;
 using Infrastructure.Data.MSSQLServerRepository.Implementations.LowerRepository;
 using System.Data;
 using System.Data.SqlClient;
 
 namespace Infrastructure.Data.MSSQLServerRepository.Implementations.MajorRepository
 {
-	public class EmployeeRepository : MSSQLFullRepository<Employee>
+	public class EmployeeRepository : MSSQLRepository<Employee>
 	{
 		private IManyToManyRepository<Position> _positionManyToManyRepository;
 

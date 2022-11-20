@@ -3,7 +3,7 @@ using ApplicationCore.Domain.Core.Models.Cinema.Films;
 using ApplicationCore.Domain.Interfaces;
 using ApplicationCore.Domain.Interfaces.Interfaces;
 using Infrastructure.Data.MSSQLServerRepository.Connection;
-using Infrastructure.Data.MSSQLServerRepository.Implementations.MajorRepository;
+using Infrastructure.Data.MSSQLServerRepository.Connection.Extensions;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -45,16 +45,16 @@ namespace Infrastructure.Data.MSSQLServerRepository.Implementations.LowerReposit
 				Tickets = _ticketGetAllById.GetAllByIdOneToMany((int)sqlDataReader["Id"]).Result
 			};
 
-		protected override void InsertCommand(SqlCommand sqlCommand, Session entity)
-		{
-			sqlCommand.Parameters.Add("@FilmId", SqlDbType.NVarChar).Value = entity.Film.Id;
-			sqlCommand.Parameters.Add("@StartTime", SqlDbType.Decimal).Value = entity.StartTime;
+		//protected override void InsertCommand(SqlCommand sqlCommand, Session entity)
+		//{
+		//	sqlCommand.Parameters.Add("@FilmId", SqlDbType.NVarChar).Value = entity.Film.Id;
+		//	sqlCommand.Parameters.Add("@StartTime", SqlDbType.Decimal).Value = entity.StartTime;
 
-			foreach (Ticket item in entity.Tickets)
-			{
-				_ticketRepository.InsertAsync(item);
-			}
-		}
+		//	foreach (Ticket item in entity.Tickets)
+		//	{
+		//		_ticketRepository.InsertAsync(item);
+		//	}
+		//}
 
 		protected override async Task SetCommand(SqlCommand sqlCommand, ManyToMany<Session> value)
 			=> value.ManyList.ForEach(item =>

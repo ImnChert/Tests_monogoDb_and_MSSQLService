@@ -1,13 +1,14 @@
 ﻿using ApplicationCore.Domain.Core.Models.Cinema;
 using ApplicationCore.Domain.Interfaces.Interfaces;
 using Infrastructure.Data.MSSQLServerRepository.Connection;
+using Infrastructure.Data.MSSQLServerRepository.Connection.Extensions;
 using Infrastructure.Data.MSSQLServerRepository.Implementations.MajorRepository;
 using System.Data;
 using System.Data.SqlClient;
 
 namespace Infrastructure.Data.MSSQLServerRepository.Implementations.RepositoryImplementations
 {
-	public class SeatRepository : MSSQLFullRepository<Seat>
+	public class SeatRepository : MSSQLRepository<Seat>
 	{
 		private IRepository<Category> _categoryRepository;
 

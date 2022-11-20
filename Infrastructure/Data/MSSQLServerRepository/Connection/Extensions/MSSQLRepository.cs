@@ -3,35 +3,26 @@ using ApplicationCore.Domain.Interfaces.Interfaces;
 using System.Data.SqlClient;
 using System.Data;
 using ApplicationCore.Domain.Interfaces;
-using ApplicationCore.Domain.Core.Models.Cinema;
 
 namespace Infrastructure.Data.MSSQLServerRepository.Connection.Extensions
 {
-	public abstract class MainMSSQLServerRepository<T>
-		 : MainMSSQLServer, IRepository<T>, IGetAllById<T> where T : EntityBase
+	public abstract class MSSQLRepository<T>
+		 : MSSSQLShortRepository<T>, IRepository<T>, IGetAllById<T> where T : EntityBase
 	{
-		protected readonly string _tableName;
-		protected readonly string _deleteQuery;
-		protected readonly string _insertQuery;
-		protected readonly string _updateQuery;
 		protected readonly string _getAllQuery;
 		protected readonly string _getByIdQuery;
 		protected readonly string _getAllByIdQuery = null;
 		protected readonly string _parameterName = null;
 
-		public MainMSSQLServerRepository(string connectionString, string tableName,
+		public MSSQLRepository(string connectionString, string tableName,
 			string insertQuery, string updateQuery, string getAllQuery, string getByIdQuery)
-			: base(connectionString)
+			: base(connectionString, tableName, insertQuery, updateQuery)
 		{
-			_tableName = tableName;
-			_deleteQuery = $@"DELETE FROM {_tableName} WHERE Id = @id";
-			_insertQuery = insertQuery;
-			_updateQuery = updateQuery;
 			_getAllQuery = getAllQuery;
 			_getByIdQuery = getByIdQuery;
 		}
 
-		public MainMSSQLServerRepository(string connectionString, string tableName,
+		public MSSQLRepository(string connectionString, string tableName,
 			string insertQuery, string updateQuery, string getAllQuery, string getByIdQuery,
 			string getAllByIdQuery, string parameterName)
 			: this(connectionString, tableName, insertQuery, updateQuery, getAllQuery, getByIdQuery)
@@ -40,15 +31,7 @@ namespace Infrastructure.Data.MSSQLServerRepository.Connection.Extensions
 			_parameterName = parameterName;
 		}
 
-		private async Task<bool> DeleteSqlCommand(SqlCommand sqlCommand, T entity)
-		{
-			sqlCommand.Parameters.Add("@id", SqlDbType.Int).Value = entity.Id;
-			await sqlCommand.ExecuteNonQueryAsync();
-
-			return true;
-		}
-
-		private async Task<bool> InsertSqlCommand(SqlCommand sqlCommand, T entity)
+		protected override sealed async Task<bool> InsertSqlCommand(SqlCommand sqlCommand, T entity)
 		{
 			InsertCommand(sqlCommand, entity);
 
@@ -57,7 +40,7 @@ namespace Infrastructure.Data.MSSQLServerRepository.Connection.Extensions
 			return true;
 		}
 
-		private async Task<bool> UpdateSqlCommand(SqlCommand sqlCommand, T entity)
+		protected override sealed async Task<bool> UpdateSqlCommand(SqlCommand sqlCommand, T entity)
 		{
 			sqlCommand.Parameters.Add("@Id", SqlDbType.Int).Value = entity.Id;
 			InsertCommand(sqlCommand, entity);
@@ -109,15 +92,6 @@ namespace Infrastructure.Data.MSSQLServerRepository.Connection.Extensions
 					return null;
 			}
 		}
-
-		public async Task<bool> DeleteAsync(T entity)
-			=> await Connection(entity, DeleteSqlCommand, _deleteQuery);
-
-		public async Task<bool> InsertAsync(T entity)
-			=> await Connection(entity, InsertSqlCommand, _insertQuery);
-
-		public async Task<bool> UpdateAsync(T entity)
-			=> await Connection(entity, UpdateSqlCommand, _updateQuery);
 
 		public async Task<List<T>> GetAllAsync()
 			=> await Connection<List<T>, T>(null, GetAllSqlCommand, _getAllQuery);

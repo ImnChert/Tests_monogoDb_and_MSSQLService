@@ -2,12 +2,13 @@
 using ApplicationCore.Domain.Core.Models.Roles;
 using ApplicationCore.Domain.Interfaces.Interfaces;
 using Infrastructure.Data.MSSQLServerRepository.Connection;
+using Infrastructure.Data.MSSQLServerRepository.Connection.Extensions;
 using System.Data;
 using System.Data.SqlClient;
 
 namespace Infrastructure.Data.MSSQLServerRepository.Implementations.MajorRepository
 {
-	public class ReviewRepository : MSSQLFullRepository<Review>
+	public class ReviewRepository : MSSQLRepository<Review>
 	{
 		private readonly Film _film;
 		private readonly IRepository<RegisteredUser> _registerUserRepository;
