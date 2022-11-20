@@ -1,7 +1,6 @@
 ﻿using ApplicationCore.Domain.Core.Models.Cinema.Films;
 using ApplicationCore.Domain.Interfaces;
 using ApplicationCore.Domain.Interfaces.Interfaces;
-using Infrastructure.Data.MSSQLServerRepository.Connection;
 using Infrastructure.Data.MSSQLServerRepository.Connection.Extensions;
 using System.Data;
 using System.Data.SqlClient;

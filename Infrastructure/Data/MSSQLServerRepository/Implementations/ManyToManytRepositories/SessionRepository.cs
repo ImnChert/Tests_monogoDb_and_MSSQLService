@@ -4,6 +4,7 @@ using ApplicationCore.Domain.Interfaces;
 using ApplicationCore.Domain.Interfaces.Interfaces;
 using Infrastructure.Data.MSSQLServerRepository.Connection;
 using Infrastructure.Data.MSSQLServerRepository.Connection.Extensions;
+using Infrastructure.Data.MSSQLServerRepository.Implementations.MajorRepository;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -31,10 +32,13 @@ namespace Infrastructure.Data.MSSQLServerRepository.Implementations.LowerReposit
 			_filmRepository = filmRepository;
 		}
 
-		//public SessionRepository(string connectionString)
-		//	: this(connectionString, new TicketRepository(connectionString, new Session),
-		//		  new TicketRepository(connectionString), new FilmRepository(connectionString))
-		//{ }
+		public SessionRepository(string connectionString)
+			: this(connectionString,
+				  new TicketRepository(connectionString),
+				  new TicketRepository(connectionString),
+				  new FilmRepository(connectionString))
+		{
+		}
 
 		protected override Session GetCommand(SqlDataReader sqlDataReader)
 			=> new Session()

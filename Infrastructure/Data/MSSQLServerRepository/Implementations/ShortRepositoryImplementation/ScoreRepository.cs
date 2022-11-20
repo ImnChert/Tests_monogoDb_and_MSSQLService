@@ -6,7 +6,7 @@ using Infrastructure.Data.MSSQLServerRepository.Connection.Extensions;
 using System.Data;
 using System.Data.SqlClient;
 
-namespace Infrastructure.Data.MSSQLServerRepository.Implementations.MajorRepository
+namespace Infrastructure.Data.MSSQLServerRepository.Implementations.ShortRepositoryImplementation
 {
 	public class ScoreRepository : MSSQLRepository<Score>
 	{

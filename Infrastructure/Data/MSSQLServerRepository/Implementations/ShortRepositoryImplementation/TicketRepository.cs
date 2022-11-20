@@ -3,11 +3,12 @@ using ApplicationCore.Domain.Core.Models.Roles;
 using ApplicationCore.Domain.Core.Models.Roles.Staff;
 using ApplicationCore.Domain.Interfaces.Interfaces;
 using Infrastructure.Data.MSSQLServerRepository.Connection.Extensions;
+using Infrastructure.Data.MSSQLServerRepository.Implementations.MajorRepository;
 using Infrastructure.Data.MSSQLServerRepository.Implementations.RepositoryImplementations;
 using System.Data;
 using System.Data.SqlClient;
 
-namespace Infrastructure.Data.MSSQLServerRepository.Implementations.MajorRepository
+namespace Infrastructure.Data.MSSQLServerRepository.Implementations.ShortRepositoryImplementation
 {
 	public class TicketRepository : MSSQLRepository<Ticket>
 	{

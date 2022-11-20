@@ -1,10 +1,8 @@
 ﻿using ApplicationCore.Domain.Core.Models.Cinema.Films;
-using ApplicationCore.Domain.Interfaces;
-using Infrastructure.Data.MSSQLServerRepository.Connection;
 using Infrastructure.Data.MSSQLServerRepository.Connection.Extensions;
 using System.Data.SqlClient;
 
-namespace Infrastructure.Data.MSSQLServerRepository.Implementations.MajorRepository
+namespace Infrastructure.Data.MSSQLServerRepository.Implementations.ShortRepositoryImplementation
 {
 	public class PersonRepository : MSSSQLShortRepository<Film>
 	{
