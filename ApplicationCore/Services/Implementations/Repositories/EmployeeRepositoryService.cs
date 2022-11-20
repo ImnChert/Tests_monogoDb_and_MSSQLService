@@ -3,9 +3,9 @@ using ApplicationCore.Domain.Interfaces.Interfaces;
 
 namespace ApplicationCore.Services.Implementations.Repositories
 {
-	public class EmployeeService : MainRepository<Employee>
+	public class EmployeeRepositoryService : MainRepository<Employee>
 	{
-		public EmployeeService(IRepository<Employee> repository)
+		public EmployeeRepositoryService(IRepository<Employee> repository)
 			: base(repository) { }
 	}
 }

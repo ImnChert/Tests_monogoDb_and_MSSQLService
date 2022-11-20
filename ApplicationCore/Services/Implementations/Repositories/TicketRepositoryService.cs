@@ -3,9 +3,9 @@ using ApplicationCore.Domain.Interfaces.Interfaces;
 
 namespace ApplicationCore.Services.Implementations.Repositories
 {
-	public class SessionService : MainRepository<Session>
+	public class TicketRepositoryService : MainRepository<Ticket>
 	{
-		public SessionService(IRepository<Session> repository) : base(repository)
+		public TicketRepositoryService(IRepository<Ticket> repository) : base(repository)
 		{
 		}
 	}

@@ -3,9 +3,9 @@ using ApplicationCore.Domain.Interfaces.Interfaces;
 
 namespace ApplicationCore.Services.Implementations.Repositories
 {
-	public class FilmService : MainRepository<Film>
+	public class FilmRepositoryService : MainRepository<Film>
 	{
-		public FilmService(IRepository<Film> repository)
+		public FilmRepositoryService(IRepository<Film> repository)
 			: base(repository) { }
 	}
 }

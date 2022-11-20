@@ -3,9 +3,9 @@ using ApplicationCore.Domain.Interfaces.Interfaces;
 
 namespace ApplicationCore.Services.Implementations.Repositories
 {
-	public class UserService : MainRepository<RegisteredUser>
+	public class UserRepositoryService : MainRepository<RegisteredUser>
 	{
-		public UserService(IRepository<RegisteredUser> repository) : base(repository)
+		public UserRepositoryService(IRepository<RegisteredUser> repository) : base(repository)
 		{
 		}
 	}

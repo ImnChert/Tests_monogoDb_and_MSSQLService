@@ -43,19 +43,19 @@ namespace IntegratedTests
 				// Arrange
 
 				var userRepository = new UserRepository(_connectionString);
-				var userService = new UserService(userRepository);
+				var userService = new UserRepositoryService(userRepository);
 
 				var employeeRepository = new EmployeeRepository(_connectionString);
-				var employeeService = new EmployeeService(employeeRepository);
+				var employeeService = new EmployeeRepositoryService(employeeRepository);
 
 				var filmRepositpry = new FilmRepository(_connectionString);
-				var filmService = new FilmService(filmRepositpry);
+				var filmService = new FilmRepositoryService(filmRepositpry);
 
 				var categoryRepositpry = new CategoryRepository(_connectionString);
 				var categoryService = new CategoryService(categoryRepositpry);
 
 				var scheduleRepository = new ScheduleRepository(_connectionString);
-				var scheduleService = new ScheduleService(scheduleRepository);
+				var scheduleService = new ScheduleRepositoryService(scheduleRepository);
 
 				List<RegisteredUser> collectionUsers = GetTestUsers();
 				List<Ticket> collectionTickets = GetTestTicket();
@@ -110,7 +110,7 @@ namespace IntegratedTests
 			{
 				// Arrange
 				var scheduleRepository = new ScheduleRepository(_connectionString);
-				var scheduleService = new ScheduleService(scheduleRepository);
+				var scheduleService = new ScheduleRepositoryService(scheduleRepository);
 
 				var testUser = new RegisteredUser()
 				{
@@ -157,19 +157,19 @@ namespace IntegratedTests
 			{
 				// Arrange
 				var userRepository = new UserRepository(_connectionString);
-				var userService = new UserService(userRepository);
+				var userService = new UserRepositoryService(userRepository);
 
 				var employeeRepository = new EmployeeRepository(_connectionString);
-				var employeeService = new EmployeeService(employeeRepository);
+				var employeeService = new EmployeeRepositoryService(employeeRepository);
 
 				var filmRepositpry = new FilmRepository(_connectionString);
-				var filmService = new FilmService(filmRepositpry);
+				var filmService = new FilmRepositoryService(filmRepositpry);
 
 				var categoryRepositpry = new CategoryRepository(_connectionString);
 				var categoryService = new CategoryService(categoryRepositpry);
 
 				var scheduleRepository = new ScheduleRepository(_connectionString);
-				var scheduleService = new ScheduleService(scheduleRepository);
+				var scheduleService = new ScheduleRepositoryService(scheduleRepository);
 
 				// Act
 
