@@ -3,9 +3,9 @@ using ApplicationCore.Domain.Interfaces.Interfaces;
 
 namespace ApplicationCore.Services.Implementations.Repositories
 {
-	public class CategoryService : MainRepository<Category>
+	public class CategoryRepositoryService : MainRepository<Category>
 	{
-		public CategoryService(IRepository<Category> repository)
+		public CategoryRepositoryService(IRepository<Category> repository)
 			: base(repository) { }
 	}
 }

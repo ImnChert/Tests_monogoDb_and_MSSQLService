@@ -52,7 +52,7 @@ namespace IntegratedTests
 				var filmService = new FilmRepositoryService(filmRepositpry);
 
 				var categoryRepositpry = new CategoryRepository(_connectionString);
-				var categoryService = new CategoryService(categoryRepositpry);
+				var categoryService = new CategoryRepositoryService(categoryRepositpry);
 
 				var scheduleRepository = new ScheduleRepository(_connectionString);
 				var scheduleService = new ScheduleRepositoryService(scheduleRepository);

@@ -21,11 +21,11 @@ namespace ApplicationCore.Services.Implementations.FunctionalEntities.Services
 		{
 			try
 			{
-				_scheduleFunction.AddSession(session);
+				var assert = _scheduleFunction.AddSession(session);
 
 				return new BaseResponse<bool>()
 				{
-					Data = true,
+					Data = assert,
 					Description = "Successfully",
 					StatusCode = new OkResult()
 				};
@@ -45,11 +45,11 @@ namespace ApplicationCore.Services.Implementations.FunctionalEntities.Services
 		{
 			try
 			{
-				_scheduleFunction.AddTicket(user, session, seat);
+				var assert = _scheduleFunction.AddTicket(user, session, seat);
 
 				return new BaseResponse<bool>()
 				{
-					Data = true,
+					Data = assert,
 					Description = "Successfully",
 					StatusCode = new OkResult()
 				};
@@ -69,11 +69,11 @@ namespace ApplicationCore.Services.Implementations.FunctionalEntities.Services
 		{
 			try
 			{
-				_scheduleFunction.ConfirmPayment(session, ticket, employee);
+				var assert = _scheduleFunction.ConfirmPayment(session, ticket, employee);
 
 				return new BaseResponse<bool>()
 				{
-					Data = true,
+					Data = assert,
 					Description = "Successfully",
 					StatusCode = new OkResult()
 				};
@@ -93,11 +93,11 @@ namespace ApplicationCore.Services.Implementations.FunctionalEntities.Services
 		{
 			try
 			{
-				_scheduleFunction.AddTicket(user, session, seat);
+				var assert = _scheduleFunction.AddTicket(user, session, seat);
 
 				return new BaseResponse<bool>()
 				{
-					Data = true,
+					Data = assert,
 					Description = "Successfully",
 					StatusCode = new OkResult()
 				};
