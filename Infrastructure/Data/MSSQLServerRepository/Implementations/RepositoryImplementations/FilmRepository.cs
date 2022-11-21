@@ -1,7 +1,9 @@
 ﻿using ApplicationCore.Domain.Core.Models.Cinema.Films;
 using ApplicationCore.Domain.Interfaces;
 using ApplicationCore.Domain.Interfaces.Interfaces;
+using Infrastructure.Data.MSSQLServerRepository.Connection;
 using Infrastructure.Data.MSSQLServerRepository.Connection.Extensions;
+using Infrastructure.Data.MSSQLServerRepository.Implementations.ShortRepositoryImplementation;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -10,12 +12,12 @@ namespace Infrastructure.Data.MSSQLServerRepository.Implementations.MajorReposit
 	public class FilmRepository : MSSQLRepository<Film>
 	{
 		private IRepository<Distributor> _distributorRepository;
-		private readonly IGetAllById<Review> _reviewGetAllById;
-		private readonly IGetAllById<Person> _personGetAllById;
-		private readonly IGetAllById<Score> _scoreGetAllById;
+		private readonly IGetAllById<OneToMany<Review>> _reviewGetAllById;
+		private readonly IGetAllById<OneToMany<Person>> _personGetAllById;
+		private readonly IGetAllById<OneToMany<Score>> _scoreGetAllById;
 
 		public FilmRepository(string connectionString, IRepository<Distributor> distributorRepository,
-			IGetAllById<Review> reviewGetAllById, IGetAllById<Person> personGetAllById, IGetAllById<Score> scoreGetAllById)
+			IGetAllById<OneToMany<Review>> reviewGetAllById, IGetAllById<OneToMany<Person>> personGetAllById, IGetAllById<OneToMany<Score>> scoreGetAllById)
 			: base(connectionString,
 				  "Films",
 				  $@"INSERT INTO Films (Id,Name,Duration,DescriptionFilm,YearOfRelease,LicensExpirationDate,DistributorId,BasePrice) 
@@ -57,9 +59,9 @@ namespace Infrastructure.Data.MSSQLServerRepository.Implementations.MajorReposit
 		public FilmRepository(string connectionString)
 			: this(connectionString,
 				 new DistributorRepository(connectionString),
-				 new ReviewRepository(connectionString),
-				 new PersonRepository(connectionString),
-				 new ScoreRepository(connectionString))
+				 new ReviewShortRepository(connectionString),
+				 new PersonShortRepository(connectionString),
+				 new ScoreShortRepository(connectionString))
 		{
 		}
 
@@ -69,11 +71,11 @@ namespace Infrastructure.Data.MSSQLServerRepository.Implementations.MajorReposit
 				Id = (int)sqlDataReader["Id"],
 				Name = sqlDataReader["Name"] as string ?? "Undefined",
 				Duration = (int)sqlDataReader["Duration"],
-				FilmCrew = _personGetAllById.GetAllByIdOneToMany((int)sqlDataReader["Id"]).Result,
-				Reviews = _reviewGetAllById.GetAllByIdOneToMany((int)sqlDataReader["Id"]).Result,
+				FilmCrew = _personGetAllById.GetAllByIdOneToMany((int)sqlDataReader["Id"]).Result.Select(x => x.Value).ToList(),
+				Reviews = _reviewGetAllById.GetAllByIdOneToMany((int)sqlDataReader["Id"]).Result.Select(x => x.Value).ToList(),
 				Description = sqlDataReader["Description"] as string ?? "Undefined",
 				Year = (int)sqlDataReader["YearOfRelease"],
-				Scores = _scoreGetAllById.GetAllByIdOneToMany((int)sqlDataReader["Id"]).Result,
+				Scores = _scoreGetAllById.GetAllByIdOneToMany((int)sqlDataReader["Id"]).Result.Select(x => x.Value).ToList(),
 				LicensExpirationDate = DateTime.Parse((string)sqlDataReader["LicensExpirationDate"]),
 				Distributor = _distributorRepository.GetById((int)sqlDataReader["DistributorId"]).Result,
 				BasePrice = (decimal)sqlDataReader["BasePrice"]
