@@ -3,17 +3,18 @@ using ApplicationCore.Domain.Core.Models.Roles;
 using ApplicationCore.Domain.Interfaces.Interfaces;
 using Infrastructure.Data.MSSQLServerRepository.Connection;
 using Infrastructure.Data.MSSQLServerRepository.Connection.Extensions;
+using Infrastructure.Data.MSSQLServerRepository.Implementations.MajorRepository;
 using System.Data;
 using System.Data.SqlClient;
 
 namespace Infrastructure.Data.MSSQLServerRepository.Implementations.ShortRepositoryImplementation
 {
-	public class ScoreRepository : MSSQLRepository<Score>
+	public class ScoreShortRepository : MSSQLRepository<OneToMany<Score>>
 	{
-		private readonly Film _film;
+
 		private readonly IRepository<RegisteredUser> _registerUserRepository;
 
-		public ScoreRepository(string connectionString, Film film, IRepository<RegisteredUser> registerUserRepository)
+		public ScoreShortRepository(string connectionString, IRepository<RegisteredUser> registerUserRepository)
 			: base(connectionString,
 				  "Scores",
 				  $@"INSERT INTO Scores (Id,FilmId,RegisteredUsersId,Raiting) 
@@ -25,23 +26,31 @@ namespace Infrastructure.Data.MSSQLServerRepository.Implementations.ShortReposit
 				  $"SELECT Id,FilmId,RegisteredUsersId,Raiting FROM Scores WHERE FilmsId=@FilmsId",
 				  "@FilmsId")
 		{
-			_film = film;
 			_registerUserRepository = registerUserRepository;
 		}
 
-		protected override Score GetReader(SqlDataReader sqlDataReader)
-			=> new Score()
+		public ScoreShortRepository(string connectionString)
+			: this(connectionString,
+				  new UserRepository(connectionString))
+		{
+		}
+
+		protected override OneToMany<Score> GetReader(SqlDataReader sqlDataReader)
+			=> new OneToMany<Score>()
 			{
-				Id = (int)sqlDataReader["Id"],
-				RegisteredUser = _registerUserRepository.GetById((int)sqlDataReader["RegisteredUsersId"]).Result,
-				Raiting = (int)sqlDataReader["Raiting"]
+				Value = new Score
+				{
+					Id = (int)sqlDataReader["Id"],
+					RegisteredUser = _registerUserRepository.GetById((int)sqlDataReader["RegisteredUsersId"]).Result,
+					Raiting = (int)sqlDataReader["Raiting"]
+				}
 			};
 
-		protected override void InsertCommand(SqlCommand sqlCommand, Score entity)
+		protected override void InsertCommand(SqlCommand sqlCommand, OneToMany<Score> entity)
 		{
-			sqlCommand.Parameters.Add("@RegisteredUsersId", SqlDbType.NVarChar).Value = entity.RegisteredUser.Id;
-			sqlCommand.Parameters.Add("@FilmId", SqlDbType.NVarChar).Value = _film.Id;
-			sqlCommand.Parameters.Add("@Raiting", SqlDbType.Decimal).Value = entity.Raiting;
+			sqlCommand.Parameters.Add("@RegisteredUsersId", SqlDbType.NVarChar).Value = entity.Value.RegisteredUser.Id;
+			sqlCommand.Parameters.Add("@FilmId", SqlDbType.NVarChar).Value = entity.AdditionId;
+			sqlCommand.Parameters.Add("@Raiting", SqlDbType.Decimal).Value = entity.Value.Raiting;
 		}
 	}
 }
