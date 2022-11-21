@@ -15,10 +15,12 @@ namespace IntegratedTests
 	[TestCaseOrderer("IntegratedTests.Configuration", "IntegratedTests")]
 	public class ScheduleFunctionIntegratedTest
 	{
-		private string _connectionString = "mongodb://localhost:27017";
+		private static string _connectionString = "mongodb://localhost:27017";
+		private static Schedule _testSchedule = new Schedule();
 
-		[Fact, TestPriority(1)]
-		public async Task TestCreateData()
+		// TODO: сделать один метод который вызывет эти 3
+		[Fact, TestPriority(0)]
+		public async Task InsertAndGet_AddingObjectsViaRepositoriesAndReadingDataUsingARepository_IsTrue()
 		{
 			try
 			{
@@ -49,18 +51,22 @@ namespace IntegratedTests
 				// Act
 
 				await categoryService.InsertAsync(category);
-				Category categoryData = categoryService.GetAllAsync().Result.Data[0];
+				var categoryAsync = await categoryService.GetAllAsync();
+				Category categoryData = categoryAsync.Data[0];
 
 				await employeeService.InsertAsync(employee);
-				Employee employeeData = employeeService.GetAllAsync().Result.Data[0];
+				var employeeAsync = await employeeService.GetAllAsync();
+				Employee employeeData = employeeAsync.Data[0];
 
 				collectionUsers.ForEach(async user => await userService.InsertAsync(user));
-				List<RegisteredUser> usersData = userService.GetAllAsync().Result.Data;
+				var userAsync = await userService.GetAllAsync();
+				List<RegisteredUser> usersData = userAsync.Data;
 
 				film.Reviews.ForEach(review => review.RegisteredUser = usersData[0]);
 				film.Scores.ForEach(score => score.RegisteredUser = usersData[0]);
 				await filmService.InsertAsync(film);
-				Film filmData = filmService.GetAllAsync().Result.Data[0];
+				var filmAsync = await filmService.GetAllAsync();
+				Film filmData = filmAsync.Data[0];
 
 				foreach (Ticket ticket in collectionTickets)
 				{
@@ -75,23 +81,24 @@ namespace IntegratedTests
 				await scheduleService.InsertAsync(schedule);
 				BaseResponse<Schedule> scheduleData = await scheduleService.GetById(schedule.Id);
 
+				_testSchedule = scheduleData.Data;
+
 				Assert.True(true);
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
 				Assert.True(false);
 			}
 		}
 
-		[Fact, TestPriority(2)]
-		public async Task TestCalculation()
+		[Fact, TestPriority(1)]
+		public void AddTicket_TryToCreateTheWrongTicket_IsFalse()
 		{
-			Thread.Sleep(400);
+			Thread.Sleep(1000);
+
 			try
 			{
 				// Arrange
-				var scheduleRepository = new ScheduleRepository(_connectionString);
-				var scheduleService = new ScheduleRepositoryService(scheduleRepository);
 
 				var testUser = new RegisteredUser()
 				{
@@ -112,8 +119,7 @@ namespace IntegratedTests
 				};
 
 				// Act
-				var data = await scheduleService.GetAllAsync();
-				Schedule schedule = data.Data[0];
+				Schedule schedule = _testSchedule;
 				var scheduleValidation = new ScheduleValidation(schedule);
 				var scheduleFuntion = new ScheduleFunction(scheduleValidation, schedule);
 				var scheduleFunctionService = new ScheduleFunctionService(scheduleFuntion);
@@ -123,16 +129,17 @@ namespace IntegratedTests
 				var assert = scheduleFunctionService.AddTicket(testUser, schedule.Sessions[0], testSeat).Data;
 				Assert.False(assert);
 			}
-			catch
+			catch (Exception ex)
 			{
 				Assert.False(true);
 			}
 		}
 
-		[Fact, TestPriority(3)]
-		public async Task TestDeleteAllData()
+		[Fact, TestPriority(2)]
+		public async Task Delete_DeleteAllDataInSource_IsTrue()
 		{
-			Thread.Sleep(3000);
+			Thread.Sleep(5000);
+
 			try
 			{
 				// Arrange
@@ -153,10 +160,11 @@ namespace IntegratedTests
 
 				// Act
 
-				List<RegisteredUser> collectionRegisteredUsers = userService.GetAllAsync().Result.Data;
+				var collectionRegisteredUsersAsync = await userService.GetAllAsync();
+				List<RegisteredUser> collectionRegisteredUsers = collectionRegisteredUsersAsync.Data;
 				collectionRegisteredUsers.ForEach(async user => await userService.DeleteAsync(user));
 
-				Schedule schedule = scheduleService.GetAllAsync().Result.Data[0];
+				Schedule schedule = _testSchedule;
 
 				schedule.Sessions.ForEach(async session =>
 				{

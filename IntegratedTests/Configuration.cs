@@ -1,8 +1,9 @@
 ﻿using Xunit.Abstractions;
+using Xunit.Sdk;
 
 namespace IntegratedTests
 {
-	public class Configuration
+	public class Configuration : ITestCaseOrderer
 	{
 		public IEnumerable<TTestCase> OrderTestCases<TTestCase>(
 			IEnumerable<TTestCase> testCases) where TTestCase : ITestCase
