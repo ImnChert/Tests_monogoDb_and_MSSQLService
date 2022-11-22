@@ -1,13 +1,16 @@
 ﻿using ApplicationCore.Domain.Core.Models.Roles;
 using ApplicationCore.Domain.Interfaces.Interfaces;
 using ApplicationCore.Services.Implementations.Repositories;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System.Numerics;
 
 namespace MoqTests
 {
 	public class UserRepositoryServiceTest
 	{
 		[Fact]
-		public async Task InsertAsync_InsertNewUser_IsTrue()
+		public async Task InsertAsync_InsertNewUser_True()
 		{
 			// Arange 
 
@@ -38,7 +41,7 @@ namespace MoqTests
 		}
 
 		[Fact]
-		public async Task GetTaskAsync_GetAllUsers_IsTrue()
+		public async Task GetTaskAsync_GetAllUsers_Equal()
 		{
 			// Arrange
 			var collectionUsers = GetUsers();
@@ -55,6 +58,88 @@ namespace MoqTests
 
 			// Assert
 			Assert.Equal(count, result.Data.Count);
+		}
+
+		[Fact]
+		public async Task GetById_GetUsersById_Equal()
+		{
+			// Arrange
+			var collectionUsers = GetUsers();
+			int userId = collectionUsers[0].Id;
+
+			var repositoryMock = new Mock<IRepository<RegisteredUser>>();
+			repositoryMock.Setup(repo => repo.GetById(userId))
+				.ReturnsAsync(new RegisteredUser() { Id = 1 });
+
+			var service = new UserRepositoryService(repositoryMock.Object);
+
+			// Act
+			var result = await service.GetById(userId);
+
+			// Assert
+			Assert.Equal(userId, result.Data.Id);
+		}
+
+		[Fact]
+		public async Task GetById_SetAnIdThatDoesnNotExist_NotEqual()
+		{
+			// Arrange
+			var collectionUsers = GetUsers();
+
+			int planeId = collectionUsers[0].Id;
+			int incorrectId = collectionUsers.Max(i => i.Id) + 1;
+
+			var repositoryMock = new Mock<IRepository<RegisteredUser>>();
+			repositoryMock.Setup(repo => repo.GetById(planeId))
+				.ReturnsAsync(new RegisteredUser() { Id = 1 });
+
+			var service = new UserRepositoryService(repositoryMock.Object);
+
+			// Act
+			var result = await service.GetById(incorrectId);
+
+			// Assert
+			Assert.NotEqual(new OkResult(), result.StatusCode);
+		}
+
+		[Fact]
+		public async Task DeleteAsync_DeletingAUserWithASpecifiedId_True()
+		{
+			// Arrange
+			var collectionUsers = GetUsers();
+			RegisteredUser user = collectionUsers[0]; //1
+
+			var repositoryMock = new Mock<IRepository<RegisteredUser>>();
+			repositoryMock.Setup(repo => repo.DeleteAsync(user))
+					.ReturnsAsync(true);
+
+			var service = new UserRepositoryService(repositoryMock.Object);
+
+			// Act
+			var result = await service.DeleteAsync(user);
+
+			// Assert
+			Assert.True(result.Data);
+		}
+
+		[Fact]
+		public async Task UpdateAsync_UpdateUser_True()
+		{
+			// Arrange
+			var collectionUsers = GetUsers();
+			RegisteredUser user = collectionUsers[0]; //1
+
+			var repositoryMock = new Mock<IRepository<RegisteredUser>>();
+			repositoryMock.Setup(repo => repo.UpdateAsync(user))
+					.ReturnsAsync(true);
+
+			var service = new UserRepositoryService(repositoryMock.Object);
+
+			// Act
+			var result = await service.UpdateAsync(user);
+
+			// Assert
+			Assert.True(result.Data);
 		}
 
 		private List<RegisteredUser> GetUsers()
