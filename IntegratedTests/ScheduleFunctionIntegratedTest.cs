@@ -18,9 +18,8 @@ namespace IntegratedTests
 		private static string _connectionString = "mongodb://localhost:27017";
 		private static Schedule _testSchedule = new Schedule();
 
-		// TODO: сделать один метод который вызывет эти 3
 		[Fact, TestPriority(0)]
-		public async Task InsertAndGet_AddingObjectsViaRepositoriesAndReadingDataUsingARepository_IsTrue()
+		public async Task InsertAndGet_AddingObjectsViaRepositoriesAndReadingDataUsingARepository_True()
 		{
 			try
 			{
@@ -59,6 +58,7 @@ namespace IntegratedTests
 				Employee employeeData = employeeAsync.Data[0];
 
 				collectionUsers.ForEach(async user => await userService.InsertAsync(user));
+				Thread.Sleep(100);
 				var userAsync = await userService.GetAllAsync();
 				List<RegisteredUser> usersData = userAsync.Data;
 
@@ -92,7 +92,7 @@ namespace IntegratedTests
 		}
 
 		[Fact, TestPriority(1)]
-		public void AddTicket_TryToCreateTheWrongTicket_IsFalse()
+		public void AddTicket_TryToCreateTheWrongTicket_False()
 		{
 			Thread.Sleep(1000);
 
@@ -136,9 +136,9 @@ namespace IntegratedTests
 		}
 
 		[Fact, TestPriority(2)]
-		public async Task Delete_DeleteAllDataInSource_IsTrue()
+		public async Task Delete_DeleteAllDataInSource_True()
 		{
-			Thread.Sleep(5000);
+			Thread.Sleep(2000);
 
 			try
 			{
