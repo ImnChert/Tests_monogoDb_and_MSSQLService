@@ -62,26 +62,18 @@ namespace IntegratedTests
 				var userAsync = await userService.GetAllAsync();
 				List<RegisteredUser> usersData = userAsync.Data;
 
-				film.Reviews.ForEach(review => review.RegisteredUser = usersData[0]);
-				film.Scores.ForEach(score => score.RegisteredUser = usersData[0]);
+				FilmPreparation(film, usersData);
 				await filmService.InsertAsync(film);
 				var filmAsync = await filmService.GetAllAsync();
 				Film filmData = filmAsync.Data[0];
 
-				foreach (Ticket ticket in collectionTickets)
-				{
-					ticket.RegisteredUser = usersData[0];
-					ticket.Seat.Category = categoryData;
-					ticket.Cashier = employeeData;
-				}
-
-				schedule.Sessions[0].Tickets = collectionTickets;
-				schedule.Sessions[0].Film = filmData;
-
+				SchedulePreparation(schedule, collectionTickets, filmData, usersData, employeeData, categoryData);
 				await scheduleService.InsertAsync(schedule);
 				BaseResponse<Schedule> scheduleData = await scheduleService.GetById(schedule.Id);
 
 				_testSchedule = scheduleData.Data;
+
+				// Assert
 
 				Assert.True(true);
 			}
@@ -110,24 +102,23 @@ namespace IntegratedTests
 					DateOfBirthday = DateTime.Now,
 					Phone = "+375444444444"
 				};
-
 				var testSeat = new Seat()
 				{
 					NumberRow = 1,
 					NumberColumn = 1,
 					Category = null
 				};
-
-				// Act
 				Schedule schedule = _testSchedule;
 				var scheduleValidation = new ScheduleValidation(schedule);
 				var scheduleFuntion = new ScheduleFunction(scheduleValidation, schedule);
 				var scheduleFunctionService = new ScheduleFunctionService(scheduleFuntion);
 
+				// Act
+				var data = scheduleFunctionService.AddTicket(testUser, schedule.Sessions[0], testSeat);
 
 				// Assert
-				var assert = scheduleFunctionService.AddTicket(testUser, schedule.Sessions[0], testSeat).Data;
-				Assert.False(assert);
+				var result = data.Data;
+				Assert.False(result);
 			}
 			catch (Exception ex)
 			{
@@ -158,13 +149,13 @@ namespace IntegratedTests
 				var scheduleRepository = new ScheduleRepository(_connectionString);
 				var scheduleService = new ScheduleRepositoryService(scheduleRepository);
 
+				Schedule schedule = _testSchedule;
+
 				// Act
 
 				var collectionRegisteredUsersAsync = await userService.GetAllAsync();
 				List<RegisteredUser> collectionRegisteredUsers = collectionRegisteredUsersAsync.Data;
 				collectionRegisteredUsers.ForEach(async user => await userService.DeleteAsync(user));
-
-				Schedule schedule = _testSchedule;
 
 				schedule.Sessions.ForEach(async session =>
 				{
@@ -185,6 +176,26 @@ namespace IntegratedTests
 			{
 				Assert.True(false);
 			}
+		}
+
+		private void FilmPreparation(Film film, List<RegisteredUser> usersData)
+		{
+			film.Reviews.ForEach(review => review.RegisteredUser = usersData[0]);
+			film.Scores.ForEach(score => score.RegisteredUser = usersData[0]);
+		}
+
+		private void SchedulePreparation(Schedule schedule, List<Ticket> collectionTickets, Film filmData,
+										List<RegisteredUser> usersData, Employee employeeData, Category categoryData)
+		{
+			foreach (Ticket ticket in collectionTickets)
+			{
+				ticket.RegisteredUser = usersData[0];
+				ticket.Seat.Category = categoryData;
+				ticket.Cashier = employeeData;
+			}
+
+			schedule.Sessions[0].Tickets = collectionTickets;
+			schedule.Sessions[0].Film = filmData;
 		}
 
 		private List<RegisteredUser> GetTestUsers()
