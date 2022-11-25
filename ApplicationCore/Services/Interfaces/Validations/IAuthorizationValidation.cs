@@ -2,7 +2,7 @@
 
 namespace ApplicationCore.Services.Interfaces.Validations
 {
-	public interface IAuthorizationValidation
+	public interface IAuthorizationValidation : IIsNotNull
 	{
 		public bool UsernameIsNotUse(string username, List<IAuthorization> authorizations);
 
