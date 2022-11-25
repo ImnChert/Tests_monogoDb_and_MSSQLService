@@ -8,12 +8,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ApplicationCore.Services.Implementations.FunctionalEntities.Services
 {
-	internal class GuideService : IGuideService
+	internal class GuideFunctionService : IGuideService
 	{
 		private IGuideFunction _guideFunction;
 		private IGuideValidation _guideValidation;
 
-		public GuideService(IGuideFunction guideFunction, IGuideValidation guideValidation)
+		public GuideFunctionService(IGuideFunction guideFunction, IGuideValidation guideValidation)
 		{
 			_guideFunction = guideFunction;
 			_guideValidation = guideValidation;
