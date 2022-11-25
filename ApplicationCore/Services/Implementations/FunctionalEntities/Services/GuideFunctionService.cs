@@ -44,20 +44,80 @@ namespace ApplicationCore.Services.Implementations.FunctionalEntities.Services
 				};
 			}
 		}
-		// TODO: доделать
+
 		public BaseResponse<List<Session>> PriceOfImpressions(Schedule schedule)
 		{
-			throw new NotImplementedException();
+			try
+			{
+				_guideValidation.IsNotNull(schedule);
+
+				List<Session> prices = _guideFunction.PriceOfImpressions(schedule);
+
+				return new BaseResponse<List<Session>>
+				{
+					Data = prices,
+					StatusCode = new OkResult(),
+					Description = "Ok result"
+				};
+			}
+			catch (Exception ex)
+			{
+				return new BaseResponse<List<Session>>
+				{
+					StatusCode = new BadRequestResult(),
+					Description = ex.Message
+				};
+			}
 		}
 
 		public BaseResponse<List<Film>> RentMovies(List<Schedule> schedules)
 		{
-			throw new NotImplementedException();
+			try
+			{
+				_guideValidation.IsNotNull(schedules);
+
+				List<Film> rentMovies = _guideFunction.RentMovies(schedules);
+
+				return new BaseResponse<List<Film>>
+				{
+					Data = rentMovies,
+					StatusCode = new OkResult(),
+					Description = "Ok result"
+				};
+			}
+			catch (Exception ex)
+			{
+				return new BaseResponse<List<Film>>
+				{
+					StatusCode = new BadRequestResult(),
+					Description = ex.Message
+				};
+			}
 		}
 
 		public BaseResponse<List<Schedule>> ShowSchedule(List<Schedule> schedules)
 		{
-			throw new NotImplementedException();
+			try
+			{
+				_guideValidation.IsNotNull(schedules);
+
+				List<Schedule> showSchedule = _guideFunction.ShowSchedule(schedules);
+
+				return new BaseResponse<List<Schedule>>
+				{
+					Data = showSchedule,
+					StatusCode = new OkResult(),
+					Description = "Ok result"
+				};
+			}
+			catch (Exception ex)
+			{
+				return new BaseResponse<List<Schedule>>
+				{
+					StatusCode = new BadRequestResult(),
+					Description = ex.Message
+				};
+			}
 		}
 	}
 }
