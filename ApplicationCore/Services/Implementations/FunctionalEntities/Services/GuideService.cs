@@ -41,7 +41,7 @@ namespace ApplicationCore.Services.Implementations.FunctionalEntities.Services
 				{
 					StatusCode = new BadRequestResult(),
 					Description = ex.Message
-				}
+				};
 			}
 		}
 		// TODO: доделать
