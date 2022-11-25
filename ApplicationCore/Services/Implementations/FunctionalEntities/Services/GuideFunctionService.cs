@@ -45,15 +45,15 @@ namespace ApplicationCore.Services.Implementations.FunctionalEntities.Services
 			}
 		}
 
-		public BaseResponse<List<Session>> PriceOfImpressions(Schedule schedule)
+		public BaseResponse<Dictionary<Session, decimal>> PriceOfImpressions(Schedule schedule)
 		{
 			try
 			{
 				_guideValidation.IsNotNull(schedule);
 
-				List<Session> prices = _guideFunction.PriceOfImpressions(schedule);
+				Dictionary<Session, decimal> prices = _guideFunction.PriceOfImpressions(schedule);
 
-				return new BaseResponse<List<Session>>
+				return new BaseResponse<Dictionary<Session, decimal>>
 				{
 					Data = prices,
 					StatusCode = new OkResult(),
@@ -62,7 +62,7 @@ namespace ApplicationCore.Services.Implementations.FunctionalEntities.Services
 			}
 			catch (Exception ex)
 			{
-				return new BaseResponse<List<Session>>
+				return new BaseResponse<Dictionary<Session, decimal>>
 				{
 					StatusCode = new BadRequestResult(),
 					Description = ex.Message

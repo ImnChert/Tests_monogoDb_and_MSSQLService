@@ -8,6 +8,6 @@ namespace ApplicationCore.Services.Interfaces.FunctionalEntities.Functions
 		public List<Film> RentMovies(List<Schedule> schedules);
 		public List<Schedule> ShowSchedule(List<Schedule> schedules);
 		public Seat[,] PlacesForBooking(Session session, Hall hall);
-		public List<Session> PriceOfImpressions(Schedule schedule);
+		public Dictionary<Session, decimal> PriceOfImpressions(Schedule schedule);
 	}
 }

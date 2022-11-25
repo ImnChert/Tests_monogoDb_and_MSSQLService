@@ -9,6 +9,6 @@ namespace ApplicationCore.Services.Interfaces.FunctionalEntities.Services
 		public BaseResponse<List<Film>> RentMovies(List<Schedule> schedules);
 		public BaseResponse<List<Schedule>> ShowSchedule(List<Schedule> schedules);
 		public BaseResponse<Seat[,]> PlacesForBooking(Session session, Hall hall);
-		public BaseResponse<List<Session>> PriceOfImpressions(Schedule schedule);
+		public BaseResponse<Dictionary<Session, decimal>> PriceOfImpressions(Schedule schedule);
 	}
 }
