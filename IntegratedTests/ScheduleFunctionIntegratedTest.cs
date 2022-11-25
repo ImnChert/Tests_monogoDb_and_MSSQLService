@@ -110,8 +110,8 @@ namespace IntegratedTests
 				};
 				Schedule schedule = _testSchedule;
 				var scheduleValidation = new ScheduleValidation(schedule);
-				var scheduleFuntion = new ScheduleFunction(scheduleValidation, schedule);
-				var scheduleFunctionService = new ScheduleFunctionService(scheduleFuntion);
+				var scheduleFuntion = new ScheduleFunction(schedule);
+				var scheduleFunctionService = new ScheduleFunctionService(scheduleFuntion, scheduleValidation);
 
 				// Act
 				var data = scheduleFunctionService.AddTicket(testUser, schedule.Sessions[0], testSeat);

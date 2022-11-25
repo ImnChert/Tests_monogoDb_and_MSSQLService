@@ -9,6 +9,86 @@ namespace AutomaticTests
 {
 	public class ScheduleValidationTest
 	{
+		[Fact]
+		public void IsValidSession_ScheduleContainsSession_True()
+		{
+			//Arange
+			Schedule schedule = GetTestSchedule();
+			var scheduleValidation = new ScheduleValidation(schedule);
+			var testSession = new Session()
+			{
+				Film = GetTestFilm(),
+				StartTime = DateTime.Now,
+				Tickets = GetTestTicket()
+			};
+
+			// Act
+			var result = scheduleValidation.ContainSession(testSession);
+
+			//Assert
+			Assert.True(result);
+		}
+
+		[Fact]
+		public void IsValidSession_ScheduleContainsSession_False()
+		{
+			//Arange
+			Schedule schedule = GetTestSchedule();
+			var scheduleValidation = new ScheduleValidation(schedule);
+			var testSession = new Session()
+			{
+				Film = null,
+				StartTime = DateTime.Now,
+				Tickets = GetTestTicket()
+			};
+
+			// Act
+			var result = scheduleValidation.ContainSession(testSession);
+
+			//Assert
+			Assert.False(result);
+		}
+
+		[Fact]
+		public void IsValidSeat_ThereIsTheSeatInAnyTicket_True()
+		{
+			//Arange
+			Schedule schedule = GetTestSchedule();
+			var scheduleValidation = new ScheduleValidation(schedule);
+			var testSession = new Seat()
+			{
+				NumberRow = 1,
+				NumberColumn = 1,
+				Category = GetTestCategory()
+			};
+
+			// Act
+			var result = scheduleValidation.ContainSeat(testSession);
+
+			//Assert
+			Assert.True(result);
+		}
+
+		[Fact]
+		public void IsValidSeat_ThereIsTheSeatInAnyTicket_False()
+		{
+			//Arange
+			Schedule schedule = GetTestSchedule();
+			var scheduleValidation = new ScheduleValidation(schedule);
+			var testSession = new Seat()
+			{
+				NumberRow = 2,
+				NumberColumn = 2,
+				Category = GetTestCategory()
+			};
+
+			// Act
+			var result = scheduleValidation.ContainSeat(testSession);
+
+			//Assert
+			Assert.False(result);
+		}
+
 		private Category GetTestCategory()
 			=> new Category()
 			{
@@ -152,84 +232,5 @@ namespace AutomaticTests
 				}
 			};
 
-		[Fact]
-		public void IsValidSession_ScheduleContainsSession_IsTrue()
-		{
-			//Arange
-			Schedule schedule = GetTestSchedule();
-			var scheduleValidation = new ScheduleValidation(schedule);
-			var testSession = new Session()
-			{
-				Film = GetTestFilm(),
-				StartTime = DateTime.Now,
-				Tickets = GetTestTicket()
-			};
-
-			// Act
-			var result = scheduleValidation.ContainSession(testSession);
-
-			//Assert
-			Assert.True(result);
-		}
-
-		[Fact]
-		public void IsValidSession_ScheduleContainsSession_IsFalse()
-		{
-			//Arange
-			Schedule schedule = GetTestSchedule();
-			var scheduleValidation = new ScheduleValidation(schedule);
-			var testSession = new Session()
-			{
-				Film = null,
-				StartTime = DateTime.Now,
-				Tickets = GetTestTicket()
-			};
-
-			// Act
-			var result = scheduleValidation.ContainSession(testSession);
-
-			//Assert
-			Assert.False(result);
-		}
-
-		[Fact]
-		public void IsValidSeat_ThereIsTheSeatInAnyTicket_IsTrue()
-		{
-			//Arange
-			Schedule schedule = GetTestSchedule();
-			var scheduleValidation = new ScheduleValidation(schedule);
-			var testSession = new Seat()
-			{
-				NumberRow = 1,
-				NumberColumn = 1,
-				Category = GetTestCategory()
-			};
-
-			// Act
-			var result = scheduleValidation.ContainSeat(testSession);
-
-			//Assert
-			Assert.True(result);
-		}
-
-		[Fact]
-		public void IsValidSeat_ThereIsTheSeatInAnyTicket_IsFalse()
-		{
-			//Arange
-			Schedule schedule = GetTestSchedule();
-			var scheduleValidation = new ScheduleValidation(schedule);
-			var testSession = new Seat()
-			{
-				NumberRow = 2,
-				NumberColumn = 2,
-				Category = GetTestCategory()
-			};
-
-			// Act
-			var result = scheduleValidation.ContainSeat(testSession);
-
-			//Assert
-			Assert.False(result);
-		}
 	}
 }

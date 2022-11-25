@@ -1,9 +1,7 @@
 ﻿using ApplicationCore.Domain.Core.Models.Roles;
 using ApplicationCore.Domain.Interfaces.Interfaces;
 using ApplicationCore.Services.Implementations.Repositories;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Numerics;
 
 namespace MoqTests
 {
@@ -41,7 +39,7 @@ namespace MoqTests
 		}
 
 		[Fact]
-		public async Task GetTaskAsync_GetAllUsers_Equal()
+		public async Task GetAllAsync_GetAllUsers_Equal()
 		{
 			// Arrange
 			var collectionUsers = GetUsers();
