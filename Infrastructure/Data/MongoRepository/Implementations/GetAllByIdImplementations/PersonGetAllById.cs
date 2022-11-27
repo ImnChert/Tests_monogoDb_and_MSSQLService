@@ -52,10 +52,10 @@ namespace Infrastructure.Data.MongoRepository.Implementations.GetAllByIdImplemen
 				people.Add(new Person()
 				{
 					Id = item.GetValue("staff_id").ToInt32(),
-					FirstName = item.GetValue("firstName").ToString(),
-					LastName = item.GetValue("lastName").ToString(),
-					MiddleName = item.GetValue("middleName").ToString(),
-					Post = item.GetValue("post").ToString()
+					FirstName = item.GetValue("firstName").ToString() as string ?? "Undefined",
+					LastName = item.GetValue("lastName").ToString() as string ?? "Undefined",
+					MiddleName = item.GetValue("middleName").ToString() as string ?? "Undefined",
+					Post = item.GetValue("post").ToString() as string ?? "Undefined"
 				});
 				;
 			}

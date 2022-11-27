@@ -32,56 +32,13 @@ namespace Infrastructure.Data.MongoRepository.Implementations.RepositoryImplemen
 			_scoreGetAllById = new ScoreGetAllById(connectionString, _mongoCollection);
 		}
 
-		//public override async Task<List<Film>> GetAllAsync()
-		//{
-		//	var filter = new BsonDocument();
-		//	var films = new List<Film>();
-
-		//	using (IAsyncCursor<BsonDocument> cursor = await _mongoCollection.FindAsync(filter))
-		//	{
-		//		while (await cursor.MoveNextAsync())
-		//		{
-		//			IEnumerable<BsonDocument> filmsBson = cursor.Current;
-
-		//			foreach (BsonDocument item in filmsBson)
-		//			{
-		//				films.Add(InitializationFilm(item));
-		//			}
-		//		}
-		//	}
-
-		//	return films;
-		//}
-
-		//public override async Task<Film GetById(int id)
-		//{
-		//	var film = new Film();
-		//	var filter = new BsonDocument("_id", id);
-
-		//	using (IAsyncCursor<BsonDocument> cursor = await _mongoCollection.FindAsync(filter))
-		//	{
-		//		if (await cursor.MoveNextAsync())
-		//		{
-		//			if (cursor.Current.Count() == 0)
-		//				return null;
-
-		//			var elements = cursor.Current.ToList();
-		//			BsonDocument item = elements[0];
-
-		//			film = InitializationFilm(item);
-		//		}
-		//	}
-
-		//	return film;
-		//}
-
 		protected override Film Initialization(BsonDocument item)
 			=> new Film()
 			{
 				Id = item.GetValue("_id").ToInt32(),
-				Name = item.GetValue("name").ToString(),
+				Name = item.GetValue("name").ToString() as string ?? "Undefined",
 				Duration = item.GetValue("duration").ToInt32(),
-				Description = item.GetValue("description").ToString(),
+				Description = item.GetValue("description").ToString() as string ?? "Undefined",
 				FilmCrew = _personGetAllById.GetAllByIdOneToMany(item.GetValue("_id").ToInt32()).Result,
 				Reviews = _reviewGetAllById.GetAllByIdOneToMany(item.GetValue("_id").ToInt32()).Result,
 				Scores = _scoreGetAllById.GetAllByIdOneToMany(item.GetValue("_id").ToInt32()).Result,

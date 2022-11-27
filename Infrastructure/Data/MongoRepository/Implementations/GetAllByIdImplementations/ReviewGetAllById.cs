@@ -57,7 +57,7 @@ namespace Infrastructure.Data.MongoRepository.Implementations.GetAllByIdImplemen
 				{
 					Id = item.GetValue("_id").ToInt32(),
 					RegisteredUser = _registeredUserRepository.GetById(item.GetValue("registeredUser_id").ToInt32()).Result,
-					Description = item.GetValue("discription").ToString()
+					Description = item.GetValue("discription").ToString() as string ?? "Undefined"
 				});
 			}
 

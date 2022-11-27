@@ -13,54 +13,11 @@ namespace Infrastructure.Data.MongoRepository.Implementations.RepositoryImplemen
 		{
 		}
 
-		//public override async Task<List<Distributor>> GetAllAsync()
-		//{
-		//	var filter = new BsonDocument();
-		//	var distributors = new List<Distributor>();
-
-		//	using (IAsyncCursor<BsonDocument> cursor = await _mongoCollection.FindAsync(filter))
-		//	{
-		//		while (await cursor.MoveNextAsync())
-		//		{
-		//			IEnumerable<BsonDocument> filmsBson = cursor.Current;
-
-		//			foreach (BsonDocument item in filmsBson)
-		//			{
-		//				distributors.Add(InitializationDistributor(item));
-		//			}
-		//		}
-		//	}
-
-		//	return distributors;
-		//}
-
-		//public override async Task<Distributor> GetById(int id)
-		//{
-		//	var distributor = new Distributor();
-		//	var filter = new BsonDocument("_id", id);
-
-		//	using (IAsyncCursor<BsonDocument> cursor = await _mongoCollection.FindAsync(filter))
-		//	{
-		//		if (await cursor.MoveNextAsync())
-		//		{
-		//			if (cursor.Current.Count() == 0)
-		//				return null;
-
-		//			var elements = cursor.Current.ToList();
-		//			BsonDocument item = elements[0];
-
-		//			distributor = InitializationDistributor(item);
-		//		}
-		//	}
-
-		//	return distributor;
-		//}
-
 		protected override Distributor Initialization(BsonDocument item)
 			=> new Distributor()
 			{
 				Id = item.GetValue("_id").ToInt32(),
-				NameCompany = item.GetValue("nameCompany").ToString()
+				NameCompany = item.GetValue("nameCompany").ToString() as string ?? "Undefined"
 			};
 
 		public override async Task<bool> InsertAsync(Distributor entity)

@@ -57,7 +57,7 @@ namespace Infrastructure.Data.MongoRepository.Implementations.GetAllByIdImplemen
 
 			foreach (BsonDocument item in results)
 			{
-				Position position = GetType(item.GetValue("_id").ToInt32(), item.GetValue("name").ToString());
+				Position position = GetType(item.GetValue("_id").ToInt32(), item.GetValue("name").ToString() as string ?? "Undefined");
 				positions.Add(position);
 			}
 

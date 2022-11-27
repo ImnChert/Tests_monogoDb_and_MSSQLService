@@ -19,51 +19,6 @@ namespace Infrastructure.Data.MongoRepository.Implementations.RepositoryImplemen
 			_sessionGetAllById = new SessionGetAllById(connectionString, _mongoCollection);
 		}
 
-		//public override async Task<List<Schedule>> GetAllAsync()
-		//{
-		//	var filter = new BsonDocument();
-		//	var schedules = new List<Schedule>();
-
-		//	using (IAsyncCursor<BsonDocument> cursor = await _mongoCollection.FindAsync(filter))
-		//	{
-		//		var parse = new MongoParser();
-		//		while (await cursor.MoveNextAsync())
-		//		{
-		//			IEnumerable<BsonDocument> user = cursor.Current;
-
-		//			foreach (BsonDocument item in user)
-		//			{
-		//				schedules.Add(InitializationSchedule(item, parse));
-		//			}
-		//		}
-		//	}
-
-		//	return schedules;
-		//}
-
-		//public override async Task<Schedule> GetById(int id)
-		//{
-		//	var schedule = new Schedule();
-		//	var filter = new BsonDocument("_id", id);
-
-		//	using (IAsyncCursor<BsonDocument> cursor = await _mongoCollection.FindAsync(filter))
-		//	{
-		//		if (await cursor.MoveNextAsync())
-		//		{
-		//			if (cursor.Current.Count() == 0)
-		//				return null;
-
-		//			var elements = cursor.Current.ToList();
-		//			BsonDocument item = elements[0];
-
-		//			var parse = new MongoParser();
-		//			schedule = InitializationSchedule(item, parse);
-		//		}
-		//	}
-
-		//	return schedule;
-		//}
-
 		protected override Schedule Initialization(BsonDocument item)
 			=> new Schedule()
 			{

@@ -25,61 +25,15 @@ namespace Infrastructure.Data.MongoRepository.Implementations.RepositoryImplemen
 			_positionsGetAllById = new PositionGetAllById(_mongoCollection);
 		}
 
-		//public override async Task<List<Employee>> GetAllAsync()
-		//{
-		//	var filter = new BsonDocument();
-		//	var employees = new List<Employee>();
-
-		//	using (IAsyncCursor<BsonDocument> cursor = await _mongoCollection.FindAsync(filter))
-		//	{
-		//		var parse = new MongoParser();
-		//		while (await cursor.MoveNextAsync())
-		//		{
-		//			IEnumerable<BsonDocument> user = cursor.Current;
-
-		//			foreach (BsonDocument item in user)
-		//			{
-		//				employees.Add(InitializationEmployee(item, parse));
-		//			}
-		//		}
-		//	}
-
-		//	return employees;
-		//}
-
-		//public override async Task<Employee> GetById(int id)
-		//{
-		//	var employee = new Employee();
-		//	var filter = new BsonDocument("_id", id);
-
-		//	using (IAsyncCursor<BsonDocument> cursor = await _mongoCollection.FindAsync(filter))
-		//	{
-		//		if (await cursor.MoveNextAsync())
-		//		{
-		//			if (cursor.Current.Count() == 0)
-		//				return null;
-
-		//			var elements = cursor.Current.ToList();
-		//			BsonDocument item = elements[0];
-
-		//			var parse = new MongoParser();
-
-		//			employee = InitializationEmployee(item, parse);
-		//		}
-		//	}
-
-		//	return employee;
-		//}
-
 		protected override Employee Initialization(BsonDocument item)
 			=> new Employee()
 			{
 				Id = item.GetValue("_id").ToInt32(),
-				Username = item.GetValue("username").ToString(),
-				Password = item.GetValue("password").ToString(),
-				FirstName = item.GetValue("firstName").ToString(),
-				MiddleName = item.GetValue("middleName").ToString(),
-				LastName = item.GetValue("lastName").ToString(),
+				Username = item.GetValue("username").ToString() as string ?? "Undefined",
+				Password = item.GetValue("password").ToString() as string ?? "Undefined",
+				FirstName = item.GetValue("firstName").ToString() as string ?? "Undefined",
+				MiddleName = item.GetValue("middleName").ToString() as string ?? "Undefined",
+				LastName = item.GetValue("lastName").ToString() as string ?? "Undefined",
 				Positions = _positionsGetAllById.GetAllByIdOneToMany(item.GetValue("_id").ToInt32()).Result.ToList()
 			};
 
