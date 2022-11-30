@@ -9,7 +9,6 @@ namespace ApplicationCore.Services.Implementations.Validations
 		/// <summary>
 		/// The regular expression below cheks that a password:
 		/// Has minimum 8 characters in length. Adjust it by modifying {8,}
-		///	At least one uppercase English letter. You can remove this condition by removing (?=.*?[A-Z])
 		/// At least one lowercase English letter.  You can remove this condition by removing (?=.*?[a-z])
 		/// At least one digit. You can remove this condition by removing (?=.*?[0-9])
 		/// At least one special character,  You can remove this condition by removing (?=.*?[#?!@$%^&*-]).
@@ -18,9 +17,9 @@ namespace ApplicationCore.Services.Implementations.Validations
 		/// <returns>Is verefication.</returns>
 		public bool PasswordIsValidate(string password)
 		{
-			var regex = new Regex("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$");
-
-			return regex.IsMatch(password);
+			var regex = new Regex("^(?=.*?[a-zA-Z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$");
+			var result = regex.IsMatch(password);
+			return result;
 		}
 
 		public bool UsernameIsNotUse(string username, List<IAuthorization> authorizations)
@@ -36,9 +35,10 @@ namespace ApplicationCore.Services.Implementations.Validations
 		/// <returns>Is verefication.</returns>
 		public bool UsernameIsValidate(string username)
 		{
-			var regex = new Regex("(?=.{8,24}$)(?=[^0-9]*[0-9])(?=[^A-Z]*[A-Z])[a-z0-9][a-zA-Z0-9]*[._-][a-zA-Z0-9]*[a-z0-9]$");
+			var regex = new Regex("^[a-zA-Z][a-zA-Z0-9]{3,9}$");
+			var result = regex.IsMatch(username);
 
-			return regex.IsMatch(username);
+			return result;
 		}
 	}
 }
