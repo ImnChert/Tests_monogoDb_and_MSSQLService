@@ -6,5 +6,6 @@ namespace ApplicationCore.Domain.Core.Interfaces
 	{
 		T Data { get; set; }
 		public StatusCodeResult StatusCode { get; set; }
+		public string Description { get; set; }
 	}
 }
